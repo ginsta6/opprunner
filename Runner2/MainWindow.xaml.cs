@@ -23,12 +23,17 @@ namespace Runner2
     {
         public abstract AbstractPlayerA CreatePlayerA();
         public abstract AbstractPlayerB CreatePlayerB();
+        public abstract AbstractPlayerC CreatePlayerC();
     }
     abstract class AbstractPlayerA
     {
 
     }
     abstract class AbstractPlayerB
+    {
+
+    }
+    abstract class AbstractPlayerC
     {
 
     }
@@ -60,6 +65,10 @@ namespace Runner2
 
         int force = 20;
         int speed = 5;
+
+        int currentPlayerTypeIndex = 1;
+        int maxPlayerTypeIndex = 3;
+        
 
         Random rnd = new Random();
 
@@ -102,6 +111,8 @@ namespace Runner2
             background2.Fill = backgroundSprite;
 
             //StartGame();
+
+            CharacterTypeSelected.Text = currentPlayerTypeIndex.ToString();
         }
 
         private void SignalRService_StartSignalReceived()
@@ -259,6 +270,21 @@ namespace Runner2
         }
 
 
+        private void cycleCharacterTypeLeftBtnClick(object sender, RoutedEventArgs e)
+        {
+            
+               currentPlayerTypeIndex--;
+            if (currentPlayerTypeIndex == 0)
+                currentPlayerTypeIndex = maxPlayerTypeIndex;
+            CharacterTypeSelected.Text = currentPlayerTypeIndex.ToString();
+        }
+        private void cycleCharacterTypeRightBtnClick(object sender, RoutedEventArgs e)
+        {
+            currentPlayerTypeIndex++;
+            if (currentPlayerTypeIndex > maxPlayerTypeIndex)
+                currentPlayerTypeIndex = 1;
+            CharacterTypeSelected.Text = currentPlayerTypeIndex.ToString();
+        }
 
 
         private void RunSprite(double i)
