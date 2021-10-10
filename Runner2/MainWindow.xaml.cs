@@ -19,19 +19,19 @@ using System.Windows.Threading;
 
 namespace Runner2
 {
-    //abstract class AbstractPlayerFactory
-    //{
-    //    public abstract AbstractPlayerA CreatePlayerA();
-    //    public abstract AbstractPlayerB CreatePlayerB();
-    //}
-    //abstract class AbstractPlayerA
-    //{
+    abstract class AbstractPlayerFactory
+    {
+        public abstract AbstractPlayerA CreatePlayerA();
+        public abstract AbstractPlayerB CreatePlayerB();
+    }
+    abstract class AbstractPlayerA
+    {
 
-    //}
-    //abstract class AbstractPlayerB
-    //{
+    }
+    abstract class AbstractPlayerB
+    {
 
-    //}
+    }
     //class  PlayerFactory : AbstractPlayerFactory
     //{
     //    public override AbstractPlayerA CreatePlayerA()
