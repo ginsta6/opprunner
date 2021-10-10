@@ -122,6 +122,8 @@ namespace Runner2
 
         private void StartGame()
         {
+            CantPlayText.Visibility = Visibility.Hidden;
+
             Canvas.SetLeft(background, 0);
             Canvas.SetLeft(background2, 1262);
 
@@ -315,7 +317,6 @@ namespace Runner2
                 startGameBtn.Visibility = Visibility.Hidden;
                 players.Visibility = Visibility.Hidden;
                 players.Visibility = Visibility.Hidden;
-                CantPlayText.Visibility = Visibility.Hidden;
                 SendStartSignalOthers();
                 //StartGame();
             }
