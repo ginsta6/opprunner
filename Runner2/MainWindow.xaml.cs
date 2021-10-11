@@ -269,10 +269,8 @@ namespace Runner2
             await rService.SendStartSignal();
         }
 
-
         private void cycleCharacterTypeLeftBtnClick(object sender, RoutedEventArgs e)
         {
-            
                currentPlayerTypeIndex--;
             if (currentPlayerTypeIndex == 0)
                 currentPlayerTypeIndex = maxPlayerTypeIndex;
@@ -320,15 +318,23 @@ namespace Runner2
         }
         private void joinLobbyBtnClick(object sender, RoutedEventArgs e)
         {
-            titlePlayers.Visibility = Visibility.Visible;
+            setActiveLobbyObjs();
+            //players.Content = nameInput.Text;
+            renameLater(nameInput.Text);
+        }
+        private void setActiveLobbyObjs()
+        {
             title.Visibility = Visibility.Hidden;
             startGameBtn.Visibility = Visibility.Hidden;
             nameInput.Visibility = Visibility.Hidden;
             joinLobbyBtn.Visibility = Visibility.Hidden;
+            cycleCharacterTypeLeftBtn.Visibility = Visibility.Hidden;
+            cycleCharacterTypeRightBtn.Visibility = Visibility.Hidden;
+            CharacterTypeSelected.Visibility = Visibility.Hidden;
+
+            titlePlayers.Visibility = Visibility.Visible;
             startGameBtn.Visibility = Visibility.Visible;
             players.Visibility = Visibility.Visible;
-            //players.Content = nameInput.Text;
-            renameLater(nameInput.Text);
         }
 
         private void startBtnClick(object sender, RoutedEventArgs e)
@@ -342,7 +348,7 @@ namespace Runner2
                 MainBackground.Visibility = Visibility.Hidden;
                 startGameBtn.Visibility = Visibility.Hidden;
                 players.Visibility = Visibility.Hidden;
-                players.Visibility = Visibility.Hidden;
+                players.Visibility = Visibility.Hidden;             // why??????????????????????????????????
                 SendStartSignalOthers();
                 //StartGame();
             }
