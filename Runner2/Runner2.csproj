@@ -248,5 +248,13 @@
   <ItemGroup>
     <Resource Include="Images\avatarowlet1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\pink\pink1.png" />
+    <Resource Include="Images\pink\pink2.png" />
+    <Resource Include="Images\pink\pink3.png" />
+    <Resource Include="Images\pink\pink4.png" />
+    <Resource Include="Images\pink\pink5.png" />
+    <Resource Include="Images\pink\pink6.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

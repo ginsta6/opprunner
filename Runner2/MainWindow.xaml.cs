@@ -201,7 +201,7 @@ namespace Runner2
                 jumping = false;
                 spriteIndex += .5;
 
-                if (spriteIndex > 8)
+                if (spriteIndex > 6)
                     spriteIndex = 1;
 
                 RunSprite(spriteIndex);
@@ -302,29 +302,35 @@ namespace Runner2
             switch (i)
             {
                 case 1:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_01.gif"));
+                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_01.gif"));
+                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink1.png"));
                     break;
                 case 2:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
+                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
+                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink2.png"));
                     break;
                 case 3:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_03.gif"));
+                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_03.gif"));
+                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink3.png"));
                     break;
                 case 4:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_04.gif"));
+                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_04.gif"));
+                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink4.png"));
                     break;
                 case 5:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_05.gif"));
+                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_05.gif"));
+                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink5.png"));
                     break;
                 case 6:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_06.gif"));
+                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_06.gif"));
+                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink6.png"));
                     break;
-                case 7:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_07.gif"));
-                    break;
-                case 8:
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_08.gif"));
-                    break;
+                //case 7:
+                //    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_07.gif"));
+                //    break;
+                //case 8:
+                //    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_08.gif"));
+                //    break;
             }
             player.Fill = playerSprite;
         }
@@ -351,16 +357,28 @@ namespace Runner2
 
         private void startBtnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPlayers < 2)
-            {
-                CantPlayText.Visibility = Visibility.Visible;
-            }
-            else
+            //uzkomentinau kad tikrint changus butu lengviau 
+            //if (CurrentPlayers < 2)
+            //{
+            //    CantPlayText.Visibility = Visibility.Visible;
+            //}
+            //else
             {
                 MainBackground.Visibility = Visibility.Hidden;
                 startGameBtn.Visibility = Visibility.Hidden;
                 players.Visibility = Visibility.Hidden;
                 players.Visibility = Visibility.Hidden;             // why??????????????????????????????????
+                titlePlayers.Visibility = Visibility.Hidden;
+                avatar.Visibility = Visibility.Hidden;
+                platform.Visibility = Visibility.Hidden;
+
+
+                obstacle.Visibility = Visibility.Visible;
+                player.Visibility = Visibility.Visible;
+                background.Visibility = Visibility.Visible;
+                background2.Visibility = Visibility.Visible;
+                scoreText.Visibility = Visibility.Visible;
+
                 SendStartSignalOthers();
                 //StartGame();
             }
