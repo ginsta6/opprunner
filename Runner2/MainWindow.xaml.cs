@@ -66,9 +66,11 @@ namespace Runner2
         int force = 20;
         int speed = 5;
 
+
+
         int currentPlayerTypeIndex = 1;
         int maxPlayerTypeIndex = 3;
-        
+
 
         Random rnd = new Random();
 
@@ -79,6 +81,7 @@ namespace Runner2
         ImageBrush playerSprite = new ImageBrush();
         ImageBrush backgroundSprite = new ImageBrush();
         ImageBrush obstacleSprite = new ImageBrush();
+        ImageBrush avatarSprite = new ImageBrush();
 
         int[] obstaclePosition = { 320, 310, 300, 305, 315 };
 
@@ -106,13 +109,19 @@ namespace Runner2
             gameTimer.Interval = TimeSpan.FromMilliseconds(20);
 
             backgroundSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/background.gif"));
+            avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
+            //avatarSprite.ImageSource= new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_08.gif"));
+            avatar.Fill = avatarSprite;
 
             background.Fill = backgroundSprite;
             background2.Fill = backgroundSprite;
 
             //StartGame();
 
-            CharacterTypeSelected.Text = currentPlayerTypeIndex.ToString();
+
+
+            //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
+
         }
 
         private void SignalRService_StartSignalReceived()
@@ -269,20 +278,23 @@ namespace Runner2
             await rService.SendStartSignal();
         }
 
-        private void cycleCharacterTypeLeftBtnClick(object sender, RoutedEventArgs e)
+      private void cycleCharacterTypeLeftBtn_Click(object sender, RoutedEventArgs e)
         {
-               currentPlayerTypeIndex--;
+            currentPlayerTypeIndex--;
             if (currentPlayerTypeIndex == 0)
                 currentPlayerTypeIndex = maxPlayerTypeIndex;
-            CharacterTypeSelected.Text = currentPlayerTypeIndex.ToString();
+            //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
+            changeAvatar(currentPlayerTypeIndex);
         }
-        private void cycleCharacterTypeRightBtnClick(object sender, RoutedEventArgs e)
+        private void cycleCharacterTypeRightBtn_Click(object sender, RoutedEventArgs e)
         {
             currentPlayerTypeIndex++;
             if (currentPlayerTypeIndex > maxPlayerTypeIndex)
                 currentPlayerTypeIndex = 1;
-            CharacterTypeSelected.Text = currentPlayerTypeIndex.ToString();
+            //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
+            changeAvatar(currentPlayerTypeIndex);
         }
+
 
 
         private void RunSprite(double i)
@@ -343,7 +355,7 @@ namespace Runner2
             {
                 CantPlayText.Visibility = Visibility.Visible;
             }
-            else 
+            else
             {
                 MainBackground.Visibility = Visibility.Hidden;
                 startGameBtn.Visibility = Visibility.Hidden;
@@ -353,6 +365,25 @@ namespace Runner2
                 //StartGame();
             }
 
+        }
+        private void changeAvatar(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
+                    CharacterTypeSelected.Content = "Pink monster";
+                    break;
+                case 2:
+                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
+                    CharacterTypeSelected.Content = "Owlet monster";
+                    break;
+                case 3:
+                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatardude.png"));
+                    CharacterTypeSelected.Content = "Dude monster";
+                    break;
+            }
+            avatar.Fill = avatarSprite;
         }
 
         private void StartCountDown()
