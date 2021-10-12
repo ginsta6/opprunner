@@ -233,5 +233,20 @@
     <Resource Include="Images\newRunner_08.gif" />
     <Resource Include="Images\obstacle.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Pink_Monster.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\avatarpink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\avatarowlet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\avatardude.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\avatarowlet1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
