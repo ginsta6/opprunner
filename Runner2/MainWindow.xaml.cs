@@ -137,7 +137,7 @@ namespace Runner2
         private void SignalRService_TauntMessageReceived(string message)
         {
             //TauntMessage.Content = message;
-            players.Content += message + '\n';
+            players.Content = message;
         }
 
         private void StartGame()
@@ -351,7 +351,7 @@ namespace Runner2
 
         private void startBtnClick(object sender, RoutedEventArgs e)
         {
-            if (CurrentPlayers != 2)
+            if (CurrentPlayers < 2)
             {
                 CantPlayText.Visibility = Visibility.Visible;
             }

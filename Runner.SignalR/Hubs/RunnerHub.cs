@@ -10,12 +10,14 @@ namespace Runner.SignalR.Hubs
     {
         public int minPlayers = 2;
         public static int currPlayers = 0;
+        private static string players = "";
 
         public async Task SendTauntMessage(string message)
         {
-            Console.WriteLine(currPlayers);
+            Console.WriteLine(currPlayers+" "+players);
             currPlayers++;
-            await Clients.All.SendAsync("ReceiveTauntMessage", message);
+            players +=message+'\n';
+            await Clients.All.SendAsync("ReceiveTauntMessage", players);
             await Clients.All.SendAsync("ReceivePlayerCount", currPlayers);
         }
 
@@ -23,6 +25,14 @@ namespace Runner.SignalR.Hubs
         {
             await Clients.All.SendAsync("ReceiveStartSignal");
         }
+        //public Task JoinGroup(string group)
+        //{
+        //    return Groups.AddToGroupAsync(Context.ConnectionId, group);
+        //}
+        //public Task SendMessageToGroup(string group, string message)
+        //{
+        //    return Clients.Group(group).SendAsync("ReceiveMessage", message);
+        //}
 
     } 
 }
