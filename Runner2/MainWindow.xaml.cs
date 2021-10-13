@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Runner2.Classes;
 using Runner2.Commands;
 using Runner2.Services;
 using System;
@@ -19,38 +20,7 @@ using System.Windows.Threading;
 
 namespace Runner2
 {
-    abstract class AbstractPlayerFactory
-    {
-        public abstract AbstractPlayerA CreatePlayerA();
-        public abstract AbstractPlayerB CreatePlayerB();
-        public abstract AbstractPlayerC CreatePlayerC();
-    }
-    abstract class AbstractPlayerA
-    {
-
-    }
-    abstract class AbstractPlayerB
-    {
-
-    }
-    abstract class AbstractPlayerC
-    {
-
-    }
-    //class  PlayerFactory : AbstractPlayerFactory
-    //{
-    //    public override AbstractPlayerA CreatePlayerA()
-    //    {
-    //        return 
-    //    }
-    //    public override AbstractPlayerA CreatePlayerB()
-    //    {
-    //        return 
-    //    }
-    //}
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+   
     public partial class MainWindow : Window
     {
         SignalRService rService;
@@ -60,12 +30,17 @@ namespace Runner2
         Rect playerHitBox;
         Rect groundHitBox;
         Rect obstacleHitBox;
+        Rect itemHitBox;
 
         bool jumping;
 
+        PlayerFactory playerF;
+        Player currentPlayer;
+
+        ItemFactory itemF;
+
         int force = 20;
         int speed = 5;
-
 
 
         int currentPlayerTypeIndex = 1;
@@ -166,6 +141,8 @@ namespace Runner2
 
             obstacle.Visibility = Visibility.Visible;
             player.Visibility = Visibility.Visible;
+            avatar.Visibility = Visibility.Hidden;
+            platform.Visibility = Visibility.Hidden;
             background.Visibility = Visibility.Visible;
             background2.Visibility = Visibility.Visible;
             scoreText.Visibility = Visibility.Visible;
@@ -175,8 +152,8 @@ namespace Runner2
 
         private void GameEngine(object sender, EventArgs e)
         {
-            Canvas.SetLeft(background, Canvas.GetLeft(background) - 3);
-            Canvas.SetLeft(background2, Canvas.GetLeft(background2) - 3);
+            Canvas.SetLeft(background, Canvas.GetLeft(background) - currentPlayer.Speed);
+            Canvas.SetLeft(background2, Canvas.GetLeft(background2) - currentPlayer.Speed);
 
             if (Canvas.GetLeft(background) < -1262)
                 Canvas.SetLeft(background, Canvas.GetLeft(background2) + background2.Width);
@@ -186,12 +163,14 @@ namespace Runner2
                 Canvas.SetLeft(background2, Canvas.GetLeft(background) + background.Width);
 
             Canvas.SetTop(player, Canvas.GetTop(player) + speed);
-            Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - 12);
+            Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
+            Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
 
             scoreText.Content = "Score: " + score;
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
+            itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
 
             if (playerHitBox.IntersectsWith(groundHitBox))
@@ -213,7 +192,7 @@ namespace Runner2
                 force -= 1;
             }
             else
-                speed = 12;
+                speed = 3;
 
             if (force < 0)
                 jumping = false;
@@ -224,11 +203,40 @@ namespace Runner2
                 Canvas.SetTop(obstacle, obstaclePosition[rnd.Next(0, obstaclePosition.Length)]);
                 score += 1;
             }
+            
+            if (Canvas.GetLeft(item) < -50)
+            {
+                Canvas.SetLeft(item, 2000);
+            }
 
             if (playerHitBox.IntersectsWith(obstacleHitBox))
             {
                 gameOver = true;
                 gameTimer.Stop();
+            }
+            
+            if (playerHitBox.IntersectsWith(itemHitBox))
+            {
+                Canvas.SetLeft(item, 2000);
+
+                switch (rnd.Next(1, 3))
+                {
+                    case 1:
+                        itemF = new GoodItemFactory();
+                        break;
+                    case 2:
+                        itemF = new BadItemFactory();
+                        break;
+                    default:
+                        break;
+
+                }
+
+                scoreText.Content = "labasssss";
+                var potion = itemF.CreatePotion();
+
+                //scoreText.Content = "labukas :*";
+                //currentPlayer.Speed += potion.speedMod;
             }
 
             if (gameOver == true)
@@ -263,7 +271,7 @@ namespace Runner2
                 //renameLater();
                 jumping = true;
                 force = 15;
-                speed = -12;
+                speed = -3;
                 playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
             }
         }
@@ -278,7 +286,7 @@ namespace Runner2
             await rService.SendStartSignal();
         }
 
-      private void cycleCharacterTypeLeftBtn_Click(object sender, RoutedEventArgs e)
+        private void cycleCharacterTypeLeftBtn_Click(object sender, RoutedEventArgs e)
         {
             currentPlayerTypeIndex--;
             if (currentPlayerTypeIndex == 0)
@@ -338,8 +346,30 @@ namespace Runner2
         {
             setActiveLobbyObjs();
             //players.Content = nameInput.Text;
+            CreatePlayer();
             renameLater(nameInput.Text);
         }
+
+        private void CreatePlayer()
+        {
+            switch (currentPlayerTypeIndex)
+            {
+                case 1:
+                    playerF = new PinkMonsterFactory(10);
+                    break;
+                case 2:
+                    playerF = new OwlMonsterFactory(12);
+                    break;
+                case 3:
+                    playerF = new DudeMonsterFactory(8);
+                    break;
+                default:
+                    break;
+            }
+
+            currentPlayer = playerF.GetPlayer();
+        }
+
         private void setActiveLobbyObjs()
         {
             title.Visibility = Visibility.Hidden;
@@ -366,7 +396,6 @@ namespace Runner2
             {
                 MainBackground.Visibility = Visibility.Hidden;
                 startGameBtn.Visibility = Visibility.Hidden;
-                players.Visibility = Visibility.Hidden;
                 players.Visibility = Visibility.Hidden;             // why??????????????????????????????????
                 titlePlayers.Visibility = Visibility.Hidden;
                 avatar.Visibility = Visibility.Hidden;
@@ -374,6 +403,7 @@ namespace Runner2
 
 
                 obstacle.Visibility = Visibility.Visible;
+                item.Visibility = Visibility.Visible;
                 player.Visibility = Visibility.Visible;
                 background.Visibility = Visibility.Visible;
                 background2.Visibility = Visibility.Visible;
