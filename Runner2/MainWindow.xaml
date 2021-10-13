@@ -44,7 +44,9 @@
 
         <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="151" Canvas.Left="110" Visibility="Hidden"/>
 
-        <Rectangle Name="obstacle" Height="178" Width="50" Fill="Red" Canvas.Top="320" Canvas.Left="721" Visibility="Hidden"/>
+        <Rectangle Name="obstacle" Height="178" Width="50" Fill="Red" Canvas.Top="320" Canvas.Left="720" Visibility="Hidden"/>
+
+        <Rectangle Name="item" Height="50" Width="50" Fill="Red" Canvas.Top="320" Canvas.Left="550" Visibility="Hidden" />
 
         <Label Name="scoreText" FontSize="32" FontWeight="Bold" Content="Score: 0" Visibility="Hidden" />
 
