@@ -52,6 +52,7 @@ namespace Runner2
         bool gameOver;
 
         double spriteIndex = 0;
+        double spriteIndexJump = 0;
 
         ImageBrush playerSprite = new ImageBrush();
         ImageBrush backgroundSprite = new ImageBrush();
@@ -272,10 +273,74 @@ namespace Runner2
                 jumping = true;
                 force = 15;
                 speed = -3;
-                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
+
+                //spriteIndexJump += .5;
+
+                //if (spriteIndexJump > 6)
+                //    spriteIndexJump = 1;
+
+                RunSpriteJump(spriteIndexJump);
+
+                //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
             }
         }
+        private void RunSpriteJump(double i)
+        {
+            if (currentPlayerTypeIndex == 1)
+            {
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+                //switch (i)
+                //{
+                //    case 1:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+                //        break;
+                //    case 2:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
+                //        break;
+                //    case 3:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
+                //        break;
+                //    case 4:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+                //        break;
+                //    case 5:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
+                //        break;
+                //    default:
+                //        break;
+                //}
+            }
+            else if (currentPlayerTypeIndex == 2)
+            {
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet1.png"));
 
+                //    switch (i)
+                //    {
+                //        case 1:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+                //            break;
+                //        case 2:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
+                //            break;
+                //        case 3:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
+                //            break;
+                //        case 4:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+                //            break;
+                //        case 5:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
+                //            break;
+                //        default:
+                //            break;
+                //    }
+            }
+            else if (currentPlayerTypeIndex == 3)
+            {
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude1.png"));
+            }
+            player.Fill = playerSprite;
+        }
         private async Task renameLater(string name)
         {
             await rService.SendTauntMessage(name);
@@ -307,38 +372,83 @@ namespace Runner2
 
         private void RunSprite(double i)
         {
-            switch (i)
+            if (currentPlayerTypeIndex == 1)
             {
-                case 1:
-                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_01.gif"));
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink1.png"));
-                    break;
-                case 2:
-                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink2.png"));
-                    break;
-                case 3:
-                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_03.gif"));
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink3.png"));
-                    break;
-                case 4:
-                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_04.gif"));
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink4.png"));
-                    break;
-                case 5:
-                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_05.gif"));
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink5.png"));
-                    break;
-                case 6:
-                    //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_06.gif"));
-                    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink6.png"));
-                    break;
-                //case 7:
-                //    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_07.gif"));
-                //    break;
-                //case 8:
-                //    playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_08.gif"));
-                //    break;
+                switch (i)
+                {
+                    case 1:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink1.png"));
+                        break;
+                    case 2:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink2.png"));
+                        break;
+                    case 3:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink3.png"));
+                        break;
+                    case 4:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink4.png"));
+                        break;
+                    case 5:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink5.png"));
+                        break;
+                    case 6:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink6.png"));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (currentPlayerTypeIndex == 2)
+            {
+                switch (i)
+                {
+                    case 1:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet1.png"));
+                        break;
+                    case 2:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet2.png"));
+                        break;
+                    case 3:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet3.png"));
+                        break;
+                    case 4:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet4.png"));
+                        break;
+                    case 5:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet5.png"));
+                        break;
+                    case 6:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet6.png"));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (currentPlayerTypeIndex == 3)
+            {
+                switch (i)
+                {
+                    case 1:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude1.png"));
+                        break;
+                    case 2:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude2.png"));
+                        break;
+                    case 3:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude3.png"));
+                        break;
+                    case 4:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude4.png"));
+                        break;
+                    case 5:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude5.png"));
+                        break;
+                    case 6:
+                        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude6.png"));
+                        break;
+                    default:
+                        break;
+                }
             }
             player.Fill = playerSprite;
         }
