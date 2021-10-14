@@ -258,5 +258,28 @@
     <Resource Include="Images\pink\pink5.png" />
     <Resource Include="Images\pink\pink6.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\dude\dude1.png" />
+    <Resource Include="Images\dude\dude2.png" />
+    <Resource Include="Images\dude\dude3.png" />
+    <Resource Include="Images\dude\dude4.png" />
+    <Resource Include="Images\dude\dude5.png" />
+    <Resource Include="Images\dude\dude6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\owlet\owlet1.png" />
+    <Resource Include="Images\owlet\owlet2.png" />
+    <Resource Include="Images\owlet\owlet3.png" />
+    <Resource Include="Images\owlet\owlet4.png" />
+    <Resource Include="Images\owlet\owlet5.png" />
+    <Resource Include="Images\owlet\owlet6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\pink\pinkjump1.png" />
+    <Resource Include="Images\pink\pinkjump2.png" />
+    <Resource Include="Images\pink\pinkjump3.png" />
+    <Resource Include="Images\pink\pinkjump4.png" />
+    <Resource Include="Images\pink\pinkjump5.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
