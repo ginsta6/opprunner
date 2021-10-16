@@ -93,12 +93,11 @@ namespace Runner2
             background2.Fill = backgroundSprite;
 
             //StartGame();
-
-
-
             //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
-
         }
+
+        // ----------------------------------------------------------------------------------------------------------
+        // SignalR functions
 
         private void SignalRService_StartSignalReceived()
         {
@@ -115,6 +114,19 @@ namespace Runner2
             //TauntMessage.Content = message;
             players.Content = message;
         }
+
+        private async Task renameLater(string name)
+        {
+            await rService.SendTauntMessage(name);
+        }                                      // *************************
+
+        private async Task SendStartSignalOthers()
+        {
+            await rService.SendStartSignal();
+        }
+
+        // ------------------------------------------------------------------------------------------------------------
+        // Game engine functions
 
         private void StartGame()
         {
@@ -142,11 +154,12 @@ namespace Runner2
 
             obstacle.Visibility = Visibility.Visible;
             player.Visibility = Visibility.Visible;
-            avatar.Visibility = Visibility.Hidden;
-            platform.Visibility = Visibility.Hidden;
             background.Visibility = Visibility.Visible;
             background2.Visibility = Visibility.Visible;
             scoreText.Visibility = Visibility.Visible;
+
+            avatar.Visibility = Visibility.Hidden;
+            platform.Visibility = Visibility.Hidden;
 
             gameTimer.Start();
         }
@@ -257,6 +270,9 @@ namespace Runner2
             }
         }
 
+        // ------------------------------------------------------------------------------------------------------------
+        // Key input functions
+
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && gameOver == true)
@@ -284,72 +300,9 @@ namespace Runner2
                 //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
             }
         }
-        private void RunSpriteJump(double i)
-        {
-            if (currentPlayerTypeIndex == 1)
-            {
-                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-                //switch (i)
-                //{
-                //    case 1:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-                //        break;
-                //    case 2:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
-                //        break;
-                //    case 3:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
-                //        break;
-                //    case 4:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
-                //        break;
-                //    case 5:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
-                //        break;
-                //    default:
-                //        break;
-                //}
-            }
-            else if (currentPlayerTypeIndex == 2)
-            {
-                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet1.png"));
 
-                //    switch (i)
-                //    {
-                //        case 1:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-                //            break;
-                //        case 2:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
-                //            break;
-                //        case 3:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
-                //            break;
-                //        case 4:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
-                //            break;
-                //        case 5:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
-                //            break;
-                //        default:
-                //            break;
-                //    }
-            }
-            else if (currentPlayerTypeIndex == 3)
-            {
-                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude1.png"));
-            }
-            player.Fill = playerSprite;
-        }
-        private async Task renameLater(string name)
-        {
-            await rService.SendTauntMessage(name);
-        }
-
-        private async Task SendStartSignalOthers()
-        {
-            await rService.SendStartSignal();
-        }
+        // -------------------------------------------------------------------------------------------------------------
+        // Button press functions
 
         private void cycleCharacterTypeLeftBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -368,7 +321,117 @@ namespace Runner2
             changeAvatar(currentPlayerTypeIndex);
         }
 
+        private void joinLobbyBtnClick(object sender, RoutedEventArgs e)
+        {
+            if (nameInput.Text.Length > 0)
+            {
+                CantJoinLobbyText.Visibility = Visibility.Hidden;
+                setActiveLobbyObjs();
+                //players.Content = nameInput.Text;
+                CreatePlayer();
+                renameLater(nameInput.Text);
+            }
+            else
+            {
+                CantJoinLobbyText.Visibility = Visibility.Visible;
+            }
+        }
 
+        private void startBtnClick(object sender, RoutedEventArgs e)
+        {
+            //uzkomentinau kad tikrint changus butu lengviau 
+            //if (CurrentPlayers < 2)
+            //{
+            //    CantPlayText.Visibility = Visibility.Visible;
+            //}
+            //else
+            {
+                MainBackground.Visibility = Visibility.Hidden;
+                startGameBtn.Visibility = Visibility.Hidden;
+                players.Visibility = Visibility.Hidden;             // why??????????????????????????????????
+                titlePlayers.Visibility = Visibility.Hidden;
+                avatar.Visibility = Visibility.Hidden;
+                platform.Visibility = Visibility.Hidden;
+
+
+                obstacle.Visibility = Visibility.Visible;
+                item.Visibility = Visibility.Visible;
+                player.Visibility = Visibility.Visible;
+                background.Visibility = Visibility.Visible;
+                background2.Visibility = Visibility.Visible;
+                scoreText.Visibility = Visibility.Visible;
+
+                SendStartSignalOthers();
+                //StartGame();
+            }
+
+        }
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Logic functions
+
+        private void CreatePlayer()
+        {
+            switch (currentPlayerTypeIndex)
+            {
+                case 1:
+                    playerF = new PinkMonsterFactory(10);
+                    break;
+                case 2:
+                    playerF = new OwlMonsterFactory(12);
+                    break;
+                case 3:
+                    playerF = new DudeMonsterFactory(8);
+                    break;
+                default:
+                    break;
+            }
+
+            currentPlayer = playerF.GetPlayer();
+        }
+
+        private void setActiveLobbyObjs()
+        {
+            title.Visibility = Visibility.Hidden;
+            startGameBtn.Visibility = Visibility.Hidden;
+            nameInput.Visibility = Visibility.Hidden;
+            joinLobbyBtn.Visibility = Visibility.Hidden;
+            cycleCharacterTypeLeftBtn.Visibility = Visibility.Hidden;
+            cycleCharacterTypeRightBtn.Visibility = Visibility.Hidden;
+            CharacterTypeSelected.Visibility = Visibility.Hidden;
+
+            titlePlayers.Visibility = Visibility.Visible;
+            startGameBtn.Visibility = Visibility.Visible;
+            players.Visibility = Visibility.Visible;
+        }
+        
+        private void changeAvatar(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
+                    CharacterTypeSelected.Content = "Pink monster";
+                    break;
+                case 2:
+                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
+                    CharacterTypeSelected.Content = "Owlet monster";
+                    break;
+                case 3:
+                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatardude.png"));
+                    CharacterTypeSelected.Content = "Dude monster";
+                    break;
+            }
+            avatar.Fill = avatarSprite;
+        }
+
+        private void StartCountDown()
+        {
+            StartGame();
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------
+        // Animation functions
 
         private void RunSprite(double i)
         {
@@ -452,103 +515,63 @@ namespace Runner2
             }
             player.Fill = playerSprite;
         }
-        private void joinLobbyBtnClick(object sender, RoutedEventArgs e)
-        {
-            setActiveLobbyObjs();
-            //players.Content = nameInput.Text;
-            CreatePlayer();
-            renameLater(nameInput.Text);
-        }
 
-        private void CreatePlayer()
+        private void RunSpriteJump(double i)
         {
-            switch (currentPlayerTypeIndex)
+            if (currentPlayerTypeIndex == 1)
             {
-                case 1:
-                    playerF = new PinkMonsterFactory(10);
-                    break;
-                case 2:
-                    playerF = new OwlMonsterFactory(12);
-                    break;
-                case 3:
-                    playerF = new DudeMonsterFactory(8);
-                    break;
-                default:
-                    break;
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+                //switch (i)
+                //{
+                //    case 1:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+                //        break;
+                //    case 2:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
+                //        break;
+                //    case 3:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
+                //        break;
+                //    case 4:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+                //        break;
+                //    case 5:
+                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
+                //        break;
+                //    default:
+                //        break;
+                //}
             }
-
-            currentPlayer = playerF.GetPlayer();
-        }
-
-        private void setActiveLobbyObjs()
-        {
-            title.Visibility = Visibility.Hidden;
-            startGameBtn.Visibility = Visibility.Hidden;
-            nameInput.Visibility = Visibility.Hidden;
-            joinLobbyBtn.Visibility = Visibility.Hidden;
-            cycleCharacterTypeLeftBtn.Visibility = Visibility.Hidden;
-            cycleCharacterTypeRightBtn.Visibility = Visibility.Hidden;
-            CharacterTypeSelected.Visibility = Visibility.Hidden;
-
-            titlePlayers.Visibility = Visibility.Visible;
-            startGameBtn.Visibility = Visibility.Visible;
-            players.Visibility = Visibility.Visible;
-        }
-
-        private void startBtnClick(object sender, RoutedEventArgs e)
-        {
-            //uzkomentinau kad tikrint changus butu lengviau 
-            //if (CurrentPlayers < 2)
-            //{
-            //    CantPlayText.Visibility = Visibility.Visible;
-            //}
-            //else
+            else if (currentPlayerTypeIndex == 2)
             {
-                MainBackground.Visibility = Visibility.Hidden;
-                startGameBtn.Visibility = Visibility.Hidden;
-                players.Visibility = Visibility.Hidden;             // why??????????????????????????????????
-                titlePlayers.Visibility = Visibility.Hidden;
-                avatar.Visibility = Visibility.Hidden;
-                platform.Visibility = Visibility.Hidden;
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet1.png"));
 
-
-                obstacle.Visibility = Visibility.Visible;
-                item.Visibility = Visibility.Visible;
-                player.Visibility = Visibility.Visible;
-                background.Visibility = Visibility.Visible;
-                background2.Visibility = Visibility.Visible;
-                scoreText.Visibility = Visibility.Visible;
-
-                SendStartSignalOthers();
-                //StartGame();
+                //    switch (i)
+                //    {
+                //        case 1:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+                //            break;
+                //        case 2:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
+                //            break;
+                //        case 3:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
+                //            break;
+                //        case 4:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+                //            break;
+                //        case 5:
+                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
+                //            break;
+                //        default:
+                //            break;
+                //    }
             }
-
-        }
-        private void changeAvatar(int index)
-        {
-            switch (index)
+            else if (currentPlayerTypeIndex == 3)
             {
-                case 1:
-                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
-                    CharacterTypeSelected.Content = "Pink monster";
-                    break;
-                case 2:
-                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
-                    CharacterTypeSelected.Content = "Owlet monster";
-                    break;
-                case 3:
-                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatardude.png"));
-                    CharacterTypeSelected.Content = "Dude monster";
-                    break;
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude1.png"));
             }
-            avatar.Fill = avatarSprite;
+            player.Fill = playerSprite;
         }
-
-        private void StartCountDown()
-        {
-            StartGame();
-        }
-
-
     }
 }
