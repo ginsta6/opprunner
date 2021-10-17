@@ -20,7 +20,7 @@ using System.Windows.Threading;
 
 namespace Runner2
 {
-   
+
     public partial class MainWindow : Window
     {
         SignalRService rService;
@@ -29,10 +29,19 @@ namespace Runner2
 
         Rect playerHitBox;
         Rect groundHitBox;
+        Rect platformHitBox;
         Rect obstacleHitBox;
         Rect itemHitBox;
 
         bool jumping;
+
+        PlayerAnimationState playerAnimationCurrentState;
+        enum PlayerAnimationState
+        {
+            RunningLeft,
+            RunningRight,
+            Standing
+        }
 
         PlayerFactory playerF;
         Player currentPlayer;
@@ -40,7 +49,7 @@ namespace Runner2
         ItemFactory itemF;
 
         int force = 20;
-        int speed = 5;
+        int speed = 10;
 
 
         int currentPlayerTypeIndex = 1;
@@ -64,6 +73,7 @@ namespace Runner2
         int score = 0;
 
         private int CurrentPlayers;
+
 
         public MainWindow()
         {
@@ -118,7 +128,7 @@ namespace Runner2
         private async Task renameLater(string name)
         {
             await rService.SendTauntMessage(name);
-        }                                      // *************************
+        }
 
         private async Task SendStartSignalOthers()
         {
@@ -149,6 +159,7 @@ namespace Runner2
             jumping = false;
             gameOver = false;
             score = 0;
+            playerAnimationCurrentState = PlayerAnimationState.Standing;
 
             scoreText.Content = "Score: " + score;
 
@@ -159,15 +170,15 @@ namespace Runner2
             scoreText.Visibility = Visibility.Visible;
 
             avatar.Visibility = Visibility.Hidden;
-            platform.Visibility = Visibility.Hidden;
+            //platform.Visibility = Visibility.Hidden;
 
             gameTimer.Start();
         }
 
         private void GameEngine(object sender, EventArgs e)
         {
-            Canvas.SetLeft(background, Canvas.GetLeft(background) - currentPlayer.Speed);
-            Canvas.SetLeft(background2, Canvas.GetLeft(background2) - currentPlayer.Speed);
+            //Canvas.SetLeft(background, Canvas.GetLeft(background) - currentPlayer.Speed);
+            //Canvas.SetLeft(background2, Canvas.GetLeft(background2) - currentPlayer.Speed);
 
             if (Canvas.GetLeft(background) < -1262)
                 Canvas.SetLeft(background, Canvas.GetLeft(background2) + background2.Width);
@@ -177,8 +188,8 @@ namespace Runner2
                 Canvas.SetLeft(background2, Canvas.GetLeft(background) + background.Width);
 
             Canvas.SetTop(player, Canvas.GetTop(player) + speed);
-            Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
-            Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
+            //Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
+            //Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
 
             scoreText.Content = "Score: " + score;
 
@@ -186,18 +197,30 @@ namespace Runner2
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
+            platformHitBox = new Rect(Canvas.GetLeft(platform), Canvas.GetTop(platform), platform.Width, platform.Height);
 
             if (playerHitBox.IntersectsWith(groundHitBox))
             {
                 speed = 0;
                 Canvas.SetTop(player, Canvas.GetTop(ground) - player.Height);
                 jumping = false;
+
+            }
+            if (playerHitBox.IntersectsWith(platformHitBox))
+            {
+                speed = 0;
+                Canvas.SetTop(player, Canvas.GetTop(platform) - player.Height);
+                jumping = false;
+            }
+
+            if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
+            {
                 spriteIndex += .5;
 
                 if (spriteIndex > 6)
                     spriteIndex = 1;
 
-                RunSprite(spriteIndex);
+                //RunSprite(spriteIndex);
             }
 
             if (jumping == true)
@@ -206,7 +229,7 @@ namespace Runner2
                 force -= 1;
             }
             else
-                speed = 3;
+                speed = 8;
 
             if (force < 0)
                 jumping = false;
@@ -217,7 +240,7 @@ namespace Runner2
                 Canvas.SetTop(obstacle, obstaclePosition[rnd.Next(0, obstaclePosition.Length)]);
                 score += 1;
             }
-            
+
             if (Canvas.GetLeft(item) < -50)
             {
                 Canvas.SetLeft(item, 2000);
@@ -228,7 +251,7 @@ namespace Runner2
                 gameOver = true;
                 gameTimer.Stop();
             }
-            
+
             if (playerHitBox.IntersectsWith(itemHitBox))
             {
                 Canvas.SetLeft(item, 2000);
@@ -268,6 +291,9 @@ namespace Runner2
                 player.StrokeThickness = 0;
                 obstacle.StrokeThickness = 0;
             }
+
+            AnimatePlayer(spriteIndex);
+            MovePlayer();
         }
 
         // ------------------------------------------------------------------------------------------------------------
@@ -279,11 +305,20 @@ namespace Runner2
             {
                 StartGame();
             }
+
+            if (e.Key == Key.Left)
+            {
+                playerAnimationCurrentState = PlayerAnimationState.RunningLeft;
+            }
+            else if (e.Key == Key.Right)
+            {
+                playerAnimationCurrentState = PlayerAnimationState.RunningRight;
+            }
         }
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Space && gameOver == false && Canvas.GetTop(player) > 260)
+            if (e.Key == Key.Space && gameOver == false && jumping == false)
             {
                 //renameLater();
                 jumping = true;
@@ -295,9 +330,13 @@ namespace Runner2
                 //if (spriteIndexJump > 6)
                 //    spriteIndexJump = 1;
 
-                RunSpriteJump(spriteIndexJump);
+                //RunSpriteJump(spriteIndexJump);
 
                 //playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_02.gif"));
+            }
+            if (e.Key == Key.Left || e.Key == Key.Right)
+            {
+                playerAnimationCurrentState = PlayerAnimationState.Standing;
             }
         }
 
@@ -348,10 +387,10 @@ namespace Runner2
             {
                 MainBackground.Visibility = Visibility.Hidden;
                 startGameBtn.Visibility = Visibility.Hidden;
-                players.Visibility = Visibility.Hidden;             // why??????????????????????????????????
+                players.Visibility = Visibility.Hidden;
                 titlePlayers.Visibility = Visibility.Hidden;
                 avatar.Visibility = Visibility.Hidden;
-                platform.Visibility = Visibility.Hidden;
+                //platform.Visibility = Visibility.Hidden;
 
 
                 obstacle.Visibility = Visibility.Visible;
@@ -369,6 +408,24 @@ namespace Runner2
 
         // -------------------------------------------------------------------------------------------------------------
         // Logic functions
+
+        private void MovePlayer()
+        {
+            player.RenderTransformOrigin = new Point(0.5, 0.5);
+            ScaleTransform flipTrans = new ScaleTransform();
+            if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft)
+            {
+                flipTrans.ScaleX = -1;
+                Canvas.SetLeft(player, Canvas.GetLeft(player) - currentPlayer.Speed);
+            }
+            else if (playerAnimationCurrentState == PlayerAnimationState.RunningRight)
+            {
+                flipTrans.ScaleX = 1;
+                Canvas.SetLeft(player, Canvas.GetLeft(player) + currentPlayer.Speed);
+            }
+
+            player.RenderTransform = flipTrans;
+        }
 
         private void CreatePlayer()
         {
@@ -404,7 +461,7 @@ namespace Runner2
             startGameBtn.Visibility = Visibility.Visible;
             players.Visibility = Visibility.Visible;
         }
-        
+
         private void changeAvatar(int index)
         {
             switch (index)
@@ -516,62 +573,95 @@ namespace Runner2
             player.Fill = playerSprite;
         }
 
-        private void RunSpriteJump(double i)
+        // ++++++++++++++++++++++++++++++++++++++++++++
+        private void IdleSprite()
         {
             if (currentPlayerTypeIndex == 1)
             {
-                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-                //switch (i)
-                //{
-                //    case 1:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-                //        break;
-                //    case 2:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
-                //        break;
-                //    case 3:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
-                //        break;
-                //    case 4:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
-                //        break;
-                //    case 5:
-                //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
-                //        break;
-                //    default:
-                //        break;
-                //}
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+
             }
             else if (currentPlayerTypeIndex == 2)
             {
-                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet1.png"));
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
 
-                //    switch (i)
-                //    {
-                //        case 1:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-                //            break;
-                //        case 2:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
-                //            break;
-                //        case 3:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
-                //            break;
-                //        case 4:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
-                //            break;
-                //        case 5:
-                //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
-                //            break;
-                //        default:
-                //            break;
-                //    }
             }
             else if (currentPlayerTypeIndex == 3)
             {
-                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude1.png"));
+                playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatardude.png"));
             }
+
             player.Fill = playerSprite;
         }
+
+        private void AnimatePlayer(double i)
+        {
+            if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
+            {
+                RunSprite(i);
+            }
+            else
+            {
+                IdleSprite();
+            }
+        }
+
+        //private void RunSpriteJump(double i)
+        //{
+        //    if (currentPlayerTypeIndex == 1)
+        //    {
+        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+        //        //switch (i)
+        //        //{
+        //        //    case 1:
+        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+        //        //        break;
+        //        //    case 2:
+        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
+        //        //        break;
+        //        //    case 3:
+        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
+        //        //        break;
+        //        //    case 4:
+        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+        //        //        break;
+        //        //    case 5:
+        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
+        //        //        break;
+        //        //    default:
+        //        //        break;
+        //        //}
+        //    }
+        //    else if (currentPlayerTypeIndex == 2)
+        //    {
+        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet1.png"));
+
+        //        //    switch (i)
+        //        //    {
+        //        //        case 1:
+        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
+        //        //            break;
+        //        //        case 2:
+        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
+        //        //            break;
+        //        //        case 3:
+        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
+        //        //            break;
+        //        //        case 4:
+        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+        //        //            break;
+        //        //        case 5:
+        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
+        //        //            break;
+        //        //        default:
+        //        //            break;
+        //        //    }
+        //    }
+        //    else if (currentPlayerTypeIndex == 3)
+        //    {
+        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude1.png"));
+        //    }
+        //    player.Fill = playerSprite;
+        //}
     }
 }
