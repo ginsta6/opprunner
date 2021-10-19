@@ -55,7 +55,7 @@
         <Label Name="scoreText" FontSize="32" FontWeight="Bold" Content="Score: 0" Visibility="Hidden" />
 
         <Label Name="CantPlayText" FontSize="14" FontWeight="Bold" Content="Not enought players to start the game" Foreground="Red" Canvas.Left="273" Canvas.Top="286" Visibility="Hidden"/>
-
+        
         <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="Player: 0" Canvas.Left="549" Width="245" Height="156" Visibility="Hidden"  HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
 
 

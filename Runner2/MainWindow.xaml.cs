@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Runner2.Classes;
-using Runner2.Commands;
 using Runner2.Services;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ using System.Windows.Threading;
 namespace Runner2
 {
 
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IObserver
     {
         SignalRService rService;
 
@@ -82,10 +81,8 @@ namespace Runner2
 
             rService = new SignalRService(connection);                      //Creating service with the connection
 
-            rService.TauntMessageReceived += SignalRService_TauntMessageReceived;
-            rService.PlayerCountReceived += SignalRService_PlayerCountReceived;
-            rService.StartSignalReceived += SignalRService_StartSignalReceived;
-
+            rService.Register(this);
+            
             rService.Connect();
 
             InitializeComponent();
@@ -109,30 +106,15 @@ namespace Runner2
         // ----------------------------------------------------------------------------------------------------------
         // SignalR functions
 
-        private void SignalRService_StartSignalReceived()
+       
+        private async Task SendPlayerToServer(string name)
         {
-            StartCountDown();
+            await rService.SendPlayerMessage(name);
         }
 
-        private void SignalRService_PlayerCountReceived(int count)
+        private async Task SendSignalToServer(string methodName)
         {
-            CurrentPlayers = count;
-        }
-
-        private void SignalRService_TauntMessageReceived(string message)
-        {
-            //TauntMessage.Content = message;
-            players.Content = message;
-        }
-
-        private async Task renameLater(string name)
-        {
-            await rService.SendTauntMessage(name);
-        }
-
-        private async Task SendStartSignalOthers()
-        {
-            await rService.SendStartSignal();
+            await rService.SendSignalToServer(methodName);
         }
 
         // ------------------------------------------------------------------------------------------------------------
@@ -368,7 +350,7 @@ namespace Runner2
                 setActiveLobbyObjs();
                 //players.Content = nameInput.Text;
                 CreatePlayer();
-                renameLater(nameInput.Text);
+                SendPlayerToServer(nameInput.Text);
             }
             else
             {
@@ -379,11 +361,11 @@ namespace Runner2
         private void startBtnClick(object sender, RoutedEventArgs e)
         {
             //uzkomentinau kad tikrint changus butu lengviau 
-            //if (CurrentPlayers < 2)
-            //{
-            //    CantPlayText.Visibility = Visibility.Visible;
-            //}
-            //else
+            if (CurrentPlayers < 2)
+            {
+                CantPlayText.Visibility = Visibility.Visible;
+            }
+            else
             {
                 MainBackground.Visibility = Visibility.Hidden;
                 startGameBtn.Visibility = Visibility.Hidden;
@@ -400,7 +382,8 @@ namespace Runner2
                 background2.Visibility = Visibility.Visible;
                 scoreText.Visibility = Visibility.Visible;
 
-                SendStartSignalOthers();
+
+                SendSignalToServer("SendStartSignal");
                 //StartGame();
             }
 
@@ -605,6 +588,34 @@ namespace Runner2
                 IdleSprite();
             }
         }
+
+
+        //------------Observer Update Method---------------
+
+        public void Update<T>(T message)
+        {
+            switch (Type.GetTypeCode(message.GetType()))
+            {
+                case TypeCode.Int32:
+                    CurrentPlayers = Convert.ToInt32(message);
+                    break;
+                case TypeCode.String:
+                    switch (Convert.ToString(message))
+                    {
+                        case "StartSignal":
+                            StartCountDown();
+                            break;
+                        default:
+                            players.Content = message;      //Gal geriau butu (ateity maziau problemu gal) jeigu paduoti player-name ne kaip stringa, o kaip koki "User" klases objekta?
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        
 
         //private void RunSpriteJump(double i)
         //{

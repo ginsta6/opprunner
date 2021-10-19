@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Runner2.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +8,17 @@ using System.Threading.Tasks;
 
 namespace Runner2.Services
 {
-    public class SignalRService
+    public class SignalRService : Subject
     {
         private readonly HubConnection _connection;
-
-        public event Action<string> TauntMessageReceived;
-        public event Action<int> PlayerCountReceived;
-        public event Action StartSignalReceived;
-
+        
         public SignalRService(HubConnection connection)
         {
             _connection = connection;
 
-            _connection.On<string>("ReceiveTauntMessage", (message) => TauntMessageReceived?.Invoke(message));
-            _connection.On<int>("ReceivePlayerCount", (currPlayer) => PlayerCountReceived?.Invoke(currPlayer));
-            _connection.On("ReceiveStartSignal", () => StartSignalReceived?.Invoke());
+            _connection.On<string>("ReceivePlayerMessage", (message) => Notify(message));
+            _connection.On<int>("ReceivePlayerCount", (currPlayer) => Notify(currPlayer));
+            _connection.On("ReceiveStartSignal", () => Notify("StartSignal"));
         }
 
         public async Task Connect()
@@ -29,14 +26,14 @@ namespace Runner2.Services
             await _connection.StartAsync();
         }
 
-        public async Task SendTauntMessage(string message)
+        public async Task SendPlayerMessage(string message)
         {
-            await _connection.SendAsync("SendTauntMessage", message);
+            await _connection.SendAsync("SendPlayerMessage", message);
         }
-
-        public async Task SendStartSignal()
+        
+        public async Task SendSignalToServer(string methodName)
         {
-            await _connection.SendAsync("SendStartSignal");
+            await _connection.SendAsync(methodName);
         }
     }
 }
