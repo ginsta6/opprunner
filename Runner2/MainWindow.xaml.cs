@@ -20,9 +20,9 @@ using System.Windows.Threading;
 
 namespace Runner2
 {
-
     public partial class MainWindow : Window
     {
+       
         SignalRService rService;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
@@ -98,6 +98,7 @@ namespace Runner2
             avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
             //avatarSprite.ImageSource= new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_08.gif"));
             avatar.Fill = avatarSprite;
+
 
             background.Fill = backgroundSprite;
             background2.Fill = backgroundSprite;
@@ -197,7 +198,7 @@ namespace Runner2
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
-            platformHitBox = new Rect(Canvas.GetLeft(platform), Canvas.GetTop(platform), platform.Width, platform.Height);
+            platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
 
             if (playerHitBox.IntersectsWith(groundHitBox))
             {
@@ -209,7 +210,7 @@ namespace Runner2
             if (playerHitBox.IntersectsWith(platformHitBox))
             {
                 speed = 0;
-                Canvas.SetTop(player, Canvas.GetTop(platform) - player.Height);
+                Canvas.SetTop(player, Canvas.GetTop(gamePlatform) - player.Height);
                 jumping = false;
             }
 
@@ -269,7 +270,8 @@ namespace Runner2
 
                 }
 
-                scoreText.Content = "labasssss";
+                //scoreText.Content = "labasssss";
+                score += 1;
                 var potion = itemF.CreatePotion();
 
                 //scoreText.Content = "labukas :*";
@@ -364,7 +366,10 @@ namespace Runner2
         {
             if (nameInput.Text.Length > 0)
             {
+                StartWin.Visibility = Visibility.Hidden;
+                LobbyWin.Visibility = Visibility.Visible;
                 CantJoinLobbyText.Visibility = Visibility.Hidden;
+                avatarLobby.Fill = avatarSprite;
                 setActiveLobbyObjs();
                 //players.Content = nameInput.Text;
                 CreatePlayer();
@@ -385,20 +390,8 @@ namespace Runner2
             //}
             //else
             {
-                MainBackground.Visibility = Visibility.Hidden;
-                startGameBtn.Visibility = Visibility.Hidden;
-                players.Visibility = Visibility.Hidden;
-                titlePlayers.Visibility = Visibility.Hidden;
-                avatar.Visibility = Visibility.Hidden;
-                //platform.Visibility = Visibility.Hidden;
-
-
-                obstacle.Visibility = Visibility.Visible;
-                item.Visibility = Visibility.Visible;
-                player.Visibility = Visibility.Visible;
-                background.Visibility = Visibility.Visible;
-                background2.Visibility = Visibility.Visible;
-                scoreText.Visibility = Visibility.Visible;
+                LobbyWin.Visibility = Visibility.Hidden;
+                GameWin.Visibility = Visibility.Visible;
 
                 SendStartSignalOthers();
                 //StartGame();
@@ -468,18 +461,22 @@ namespace Runner2
             {
                 case 1:
                     avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
-                    CharacterTypeSelected.Content = "Pink monster";
+                    CharacterTypeSelected.Content = "Pink monster";//startui
+                    CharacterTypeSelectedLobby.Content = "Pink monster";//lobui
                     break;
                 case 2:
                     avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
                     CharacterTypeSelected.Content = "Owlet monster";
+                    CharacterTypeSelectedLobby.Content = "Owlet monster";
                     break;
                 case 3:
                     avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatardude.png"));
                     CharacterTypeSelected.Content = "Dude monster";
+                    CharacterTypeSelectedLobby.Content = "Dude monster";
                     break;
             }
             avatar.Fill = avatarSprite;
+            avatarLobby.Fill = avatarSprite;
         }
 
         private void StartCountDown()
