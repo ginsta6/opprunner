@@ -6,7 +6,25 @@
              xmlns:local="clr-namespace:Runner2.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <UserControl.Background>
+        <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Background}"/>
+    </UserControl.Background>
+    <Canvas  Name="GameWin" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp">
+
+
+
+        <Rectangle Name="Ground" Height="32" Width="792" Fill="Black" Canvas.Top="387" Canvas.Left="0"/>
+
+        <Image Name="Player" Height="99" Width="67"  Canvas.Top="151" Canvas.Left="110"/>
+        <Image Name="Player1" Height="99" Width="67"  Canvas.Top="288" Canvas.Left="38"/>
+
+        <Image Name="Obstacle" Height="178" Width="50"  Canvas.Top="320" Canvas.Left="720"  />
+
+        <Image Name="Item" Height="50" Width="50"  Canvas.Top="320" Canvas.Left="550"   />
+
+        <Label Name="ScoreText" FontSize="32" FontWeight="Bold" Content="{Binding ScoreText, FallbackValue=Score:0}"   />
+
+        <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="{Binding OtherScoreText, FallbackValue=Player:0}" Canvas.Left="549" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
+
+    </Canvas>
 </UserControl>
