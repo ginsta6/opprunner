@@ -50,6 +50,18 @@
                 Grid.Row="4" Background="#FF4BD14C" BorderBrush="White" 
                 Foreground="#FF130091" FontSize="20" 
                 FontFamily="Stencil" Margin="119,1.6,118.6,41.6" Grid.RowSpan="2"  />
+        <Label x:Name="PlayerNumberError" 
+               Grid.Column="5"
+               Grid.Row="5"
+               Height="35"  Content="{Binding PlayerNumberError, Mode=TwoWay}" 
+               Width="320" FontSize="13"
+               VerticalAlignment="Center" 
+               HorizontalAlignment="Center" 
+               FontFamily="Stencil"
+               Foreground="Red" 
+               HorizontalContentAlignment="Center" 
+               VerticalContentAlignment="Center" 
+               />
 
         <Label x:Name="CharacterTypeSelected" 
                Grid.Column="1"
