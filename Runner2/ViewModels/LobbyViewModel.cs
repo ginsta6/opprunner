@@ -27,11 +27,36 @@ namespace Runner2.ViewModels
             _characterTypeSelected.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
 
             _avatar = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
+
+            _playerNumberError = new Label();
+        }
+
+        private Label _playerNumberError;
+        public Label PlayerNumberError
+        {
+            get => _playerNumberError;
+            set
+            {
+                _playerNumberError = value;
+                NotifyOfPropertyChange(() => PlayerNumberError);
+            }
         }
 
         public void StartGame()
         {
-            SendSignalToServer("SendStartSignal");
+            if (CurrentPlayers < 2)
+            {
+                _playerNumberError.Content = "Not enough players";
+                _playerNumberError.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                NotifyOfPropertyChange(() => PlayerNumberError);
+            }
+            else
+            {
+                _playerNumberError.Content = "";
+                NotifyOfPropertyChange(() => PlayerNumberError);
+
+                SendSignalToServer("SendStartSignal");
+            }
         }
         private async Task SendSignalToServer(string name)
         {

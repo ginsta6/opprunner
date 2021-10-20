@@ -29,11 +29,13 @@ namespace Runner2.ViewModels
 
             rService.Connect();
 
-            _characterTypeSelected = new Label();  
+            _characterTypeSelected = new Label();
             _characterTypeSelected.Content = "Pink Monster";
             _characterTypeSelected.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
 
             _avatar = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
+
+            _characterNameError = new Label();
         }
 
         private Label _characterTypeSelected;    
@@ -70,12 +72,36 @@ namespace Runner2.ViewModels
                 NotifyOfPropertyChange(() => NameInput);
             }
         }
+
+        private Label _characterNameError;
+        public Label CharacterNameError
+        {
+            get => _characterNameError;
+            set
+            {
+                _characterNameError = value;
+                NotifyOfPropertyChange(() => CharacterNameError);
+            }
+        }
+
         public void JoinLobby()
         {
-            //susikurt player-----------------------------------------------------------------------------------------
-            //Player player= new
-            SendPlayerToServer(NameInput);
-            ChangeView(new LobbyViewModel(rService));
+            if (NameInput != null)
+            {
+                _characterNameError.Content = "";
+                NotifyOfPropertyChange(() => CharacterNameError);
+
+                //susikurt player-----------------------------------------------------------------------------------------
+                //Player player= new
+                SendPlayerToServer(NameInput);
+                ChangeView(new LobbyViewModel(rService));
+            }
+            else
+            {
+                _characterNameError.Content = "Name can not be empty";
+                _characterNameError.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                NotifyOfPropertyChange(() => CharacterNameError);
+            }
         }
         private async Task SendPlayerToServer(string name)
         {
