@@ -12,9 +12,16 @@ namespace Runner.SignalR.Hubs
         public static int currPlayers = 0;
         private static string players = "";
 
+        public override Task OnConnectedAsync()
+        {
+            Console.WriteLine("connected");
+            return base.OnConnectedAsync();
+        }
+
         public async Task SendPlayerMessage(string message)
         {
-            Console.WriteLine(currPlayers+" "+players);
+            Console.WriteLine("method called");
+            Console.WriteLine(currPlayers+" "+players + message);
             currPlayers++;
             players +=message+'\n';
             await Clients.All.SendAsync("ReceivePlayerMessage", players);

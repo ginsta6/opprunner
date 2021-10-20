@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using Runner2.Classes;
+using Runner2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +12,16 @@ using System.Windows.Media.Imaging;
 
 namespace Runner2.ViewModels
 {
-    public class LobbyViewModel:Screen
+    public class LobbyViewModel : Screen, IObserver
     {
-        
-        public LobbyViewModel()
+        private SignalRService rService;
+        private int CurrentPlayers;
+
+        public LobbyViewModel(SignalRService rservice)
         {
+            rService = rservice;
+            rService.Register(this);
+
             _characterTypeSelected = new Label();
             _characterTypeSelected.Content = "Pink Monster";
             _characterTypeSelected.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
@@ -24,12 +31,40 @@ namespace Runner2.ViewModels
 
         public void StartGame()
         {
-            ChangeView(new GameViewModel());
+            SendSignalToServer("SendStartSignal");
+        }
+        private async Task SendSignalToServer(string name)
+        {
+            await rService.SendSignalToServer(name);
         }
         public async void ChangeView(Screen screen)
         {
             if (Parent is IConductor conductor)
                 await conductor.ActivateItemAsync(screen);
+        }
+
+        public void Update<T>(T message)
+        {
+            switch (Type.GetTypeCode(message.GetType()))
+            {
+                case TypeCode.Int32:
+                    CurrentPlayers = Convert.ToInt32(message);
+                    break;
+                case TypeCode.String:
+                    switch (Convert.ToString(message))
+                    {
+                        case "StartSignal":
+                            ChangeView(new GameViewModel());
+                            break;
+                        default:
+                            _players = Convert.ToString(message);      //Gal geriau butu (ateity maziau problemu gal) jeigu paduoti player-name ne kaip stringa, o kaip koki "User" klases objekta?
+                            NotifyOfPropertyChange(() => Players);
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private Label _characterTypeSelected;
@@ -53,6 +88,17 @@ namespace Runner2.ViewModels
             {
                 _avatar = value;
                 NotifyOfPropertyChange(() => Avatar);
+            }
+        }
+
+        private string _players;
+        public string Players
+        {
+            get => _players;
+            set
+            {
+                _players = value;
+                NotifyOfPropertyChange(() => Players);
             }
         }
     }

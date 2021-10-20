@@ -12,9 +12,11 @@ namespace Runner2.Services
     {
         private readonly HubConnection _connection;
         
-        public SignalRService(HubConnection connection)
+        public SignalRService()
         {
-            _connection = connection;
+            _connection = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5000/runner").Build();
+
 
             _connection.On<string>("ReceivePlayerMessage", (message) => Notify(message));
             _connection.On<int>("ReceivePlayerCount", (currPlayer) => Notify(currPlayer));

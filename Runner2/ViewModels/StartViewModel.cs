@@ -9,16 +9,26 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using Runner2.Classes;
+using Microsoft.AspNetCore.SignalR.Client;
+using Runner2.Services;
 
 namespace Runner2.ViewModels
 {
     public class StartViewModel : Screen
     {
-       public int currentPlayerTypeIndex = 1;
+        //HubConnection connection;
+        SignalRService rService;
+
+        public int currentPlayerTypeIndex = 1;
         int maxPlayerTypeIndex = 3;
 
         public StartViewModel()
         {
+
+            rService = new SignalRService();
+
+            rService.Connect();
+
             _characterTypeSelected = new Label();  
             _characterTypeSelected.Content = "Pink Monster";
             _characterTypeSelected.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
@@ -49,11 +59,27 @@ namespace Runner2.ViewModels
                 NotifyOfPropertyChange(() => Avatar);
             }
         }
+
+        private string _nameInput;
+        public string NameInput
+        {
+            get => _nameInput;
+            set
+            {
+                _nameInput = value;
+                NotifyOfPropertyChange(() => NameInput);
+            }
+        }
         public void JoinLobby()
         {
             //susikurt player-----------------------------------------------------------------------------------------
             //Player player= new
-            ChangeView(new LobbyViewModel());
+            SendPlayerToServer(NameInput);
+            ChangeView(new LobbyViewModel(rService));
+        }
+        private async Task SendPlayerToServer(string name)
+        {
+            await rService.SendPlayerMessage(name);
         }
         public async void ChangeView(Screen screen)
         {

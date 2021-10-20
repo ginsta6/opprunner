@@ -32,7 +32,7 @@ namespace Runner2
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false, true);
 
-            //Configuration = builder.Build();
+            Configuration = builder.Build();
 
             var serviceCollection = new ServiceCollection();
 
