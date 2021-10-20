@@ -35,7 +35,7 @@
                VerticalAlignment="Center" HorizontalAlignment="Center" 
                FontFamily="Stencil" Foreground="White" Margin="29,18,37.6,31" Height="159" Width="311" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
-        <TextBox x:Name="nameInput" 
+        <TextBox x:Name="NameInput" 
                  Grid.Row="3"
                  Grid.Column="5"
                  Width="170"

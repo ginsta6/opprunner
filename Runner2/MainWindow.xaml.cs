@@ -79,7 +79,7 @@ namespace Runner2
             HubConnection connection = new HubConnectionBuilder()           //Connecting to hub
                 .WithUrl("http://localhost:5000/runner").Build();
 
-            rService = new SignalRService(connection);                      //Creating service with the connection
+            rService = new SignalRService();                      //Creating service with the connection
 
             rService.Register(this);
             
