@@ -360,6 +360,8 @@
     <Resource Include="Images\pink\pinkjump4.png" />
     <Resource Include="Images\pink\pinkjump5.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\item.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
