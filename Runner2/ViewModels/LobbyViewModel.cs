@@ -12,6 +12,7 @@ namespace Runner2.ViewModels
 {
     public class LobbyViewModel:Screen
     {
+        
         public LobbyViewModel()
         {
             _characterTypeSelected = new Label();

@@ -11,9 +11,9 @@ namespace Runner2.ViewModels
     {
         public ShellViewModel() { }
 
-        public ShellViewModel(StartViewModel menuViewModel)
+        public ShellViewModel(StartViewModel startViewModel)
         {
-            ChangeView(menuViewModel);
+            ChangeView(startViewModel);
         }
 
         public async void ChangeView(Screen screen)
