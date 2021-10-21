@@ -23,6 +23,17 @@ namespace Runner2.Views
         public GameView()
         {
             InitializeComponent();
+            belekas.Focus();
+        }
+
+        private void KeyIsDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void KeyIsUp(object sender, KeyEventArgs e)
+        {
+
         }
     }
 }

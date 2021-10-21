@@ -226,9 +226,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Classes\CanvasPosition.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\Observer.cs" />
     <Compile Include="Classes\Player.cs" />
+    <Compile Include="Classes\PlayerSidePosition.cs" />
+    <Compile Include="Input\KeySequence.cs" />
+    <Compile Include="Input\KeyTrigger.cs" />
+    <Compile Include="Input\MultiKeyGesture.cs" />
+    <Compile Include="Input\MultiKeyGestureConverter.cs" />
+    <Compile Include="Services\PlayerInteractions\PlayerMove.cs" />
     <Compile Include="Services\SignalRService.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />
     <Compile Include="ViewModels\LobbyViewModel.cs" />

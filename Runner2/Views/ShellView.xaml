@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Runner2.Views"
         mc:Ignorable="d"
+
         Title="ShellView" Height="450" Width="810">
-    <Grid>
+    <Grid     >
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -19,5 +20,7 @@
             Grid.Row="0"
             Grid.Column="0">
         </ContentControl>
+
+      
     </Grid>
 </Window>

@@ -22,6 +22,10 @@ namespace Runner2.ViewModels
         public int currentPlayerTypeIndex = 1;
         int maxPlayerTypeIndex = 3;
 
+        public int[] SpeedArray;
+        public int[] JumpArray;
+
+
         public StartViewModel()
         {
 
@@ -34,11 +38,23 @@ namespace Runner2.ViewModels
             _characterTypeSelected.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
 
             _avatar = new BitmapImage(new Uri("pack://application:,,,/Images/avatarowlet1.png"));
-
+            SpeedArray = new int[] { 10, 5, 20 };
+            JumpArray = new int[] { 12, 18, 7 };
             _characterNameError = new Label();
+
+            _characterSpeed = new Label();
+            _characterSpeed.Content = "Speed: " + SpeedArray[0];
+            _characterSpeed.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            _characterSpeed.Height = 49.0d;
+            _characterSpeed.FontSize = 14;
+            _characterJump = new Label();
+            _characterJump.Content = "Jump: " + JumpArray[0];
+            _characterJump.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            _characterJump.Height = 49.0d;
+            _characterJump.FontSize = 14;
         }
 
-        private Label _characterTypeSelected;    
+        private Label _characterTypeSelected;
         public Label CharacterTypeSelected
         {
             get => _characterTypeSelected;
@@ -48,8 +64,27 @@ namespace Runner2.ViewModels
                 NotifyOfPropertyChange(() => CharacterTypeSelected);
             }
         }
+        private Label _characterSpeed;
+        public Label CharacterSpeed
+        {
+            get => _characterSpeed;
+            set
+            {
+                _characterSpeed = value;
+                NotifyOfPropertyChange(() => CharacterSpeed);
+            }
+        }
+        private Label _characterJump;
+        public Label CharacterJump
+        {
+            get => _characterJump;
+            set
+            {
+                _characterJump = value;
+                NotifyOfPropertyChange(() => CharacterJump);
+            }
+        }
 
-       
 
         private ImageSource _avatar;
         public ImageSource Avatar
@@ -145,7 +180,11 @@ namespace Runner2.ViewModels
                     break;
             }
             _avatar = belekas;
+            _characterSpeed.Content = "Speed: " + SpeedArray[index - 1];
+            _characterJump.Content = "Jump: " + JumpArray[index - 1];
 
+            NotifyOfPropertyChange(() => CharacterSpeed);
+            NotifyOfPropertyChange(() => CharacterJump);
             NotifyOfPropertyChange(() => Avatar);
         }
 
