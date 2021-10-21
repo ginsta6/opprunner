@@ -10,6 +10,8 @@ using System.Windows;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Caliburn.Micro;
+using System.Windows.Input;
+using Runner2.Input;
 
 namespace Runner2
 {
@@ -67,6 +69,35 @@ namespace Runner2
             _container.Singleton<StartViewModel>();
             _container.Singleton<GameViewModel>();
             _container.Singleton<LobbyViewModel>();
+
+            var defaultCreateTrigger = Parser.CreateTrigger;
+
+            Parser.CreateTrigger = (target, triggerText) =>
+            {
+                if (triggerText == null)
+                {
+                    return defaultCreateTrigger(target, null);
+                }
+
+                var triggerDetail = triggerText
+                    .Replace("[", string.Empty)
+                    .Replace("]", string.Empty);
+
+                var splits = triggerDetail.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+
+                switch (splits[0])
+                {
+                    case "Key":
+                        var key = (Key)Enum.Parse(typeof(Key), splits[1], true);
+                        return new KeyTrigger { Key = key };
+
+                    case "Gesture":
+                        var mkg = (MultiKeyGesture)(new MultiKeyGestureConverter()).ConvertFrom(splits[1]);
+                        return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+                }
+
+                return defaultCreateTrigger(target, triggerText);
+            };
         }
     }
 }

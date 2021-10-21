@@ -97,7 +97,7 @@
             </Button.RenderTransform>
             <Polygon   Stretch="Fill" Fill="#FF4BD14C" Points="0,0 0,30 0,10 30,10 30,-10 45,10 30,30 30,20 0,20 0,0 30,0 30,10 0,10" />
         </Button>
-        <Label x:Name="CharacterSpeedValue" 
+        <Label x:Name="CharacterSpeed" 
                Grid.Column="2"
                Grid.Row="4"
                Height="29"  Content="Speed: " 
@@ -107,7 +107,7 @@
                FontFamily="Stencil" Foreground="White" 
                HorizontalContentAlignment="Center" 
                VerticalContentAlignment="Center" />
-        <Label x:Name="CharacterJumpValue" 
+        <Label x:Name="CharacterJump" 
                Grid.Column="2"
                Grid.Row="5"
                Height="29"  Content="Jump: " 
