@@ -7,7 +7,7 @@
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="800" Focusable="True" IsEnabled="True" >
+             d:DesignHeight="700" d:DesignWidth="1100" Focusable="True" IsEnabled="True" >
     <UserControl.Background>
         <ImageBrush Stretch="UniformToFill" ImageSource="{Binding Background}"/>
 
@@ -15,45 +15,44 @@
     <Canvas x:Name="GameWin" Focusable="True" IsEnabled="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" >
 
 
-        
+
         <TextBox  x:Name="belekas" HorizontalAlignment="Left"
-             Width="800" cal:Message.Attach="[Key A] = [MoveLeft]; [Key D] = [MoveRight]; [Key W] = [Jump]" Background="{x:Null}" Height="528" Canvas.Top="-128"
+             Width="1176" cal:Message.Attach="[Key A] = [MoveLeft]; [Key D] = [MoveRight]; [Key W] = [Jump]" Background="{x:Null}" Height="965" Canvas.Top="-240" Canvas.Left="-32"
              >
         </TextBox>
-        
+
         <Image x:Name="Player" 
                Source="{Binding Player}"
-               Height="99" Width="67"  
-               Canvas.Left="{Binding PlayerLeft, Mode=OneWay}" 
-               Canvas.Bottom="{Binding PlayerBottom, Mode=OneWay}" Focusable="True" IsEnabled="True" Margin="366,150,366,0" VerticalAlignment="Top">
+               Height="99" Width="67"
+               Canvas.Left="{Binding PlayerLeft, Mode=OneWay}"
+               Canvas.Bottom="{Binding PlayerBottom, Mode=OneWay}" 
+               Focusable="True" IsEnabled="True" VerticalAlignment="Top"/>
 
-        </Image>     
+        <Image x:Name="Ground" Height="40" Width="1100" Stretch="Fill"
+                   Canvas.Bottom="0" Canvas.Left="0" Source="{Binding Ground}"/>
 
-            <Rectangle x:Name="Ground" Height="32" Width="900" Fill="Black" 
-                   Canvas.Top="387" Canvas.Left="0"/>
 
-         
-           
-            <Image x:Name="Player1" 
+
+        <Image x:Name="Player1" 
                Source="{Binding Player1}"
                Height="99" Width="67"  
-               Canvas.Top="288" Canvas.Left="38"/>
+               Canvas.Top="329" Canvas.Left="304"/>
 
-            <Image x:Name="Obstacle" 
+        <Image x:Name="Obstacle" 
                Source="{Binding Obstacle}"
                Height="178" Width="50"  
-               Canvas.Top="320" Canvas.Left="720"  />
+               Canvas.Top="522" Canvas.Left="1040"  />
 
-            <Image x:Name="Item" 
+        <Image x:Name="Item" 
                Source="{Binding Item}"
                Height="50" Width="50"  
                Canvas.Top="320" Canvas.Left="550"   />
 
-            <Label x:Name="ScoreText" FontSize="32" FontWeight="Bold" Content="{Binding ScoreText, FallbackValue=Score:0}"  
-             cal:Message.Attach="[Key Enter] = [EnterPressed] "/>
+        <Label x:Name="ScoreText" FontSize="32" FontWeight="Bold" Content="{Binding ScoreText, FallbackValue=Score:0}"  
+             cal:Message.Attach="[Key Enter] = [EnterPressed] " Canvas.Left="32" Canvas.Top="38" Width="216"/>
 
-            <Label x:Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="{Binding OtherScoreText, FallbackValue=Player:0}" Canvas.Left="549" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
-            <Rectangle x:Name="Platform" 
-                   Fill="Black" Height="28" Width="143" Canvas.Left="256" Canvas.Top="261"  />
-        </Canvas>
+        <Label x:Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="{Binding OtherScoreText, FallbackValue=Player:0}" Canvas.Left="815" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right" Canvas.Top="38"/>
+        <Rectangle x:Name="Platform" 
+                   Fill="Black" Height="28" Width="143" Canvas.Left="270" Canvas.Top="433"  />
+    </Canvas>
 </UserControl>

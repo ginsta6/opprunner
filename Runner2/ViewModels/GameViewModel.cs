@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -25,34 +26,75 @@ namespace Runner2.ViewModels
         int currentPlayerTypeIndex = 3;
 
         double spriteIndex = 1;
-        double spriteIndexJump = 0;
+        //double spriteIndexJump = 0;
 
         private ImageSource _player;
-        private ImageSource _player1;
+        Rect playerHitBox;
+
+        private ImageSource _ground;
+        Rect groundHitBox;
+
         private ImageSource _obstacle;
+        Rect obsticleHitBox;
+
+        private ImageSource _player1;
+        
         private ImageSource _item;
         private ImageSource _background;
+
+
+
+
         private Label _scoreText;
-        private Label _otherScoreText;
-        private int _playerLeft = 110;
-        int _playerSpeed;
-        bool finish;
+        //private Label _otherScoreText;
+
+        private int StartLeft = 100;
+        private int StartBottom = 140;
+
+        private int _playerLeft;
+        private int _playerBottom;
+
+        int playerSpeed;
+        //bool finished;
+        //bool jumping;
+
         DispatcherTimer gameTimer = new DispatcherTimer();
 
         public GameViewModel()
         {
             _scoreText = new Label();
+
             _player = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude5.png"));
             _player1 = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pink5.png"));
             _obstacle = new BitmapImage(new Uri("pack://application:,,,/Images/obstacle.png"));
             _item = new BitmapImage(new Uri("pack://application:,,,/Images/item.png"));
             _background = new BitmapImage(new Uri("pack://application:,,,/Images/background.gif"));
+
+            _ground = new BitmapImage(new Uri("pack://application:,,,/Images/ground_grass.png"));
+            groundHitBox = new Rect(0, 40, 1100, 40);
+            obsticleHitBox = new Rect(_playerBottom, _playerLeft, _player.Width - 15, _player.Height);
+
             gameTimer.Tick += Update;
             gameTimer.Interval = TimeSpan.FromMilliseconds(20);
-            _playerSpeed = 5;
-            finish = false;
+
+            playerSpeed = 7;
+            //finished = false;
+
+            _playerLeft = StartLeft;
+            _playerBottom = StartBottom;
+
             // This code line must be the last in the constructor!
             gameTimer.Start();
+        }
+
+        public ImageSource Ground
+        {
+            get => _ground;
+            set
+            {
+                _ground = value;
+                NotifyOfPropertyChange(() => Ground);
+            }
         }
 
         public ImageSource Player
@@ -120,7 +162,15 @@ namespace Runner2.ViewModels
                 NotifyOfPropertyChange(() => PlayerLeft);
             }
         }
-
+        public int PlayerBottom
+        {
+            get => _playerBottom;
+            set
+            {
+                _playerBottom = value;
+                NotifyOfPropertyChange(() => PlayerBottom);
+            }
+        }
 
         public void MoveLeft()
         {
@@ -137,6 +187,7 @@ namespace Runner2.ViewModels
         {
 
         }
+
         private void Update(object sender, EventArgs e)
         {
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
@@ -149,9 +200,39 @@ namespace Runner2.ViewModels
 
             }
             else IdleSprite();
+
+            playerHitBox = new Rect(_playerBottom, _playerLeft, _player.Width - 15, _player.Height);
+
+            if (!playerHitBox.IntersectsWith(obsticleHitBox))
+            {
+                _scoreText.Content = "Obsticle";
+            }
+            if (!playerHitBox.IntersectsWith(groundHitBox))
+            {
+                //_playerBottom -= 4;
+                //NotifyOfPropertyChange(() => PlayerBottom);
+                //_scoreText.Content = "Not touching";
+
+                //speed = 0;
+                //Canvas.SetTop(_player, Canvas.GetTop(Ground) - _player.Height);
+                //jumping = false;
+            }
+            else
+            {
+                _scoreText.Content = "Touching";
+            }
+
             HandleInputs();
             playerAnimationCurrentState = PlayerAnimationState.Standing;
         }
+
+        //private void KeyIsDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.P)
+        //    {
+        //        _scoreText.Content += "p";
+        //    }
+        //}
 
         private void HandleInputs()
         {
@@ -160,12 +241,12 @@ namespace Runner2.ViewModels
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft)
             {
                 //flipTrans.ScaleX = -1;
-                _playerLeft -= _playerSpeed;
+                _playerLeft -= playerSpeed;
             }
             else if (playerAnimationCurrentState == PlayerAnimationState.RunningRight)
             {
                 //flipTrans.ScaleX = 1;
-                _playerLeft += _playerSpeed;
+                _playerLeft += playerSpeed;
             }
             NotifyOfPropertyChange(() => PlayerLeft);
             //player.RenderTransform = flipTrans;
@@ -186,6 +267,7 @@ namespace Runner2.ViewModels
             {
                 _player = new BitmapImage(new Uri("pack://application:,,,/Images/avatardude.png"));
             }
+            NotifyOfPropertyChange(() => Player);
         }
         private void RunSprite(double i)
         {

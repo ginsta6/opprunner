@@ -44,7 +44,7 @@ namespace Runner2.ViewModels
 
         public void StartGame()
         {
-            if (CurrentPlayers < 2)
+            if (CurrentPlayers < 1)                     //----------------------------------++++++++++++++*+*+**+**+**+*+*++**+*+*+*++*+
             {
                 _playerNumberError.Content = "Not enough players";
                 _playerNumberError.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
