@@ -30,6 +30,11 @@ namespace Runner.SignalR.Hubs
             Console.WriteLine("Starting game");
             await Clients.All.SendAsync("ReceiveStartSignal");
         }
+
+        public async Task SendPlayerState(int type)
+        {
+            await Clients.Others.SendAsync("ReceivePlayerState", type);
+        }
         //public Task JoinGroup(string group)
         //{
         //    return Groups.AddToGroupAsync(Context.ConnectionId, group);

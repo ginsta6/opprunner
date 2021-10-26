@@ -36,6 +36,7 @@ namespace Runner2
         bool jumping;
 
         PlayerAnimationState playerAnimationCurrentState;
+        PlayerAnimationState player2AnimationCurrentState;
         enum PlayerAnimationState
         {
             RunningLeft,
@@ -88,6 +89,7 @@ namespace Runner2
             rService.PlayerCountReceived += SignalRService_PlayerCountReceived;
             rService.StartSignalReceived += SignalRService_StartSignalReceived;
             rService.PlayerTypeReceived += SignalRService_PlayerTypeReceived;
+            rService.PlayerStateReceived += SignalRService_PlayerStateReceived;
 
             rService.Connect();
 
@@ -130,6 +132,7 @@ namespace Runner2
         }
         private void SignalRService_PlayerTypeReceived(List<string> message)
         {
+            //Could've done it with "Clients.Others" on the server side instead but oh well. I thought of it too late.
             if (nameInput.Text == players.Content.ToString().Split('\n')[0])        //Player in given instance is the first one who connected
             {
                 //give player2 second type from list
@@ -143,6 +146,12 @@ namespace Runner2
             IdleSprite(opposingPlayer, player2, player2Sprite);
         }
 
+        private void SignalRService_PlayerStateReceived(int state)
+        {
+            player2AnimationCurrentState = (PlayerAnimationState)state;
+            MoveOtherPlayer();
+        }
+
         private async Task renameLater(string name, string playerType)
         {
             await rService.SendTauntMessage(name, playerType);
@@ -151,6 +160,11 @@ namespace Runner2
         private async Task SendStartSignalOthers()
         {
             await rService.SendStartSignal();
+        }
+
+        private async Task SendPlayerState()
+        {
+            await rService.SendPlayerState((int)playerAnimationCurrentState);
         }
 
         // ------------------------------------------------------------------------------------------------------------
@@ -313,6 +327,7 @@ namespace Runner2
             }
 
             AnimatePlayer(spriteIndex);
+            SendPlayerState();
             MovePlayer();
         }
 
@@ -436,6 +451,24 @@ namespace Runner2
             }
 
             player.RenderTransform = flipTrans;
+        }
+        
+        private void MoveOtherPlayer()
+        {
+            player2.RenderTransformOrigin = new Point(0.5, 0.5);
+            ScaleTransform flipTrans = new ScaleTransform();
+            if (player2AnimationCurrentState == PlayerAnimationState.RunningLeft)
+            {
+                flipTrans.ScaleX = -1;
+                Canvas.SetLeft(player2, Canvas.GetLeft(player2) - opposingPlayer.Speed);
+            }
+            else if (player2AnimationCurrentState == PlayerAnimationState.RunningRight)
+            {
+                flipTrans.ScaleX = 1;
+                Canvas.SetLeft(player2, Canvas.GetLeft(player2) + opposingPlayer.Speed);
+            }
+
+            player2.RenderTransform = flipTrans;
         }
 
         private void CreatePlayer(int typeToCreate, int playernum)
