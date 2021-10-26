@@ -16,6 +16,7 @@ namespace Runner2.Services
         public event Action<int> PlayerCountReceived;
         public event Action<int> PlayerStateReceived;
         public event Action StartSignalReceived;
+        public event Action<bool> PlayerJumpReceived;
 
         public SignalRService(HubConnection connection)
         {
@@ -26,6 +27,7 @@ namespace Runner2.Services
             _connection.On<int>("ReceivePlayerCount", (currPlayer) => PlayerCountReceived?.Invoke(currPlayer));
             _connection.On<int>("ReceivePlayerState", (state) => PlayerStateReceived?.Invoke(state));
             _connection.On("ReceiveStartSignal", () => StartSignalReceived?.Invoke());
+            _connection.On<bool>("ReceivePlayerJump", (jumping) => PlayerJumpReceived?.Invoke(jumping));
         }
 
         public async Task Connect()
@@ -46,6 +48,11 @@ namespace Runner2.Services
         public async Task SendPlayerState(int state)
         {
             await _connection.SendAsync("SendPlayerState", state);
+        }
+
+        public async Task SendPlayerJump(bool jumping)
+        {
+            await _connection.SendAsync("SendPlayerJump", jumping);
         }
     }
 }

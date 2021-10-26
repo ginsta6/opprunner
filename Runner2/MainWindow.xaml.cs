@@ -28,12 +28,14 @@ namespace Runner2
         DispatcherTimer gameTimer = new DispatcherTimer();
 
         Rect playerHitBox;
+        Rect player2HitBox;
         Rect groundHitBox;
         Rect platformHitBox;
         Rect obstacleHitBox;
         Rect itemHitBox;
 
         bool jumping;
+        bool opposingJumping;
 
         PlayerAnimationState playerAnimationCurrentState;
         PlayerAnimationState player2AnimationCurrentState;
@@ -52,6 +54,7 @@ namespace Runner2
 
         int force = 20;
         int speed = 10;
+        int opposingSpeed = 10;
 
 
         int currentPlayerTypeIndex = 1;
@@ -90,6 +93,7 @@ namespace Runner2
             rService.StartSignalReceived += SignalRService_StartSignalReceived;
             rService.PlayerTypeReceived += SignalRService_PlayerTypeReceived;
             rService.PlayerStateReceived += SignalRService_PlayerStateReceived;
+            rService.PlayerJumpReceived += SignalRService_PlayerJumpReceived;
 
             rService.Connect();
 
@@ -113,7 +117,7 @@ namespace Runner2
         }
 
         // ----------------------------------------------------------------------------------------------------------
-        // SignalR functions
+        // SignalR receiving funcions
 
         private void SignalRService_StartSignalReceived()
         {
@@ -152,6 +156,13 @@ namespace Runner2
             MoveOtherPlayer();
         }
 
+        private void SignalRService_PlayerJumpReceived(bool jump)
+        {
+            opposingJumping = jump;
+        }
+
+        //-----------------Functions to send to server----------------
+
         private async Task renameLater(string name, string playerType)
         {
             await rService.SendTauntMessage(name, playerType);
@@ -165,6 +176,11 @@ namespace Runner2
         private async Task SendPlayerState()
         {
             await rService.SendPlayerState((int)playerAnimationCurrentState);
+        }
+
+        private async Task SendPlayerJump()
+        {
+            await rService.SendPlayerJump(jumping);
         }
 
         // ------------------------------------------------------------------------------------------------------------
@@ -221,17 +237,20 @@ namespace Runner2
                 Canvas.SetLeft(background2, Canvas.GetLeft(background) + background.Width);
 
             Canvas.SetTop(player, Canvas.GetTop(player) + speed);
+            Canvas.SetTop(player2, Canvas.GetTop(player2) + opposingSpeed);
             //Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
             //Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
 
             scoreText.Content = "Score: " + score;
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
+            player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
             platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
 
+            //-------Hitbox platform interaction----
             if (playerHitBox.IntersectsWith(groundHitBox))
             {
                 speed = 0;
@@ -245,7 +264,20 @@ namespace Runner2
                 Canvas.SetTop(player, Canvas.GetTop(gamePlatform) - player.Height);
                 jumping = false;
             }
+            if (player2HitBox.IntersectsWith(groundHitBox))
+            {
+                opposingSpeed = 0;
+                Canvas.SetTop(player2, Canvas.GetTop(ground) - player2.Height);
 
+            }
+            if (player2HitBox.IntersectsWith(platformHitBox))
+            {
+                opposingSpeed = 0;
+                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform) - player2.Height);
+            }
+
+
+            //--------------------------------------
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
             {
                 spriteIndex += .5;
@@ -256,6 +288,7 @@ namespace Runner2
                 //RunSprite(spriteIndex);
             }
 
+            //-------------Player 1 jumping----------
             if (jumping == true)
             {
                 speed = -9;
@@ -263,10 +296,18 @@ namespace Runner2
             }
             else
                 speed = 8;
-
+            //----------Player 2 jumping-------------
+            if (opposingJumping == true)
+            {
+                opposingSpeed = -9;
+                force -= 1;
+            }
+            else
+                opposingSpeed = 8;
+            //-----Random piece of code that is useless?
             if (force < 0)
                 jumping = false;
-
+            //------------------------------------------
             if (Canvas.GetLeft(obstacle) < -50)
             {
                 Canvas.SetLeft(obstacle, 950);
@@ -285,6 +326,7 @@ namespace Runner2
                 gameTimer.Stop();
             }
 
+            //-----------------Item---------------------
             if (playerHitBox.IntersectsWith(itemHitBox))
             {
                 Canvas.SetLeft(item, 2000);
@@ -302,14 +344,34 @@ namespace Runner2
 
                 }
 
-                //scoreText.Content = "labasssss";
                 score += 1;
                 var potion = itemF.CreatePotion();
 
-                //scoreText.Content = "labukas :*";
-                //currentPlayer.Speed += potion.speedMod;
+            }
+            //Made two different 'if's to make logic of applying item effects easier later maybe
+            if (player2HitBox.IntersectsWith(itemHitBox))
+            {
+                Canvas.SetLeft(item, 2000);
+
+                switch (rnd.Next(1, 3))
+                {
+                    case 1:
+                        itemF = new GoodItemFactory();
+                        break;
+                    case 2:
+                        itemF = new BadItemFactory();
+                        break;
+                    default:
+                        break;
+
+                }
+
+                score += 1;
+                var potion = itemF.CreatePotion();
+
             }
 
+            //------------------------------------------
             if (gameOver == true)
             {
                 obstacle.Stroke = Brushes.Black;
@@ -328,6 +390,7 @@ namespace Runner2
 
             AnimatePlayer(spriteIndex);
             SendPlayerState();
+            SendPlayerJump();
             MovePlayer();
         }
 
@@ -677,62 +740,5 @@ namespace Runner2
             }
         }
 
-        //private void RunSpriteJump(double i)
-        //{
-        //    if (currentPlayerTypeIndex == 1)
-        //    {
-        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-        //        //switch (i)
-        //        //{
-        //        //    case 1:
-        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-        //        //        break;
-        //        //    case 2:
-        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
-        //        //        break;
-        //        //    case 3:
-        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
-        //        //        break;
-        //        //    case 4:
-        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
-        //        //        break;
-        //        //    case 5:
-        //        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
-        //        //        break;
-        //        //    default:
-        //        //        break;
-        //        //}
-        //    }
-        //    else if (currentPlayerTypeIndex == 2)
-        //    {
-        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/owlet/owlet1.png"));
-
-        //        //    switch (i)
-        //        //    {
-        //        //        case 1:
-        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump1.png"));
-        //        //            break;
-        //        //        case 2:
-        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump2.png"));
-        //        //            break;
-        //        //        case 3:
-        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump3.png"));
-        //        //            break;
-        //        //        case 4:
-        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
-        //        //            break;
-        //        //        case 5:
-        //        //            playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump5.png"));
-        //        //            break;
-        //        //        default:
-        //        //            break;
-        //        //    }
-        //    }
-        //    else if (currentPlayerTypeIndex == 3)
-        //    {
-        //        playerSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/dude/dude1.png"));
-        //    }
-        //    player.Fill = playerSprite;
-        //}
     }
 }
