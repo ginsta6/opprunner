@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Runner2"
         mc:Ignorable="d"
-         Title="Runner" Height="450" Width="800">
+         Title="Runner" Height="900" Width="1600">
     <Canvas Name="MainWin" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" Background="Blue">
 
         <Canvas x:Name="StartWin" Focusable="True" Visibility="Visible">
-           
+
             <TextBlock x:Name="title" Height="130"  TextWrapping="Wrap" Canvas.Top="26" Width="314" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="438"><Run Text="  Monster        "/><LineBreak/><Run Text=" runneris"/></TextBlock>
             <TextBox x:Name="nameInput" Height="41" Canvas.Left="498" TextWrapping="Wrap" Canvas.Top="193" Width="140" FontSize="20" FontFamily="Stencil" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Button x:Name="joinLobbyBtn" Content="Join lobby" Height="41" Canvas.Left="498" Canvas.Top="288" Width="140" Background="#FF4BD14C" BorderBrush="White" Foreground="#FF130091" FontSize="20" FontFamily="Stencil" Click="joinLobbyBtnClick" />
             <Label x:Name="CharacterTypeSelected" Height="56"  Content="Pink monster " Canvas.Top="34" Width="211" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="86" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
-             <Button x:Name="cycleCharacterTypeRightBtn" Background="Transparent" BorderBrush="Transparent" Canvas.Left="286" Canvas.Top="190" Click="cycleCharacterTypeRightBtn_Click">
+            <Button x:Name="cycleCharacterTypeRightBtn" Background="Transparent" BorderBrush="Transparent" Canvas.Left="286" Canvas.Top="190" Click="cycleCharacterTypeRightBtn_Click">
                 <Polygon   Stretch="Fill" Fill="#FF4BD14C" Points="0,0 0,30 0,10 30,10 30,-10 45,10 30,30 30,20 0,20 0,0 30,0 30,10 0,10" RenderTransformOrigin="0.514,-0.367" />
             </Button>
             <Button x:Name="cycleCharacterTypeLeftBtn" Background="Transparent" BorderBrush="Transparent" Canvas.Left="51" Canvas.Top="190" RenderTransformOrigin="0.5,0.5" Click="cycleCharacterTypeLeftBtn_Click">
@@ -35,7 +35,7 @@
             <Rectangle Name="platform" Height="32" Width="151" Fill="Black" Canvas.Top="263" Canvas.Left="117" />
         </Canvas>
 
-        <Canvas x:Name="LobbyWin" Focusable="False" Visibility="Hidden">           
+        <Canvas x:Name="LobbyWin" Focusable="False" Visibility="Hidden">
             <TextBlock x:Name="titlePlayers" Height="56"  TextWrapping="Wrap" Canvas.Top="54" Width="211" FontSize="48" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="470" ><Run Text="Players"/></TextBlock>
             <Label x:Name="players" Height="173"  Canvas.Top="142" Width="335" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Stencil" Foreground="#FF24EB2E" Canvas.Left="402" ScrollViewer.CanContentScroll="True" />
             <Button x:Name="startGameBtn" Content="Start game" Height="41" Canvas.Left="498" Canvas.Top="315" Width="140" Background="#FF4BD14C" BorderBrush="White" Foreground="#FF130091" FontSize="20" FontFamily="Stencil" Click="startBtnClick" />
@@ -45,19 +45,23 @@
             <Rectangle Name="platformLobby" Height="32" Width="151" Fill="Black" Canvas.Top="263" Canvas.Left="117" />
         </Canvas>
         <Canvas x:Name="GameWin" Visibility="Hidden" Focusable="False">
-            <Rectangle Name="background" Height="400" Width="1262" Fill="Orange" Canvas.Left="0"  />
-            <Rectangle Name="background2" Height="400" Width="1262" Fill="LightGreen" Canvas.Left="1262"  />
-            <Rectangle Name="ground" Height="32" Width="792" Fill="Black" Canvas.Top="387" Canvas.Left="0"/>
-            <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="151" Canvas.Left="110"/>
-            <Rectangle Name="player2" Height="99" Width="67" Fill="Brown" Canvas.Top="151" Canvas.Left="110"/>
-            <Rectangle Name="obstacle" Height="178" Width="50" Fill="Red" Canvas.Top="320" Canvas.Left="720"  />
-            <Rectangle Name="item" Height="50" Width="50" Fill="Red" Canvas.Top="320" Canvas.Left="550"   />
+            <Rectangle Name="background" Height="839" Width="1596" Fill="Orange" Canvas.Left="0"  />
+            <Rectangle Name="ground" Height="32" Width="1596" Fill="Black" Canvas.Top="839" Canvas.Left="0"/>
+            <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="703" Canvas.Left="80"/>
+            <Rectangle Name="player2" Height="99" Width="67" Fill="Brown" Canvas.Top="703" Canvas.Left="80"/>
+            <Rectangle Name="obstacle" Height="108" Width="50" Fill="Red" Canvas.Top="408" Canvas.Left="1212"  />
+            <Rectangle Name="item" Height="50" Width="50" Fill="Red" Canvas.Top="648" Canvas.Left="490"   />
             <Label Name="scoreText" FontSize="32" FontWeight="Bold" Content="Score: 0"   />
             <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="Player: 0" Canvas.Left="539" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
-            <Rectangle Name="gamePlatform" Height="32" Width="151" Fill="Black" Canvas.Top="263" Canvas.Left="117" />
+
+            <Rectangle Name="gamePlatform" Height="32" Width="229" Fill="Black" Canvas.Top="724" Canvas.Left="397" />
+            <Rectangle Name="gamePlatform2" Height="32" Width="299" Fill="Black" Canvas.Top="601" Canvas.Left="677" />
+            <Rectangle Name="gamePlatform3" Height="32" Width="511" Fill="Black" Canvas.Top="484" Canvas.Left="1033" />
+
+            <Rectangle Name="gameEndPoint" Height="110" Width="59" Fill="Brown" Canvas.Top="374" Canvas.Left="1449" />
         </Canvas>
-        
+
     </Canvas>
-    
-    
+
+
 </Window>

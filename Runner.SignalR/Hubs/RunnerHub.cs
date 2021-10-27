@@ -42,6 +42,11 @@ namespace Runner.SignalR.Hubs
         {
             await Clients.Others.SendAsync("ReceivePlayerJump", jumping);
         }
+
+        public async Task SendChangeLevelSignal()
+        {
+            await Clients.All.SendAsync("ReceiveChangeLevelSignal");
+        }
         //public Task JoinGroup(string group)
         //{
         //    return Groups.AddToGroupAsync(Context.ConnectionId, group);

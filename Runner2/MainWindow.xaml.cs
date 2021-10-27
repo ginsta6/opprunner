@@ -31,8 +31,11 @@ namespace Runner2
         Rect player2HitBox;
         Rect groundHitBox;
         Rect platformHitBox;
+        Rect platform2HitBox;
+        Rect platform3HitBox;
         Rect obstacleHitBox;
         Rect itemHitBox;
+        Rect finishHitBox;
 
         bool jumping;
         bool opposingJumping;
@@ -50,7 +53,8 @@ namespace Runner2
         Player currentPlayer;
         Player opposingPlayer;
 
-        ItemFactory itemF;
+        //ItemFactory itemF;
+        AbstractSceneFactory sceneF;
 
         int force = 20;
         int speed = 10;
@@ -94,6 +98,7 @@ namespace Runner2
             rService.PlayerTypeReceived += SignalRService_PlayerTypeReceived;
             rService.PlayerStateReceived += SignalRService_PlayerStateReceived;
             rService.PlayerJumpReceived += SignalRService_PlayerJumpReceived;
+            rService.ChangeLevelSignalReceived += SignalRService_ChangeLevelSignalReceived;
 
             rService.Connect();
 
@@ -103,14 +108,14 @@ namespace Runner2
             gameTimer.Tick += GameEngine;
             gameTimer.Interval = TimeSpan.FromMilliseconds(20);
 
-            backgroundSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/background.gif"));
+            //backgroundSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/fonas1.png"));
             avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
             //avatarSprite.ImageSource= new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_08.gif"));
             avatar.Fill = avatarSprite;
 
 
             background.Fill = backgroundSprite;
-            background2.Fill = backgroundSprite;
+            //background2.Fill = backgroundSprite;
 
             //StartGame();
             //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
@@ -161,6 +166,11 @@ namespace Runner2
             opposingJumping = jump;
         }
 
+        private void SignalRService_ChangeLevelSignalReceived()
+        {
+            GoToNextLevel();
+        }
+
         //-----------------Functions to send to server----------------
 
         private async Task renameLater(string name, string playerType)
@@ -183,6 +193,11 @@ namespace Runner2
             await rService.SendPlayerJump(jumping);
         }
 
+        private async Task SendChangeLevelSignal()
+        {
+            await rService.SendChangeLevelSignal();
+        }
+
         // ------------------------------------------------------------------------------------------------------------
         // Game engine functions
 
@@ -190,20 +205,17 @@ namespace Runner2
         {
             CantPlayText.Visibility = Visibility.Hidden;
 
+            CreateScene(1);
+
             Canvas.SetLeft(background, 0);
-            Canvas.SetLeft(background2, 1262);
+            //Canvas.SetLeft(background2, 1262);
 
-            Canvas.SetLeft(player, 110);
-            Canvas.SetTop(player, 140);
 
-            Canvas.SetLeft(obstacle, 950);
-            Canvas.SetTop(obstacle, 310);
+            //Canvas.SetLeft(obstacle, 950);
+            //Canvas.SetTop(obstacle, 310);
 
             RunSprite(1);
-
-            obstacleSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/obstacle.png"));
-            obstacle.Fill = obstacleSprite;
-
+            
             jumping = false;
             gameOver = false;
             score = 0;
@@ -215,7 +227,7 @@ namespace Runner2
             player.Visibility = Visibility.Visible;
             player2.Visibility = Visibility.Visible;
             background.Visibility = Visibility.Visible;
-            background2.Visibility = Visibility.Visible;
+            //background2.Visibility = Visibility.Visible;
             scoreText.Visibility = Visibility.Visible;
 
             avatar.Visibility = Visibility.Hidden;
@@ -229,12 +241,12 @@ namespace Runner2
             //Canvas.SetLeft(background, Canvas.GetLeft(background) - currentPlayer.Speed);
             //Canvas.SetLeft(background2, Canvas.GetLeft(background2) - currentPlayer.Speed);
 
-            if (Canvas.GetLeft(background) < -1262)
-                Canvas.SetLeft(background, Canvas.GetLeft(background2) + background2.Width);
+            //if (Canvas.GetLeft(background) < -1262)
+            //    Canvas.SetLeft(background, Canvas.GetLeft(background2) + background2.Width);
 
 
-            if (Canvas.GetLeft(background2) < -1262)
-                Canvas.SetLeft(background2, Canvas.GetLeft(background) + background.Width);
+            //if (Canvas.GetLeft(background2) < -1262)
+            //    Canvas.SetLeft(background2, Canvas.GetLeft(background) + background.Width);
 
             Canvas.SetTop(player, Canvas.GetTop(player) + speed);
             Canvas.SetTop(player2, Canvas.GetTop(player2) + opposingSpeed);
@@ -248,33 +260,15 @@ namespace Runner2
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
+
             platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
+            platform2HitBox = new Rect(Canvas.GetLeft(gamePlatform2), Canvas.GetTop(gamePlatform2), gamePlatform2.Width, gamePlatform2.Height);
+            platform3HitBox = new Rect(Canvas.GetLeft(gamePlatform3), Canvas.GetTop(gamePlatform3), gamePlatform3.Width, gamePlatform3.Height);
+
+            finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
 
             //-------Hitbox platform interaction----
-            if (playerHitBox.IntersectsWith(groundHitBox))
-            {
-                speed = 0;
-                Canvas.SetTop(player, Canvas.GetTop(ground) - player.Height);
-                jumping = false;
-
-            }
-            if (playerHitBox.IntersectsWith(platformHitBox))
-            {
-                speed = 0;
-                Canvas.SetTop(player, Canvas.GetTop(gamePlatform) - player.Height);
-                jumping = false;
-            }
-            if (player2HitBox.IntersectsWith(groundHitBox))
-            {
-                opposingSpeed = 0;
-                Canvas.SetTop(player2, Canvas.GetTop(ground) - player2.Height);
-
-            }
-            if (player2HitBox.IntersectsWith(platformHitBox))
-            {
-                opposingSpeed = 0;
-                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform) - player2.Height);
-            }
+            HandleHitBoxCollisions();
 
 
             //--------------------------------------
@@ -308,22 +302,16 @@ namespace Runner2
             if (force < 0)
                 jumping = false;
             //------------------------------------------
-            if (Canvas.GetLeft(obstacle) < -50)
-            {
-                Canvas.SetLeft(obstacle, 950);
-                Canvas.SetTop(obstacle, obstaclePosition[rnd.Next(0, obstaclePosition.Length)]);
-                score += 1;
-            }
+            //if (Canvas.GetLeft(obstacle) < -50)
+            //{
+            //    Canvas.SetLeft(obstacle, 950);
+            //    Canvas.SetTop(obstacle, obstaclePosition[rnd.Next(0, obstaclePosition.Length)]);
+            //    score += 1;
+            //}
 
             if (Canvas.GetLeft(item) < -50)
             {
                 Canvas.SetLeft(item, 2000);
-            }
-
-            if (playerHitBox.IntersectsWith(obstacleHitBox))
-            {
-                gameOver = true;
-                gameTimer.Stop();
             }
 
             //-----------------Item---------------------
@@ -334,10 +322,10 @@ namespace Runner2
                 switch (rnd.Next(1, 3))
                 {
                     case 1:
-                        itemF = new GoodItemFactory();
+                        //itemF = new GoodItemFactory();
                         break;
                     case 2:
-                        itemF = new BadItemFactory();
+                        //itemF = new BadItemFactory();
                         break;
                     default:
                         break;
@@ -345,7 +333,7 @@ namespace Runner2
                 }
 
                 score += 1;
-                var potion = itemF.CreatePotion();
+                //var potion = itemF.CreatePotion();
 
             }
             //Made two different 'if's to make logic of applying item effects easier later maybe
@@ -356,10 +344,10 @@ namespace Runner2
                 switch (rnd.Next(1, 3))
                 {
                     case 1:
-                        itemF = new GoodItemFactory();
+                        //itemF = new GoodItemFactory();
                         break;
                     case 2:
-                        itemF = new BadItemFactory();
+                        //itemF = new BadItemFactory();
                         break;
                     default:
                         break;
@@ -367,7 +355,7 @@ namespace Runner2
                 }
 
                 score += 1;
-                var potion = itemF.CreatePotion();
+                //var potion = itemF.CreatePotion();
 
             }
 
@@ -498,6 +486,87 @@ namespace Runner2
         // -------------------------------------------------------------------------------------------------------------
         // Logic functions
 
+        private void HandleHitBoxCollisions()
+        {
+            //Ground platform
+            if (playerHitBox.IntersectsWith(groundHitBox))
+            {
+                speed = 0;
+                Canvas.SetTop(player, Canvas.GetTop(ground) - player.Height);
+                jumping = false;
+
+            }
+            if (player2HitBox.IntersectsWith(groundHitBox))
+            {
+                opposingSpeed = 0;
+                Canvas.SetTop(player2, Canvas.GetTop(ground) - player2.Height);
+
+            }
+            //Platform 1
+            if (playerHitBox.IntersectsWith(platformHitBox))
+            {
+                speed = 0;
+                Canvas.SetTop(player, Canvas.GetTop(gamePlatform) - player.Height);
+                jumping = false;
+            }
+            if (player2HitBox.IntersectsWith(platformHitBox))
+            {
+                opposingSpeed = 0;
+                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform) - player2.Height);
+            }
+            //Platform 2
+            if (playerHitBox.IntersectsWith(platform2HitBox))
+            {
+                speed = 0;
+                Canvas.SetTop(player, Canvas.GetTop(gamePlatform2) - player.Height);
+                jumping = false;
+            }
+            if (player2HitBox.IntersectsWith(platform2HitBox))
+            {
+                opposingSpeed = 0;
+                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform2) - player2.Height);
+            }
+            //Platform 3
+            if (playerHitBox.IntersectsWith(platform3HitBox))
+            {
+                speed = 0;
+                Canvas.SetTop(player, Canvas.GetTop(gamePlatform3) - player.Height);
+                jumping = false;
+            }
+            if (player2HitBox.IntersectsWith(platform3HitBox))
+            {
+                opposingSpeed = 0;
+                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform3) - player2.Height);
+            }
+            //gameEndPoint
+            if (playerHitBox.IntersectsWith(finishHitBox) && player2HitBox.IntersectsWith(finishHitBox))
+            {
+                SendChangeLevelSignal();
+            }
+            //Obstacle
+            if (playerHitBox.IntersectsWith(obstacleHitBox))
+            {
+                Canvas.SetTop(player, 703 + speed);
+                Canvas.SetLeft(player, 80);
+            }
+            if (player2HitBox.IntersectsWith(obstacleHitBox))
+            {
+                Canvas.SetTop(player2, 703 + opposingSpeed);
+                Canvas.SetLeft(player2, 80);
+            }
+        }
+
+        private void GoToNextLevel()
+        {
+            CreateScene(2);//Canvas.Top="703" Canvas.Left="80"
+            Canvas.SetTop(player, 703 + speed);
+            Canvas.SetLeft(player, 80);
+            Canvas.SetTop(player2, 703 + opposingSpeed);
+            Canvas.SetLeft(player2, 80);
+
+            //Change canvas visibility
+        }
+
         private void MovePlayer()
         {
             player.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -574,6 +643,35 @@ namespace Runner2
 
                 opposingPlayer = playerF.GetPlayer();
             }
+        }
+
+        private void CreateScene(int level)
+        {
+            Background bg;
+            Platform plat;
+            Obstacle obs;
+            switch (level)
+            {
+                case 1:
+                    sceneF = new SummerFactory();
+                    break;
+                case 2:
+                    sceneF = new WinterFactory();                    
+                    break;
+            }
+
+            bg = sceneF.CreateBackground();
+            backgroundSprite.ImageSource = new BitmapImage(new Uri(bg.spritePath));
+
+            plat = sceneF.CreatePlatform();
+            gamePlatform.Fill = new SolidColorBrush(plat.color);
+            gamePlatform2.Fill = new SolidColorBrush(plat.color);
+            gamePlatform3.Fill = new SolidColorBrush(plat.color);
+            ground.Fill = new SolidColorBrush(plat.color);
+
+            obs = sceneF.CreateObstacle();
+            obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
+            obstacle.Fill = obstacleSprite;
         }
 
         private void setActiveLobbyObjs()
