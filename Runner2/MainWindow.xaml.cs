@@ -22,7 +22,7 @@ namespace Runner2
 {
     public partial class MainWindow : Window
     {
-       
+
         SignalRService rService;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
@@ -33,6 +33,8 @@ namespace Runner2
         Rect platformHitBox;
         Rect platform2HitBox;
         Rect platform3HitBox;
+        List<FrameworkElement> gamePlatforms = new List<FrameworkElement>();
+        List<Rect> platformHitBoxes = new List<Rect>();
         Rect obstacleHitBox;
         Rect itemHitBox;
         Rect finishHitBox;
@@ -77,6 +79,7 @@ namespace Runner2
         ImageBrush backgroundSprite = new ImageBrush();
         ImageBrush obstacleSprite = new ImageBrush();
         ImageBrush avatarSprite = new ImageBrush();
+        ImageBrush doorSprite = new ImageBrush();
 
         int[] obstaclePosition = { 320, 310, 300, 305, 315 };
 
@@ -110,7 +113,8 @@ namespace Runner2
 
             //backgroundSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/fonas1.png"));
             avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
-            //avatarSprite.ImageSource= new BitmapImage(new Uri("pack://application:,,,/Images/newRunner_08.gif"));
+            doorSprite.ImageSource= new BitmapImage(new Uri("pack://application:,,,/Images/door.png"));
+            gameEndPoint.Fill = doorSprite;
             avatar.Fill = avatarSprite;
 
 
@@ -215,7 +219,7 @@ namespace Runner2
             //Canvas.SetTop(obstacle, 310);
 
             RunSprite(1);
-            
+
             jumping = false;
             gameOver = false;
             score = 0;
@@ -261,10 +265,14 @@ namespace Runner2
             itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
 
-            platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
-            platform2HitBox = new Rect(Canvas.GetLeft(gamePlatform2), Canvas.GetTop(gamePlatform2), gamePlatform2.Width, gamePlatform2.Height);
-            platform3HitBox = new Rect(Canvas.GetLeft(gamePlatform3), Canvas.GetTop(gamePlatform3), gamePlatform3.Width, gamePlatform3.Height);
-
+            for (int i = GameWin.Children.Count - 4; i < GameWin.Children.Count; i++)
+            {
+                var gamePlatform = GameWin.Children[i] as FrameworkElement;
+                gamePlatforms.Add(gamePlatform);
+                platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.ActualWidth, gamePlatform.ActualHeight);
+                platformHitBoxes.Add(platformHitBox);
+            }
+            
             finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
 
             //-------Hitbox platform interaction----
@@ -502,41 +510,20 @@ namespace Runner2
                 Canvas.SetTop(player2, Canvas.GetTop(ground) - player2.Height);
 
             }
-            //Platform 1
-            if (playerHitBox.IntersectsWith(platformHitBox))
+            //Platforms (1-4)
+            for (int i = 0; i < 4; i++)
             {
-                speed = 0;
-                Canvas.SetTop(player, Canvas.GetTop(gamePlatform) - player.Height);
-                jumping = false;
-            }
-            if (player2HitBox.IntersectsWith(platformHitBox))
-            {
-                opposingSpeed = 0;
-                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform) - player2.Height);
-            }
-            //Platform 2
-            if (playerHitBox.IntersectsWith(platform2HitBox))
-            {
-                speed = 0;
-                Canvas.SetTop(player, Canvas.GetTop(gamePlatform2) - player.Height);
-                jumping = false;
-            }
-            if (player2HitBox.IntersectsWith(platform2HitBox))
-            {
-                opposingSpeed = 0;
-                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform2) - player2.Height);
-            }
-            //Platform 3
-            if (playerHitBox.IntersectsWith(platform3HitBox))
-            {
-                speed = 0;
-                Canvas.SetTop(player, Canvas.GetTop(gamePlatform3) - player.Height);
-                jumping = false;
-            }
-            if (player2HitBox.IntersectsWith(platform3HitBox))
-            {
-                opposingSpeed = 0;
-                Canvas.SetTop(player2, Canvas.GetTop(gamePlatform3) - player2.Height);
+                if (playerHitBox.IntersectsWith(platformHitBoxes[i]))
+                {
+                    speed = 0;
+                    Canvas.SetTop(player, Canvas.GetTop(gamePlatforms[i]) - player.Height);
+                    jumping = false;
+                }
+                if (player2HitBox.IntersectsWith(platformHitBoxes[i]))
+                {
+                    opposingSpeed = 0;
+                    Canvas.SetTop(player2, Canvas.GetTop(gamePlatforms[i]) - player2.Height);
+                }
             }
             //gameEndPoint
             if (playerHitBox.IntersectsWith(finishHitBox) && player2HitBox.IntersectsWith(finishHitBox))
@@ -584,7 +571,7 @@ namespace Runner2
 
             player.RenderTransform = flipTrans;
         }
-        
+
         private void MoveOtherPlayer()
         {
             player2.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -656,7 +643,7 @@ namespace Runner2
                     sceneF = new SummerFactory();
                     break;
                 case 2:
-                    sceneF = new WinterFactory();                    
+                    sceneF = new WinterFactory();
                     break;
             }
 
@@ -664,9 +651,37 @@ namespace Runner2
             backgroundSprite.ImageSource = new BitmapImage(new Uri(bg.spritePath));
 
             plat = sceneF.CreatePlatform();
-            gamePlatform.Fill = new SolidColorBrush(plat.color);
-            gamePlatform2.Fill = new SolidColorBrush(plat.color);
-            gamePlatform3.Fill = new SolidColorBrush(plat.color);
+            //obstaclePosition
+
+            //gamePlatform.Fill = new SolidColorBrush(plat.color);
+            //gamePlatform2.Fill = new SolidColorBrush(plat.color);
+            //gamePlatform3.Fill = new SolidColorBrush(plat.color);
+
+
+            int number = 4;
+            int[] width = { 229, 299, 411, 200 };
+            int height = 32;
+            int[] topPositions = { 510, 316, 310, 201 };
+            int[] leftPositions = { 397, 46, 789, 539 };
+
+            for (int i = 0; i < number; i++)
+            {
+                // Create the rectangle
+                Rectangle rec = new Rectangle()
+                {
+                    Width = width[i],
+                    Height = height,
+                    Fill = Brushes.Green,
+                    Stroke = Brushes.Red,
+                    StrokeThickness = 2,
+                };
+
+                GameWin.Children.Add(rec);
+                Canvas.SetTop(rec, topPositions[i]);
+                Canvas.SetLeft(rec, leftPositions[i]);
+            }
+
+
             ground.Fill = new SolidColorBrush(plat.color);
 
             obs = sceneF.CreateObstacle();
@@ -805,7 +820,7 @@ namespace Runner2
         }
 
         // ++++++++++++++++++++++++++++++++++++++++++++
-               
+
         private void IdleSprite(Player player, Rectangle playerToChange, ImageBrush imageBrush)
         {
             if (player.SkinType == 1)
