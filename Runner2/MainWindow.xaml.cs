@@ -36,6 +36,8 @@ namespace Runner2
         List<FrameworkElement> gamePlatforms = new List<FrameworkElement>();
         List<Rect> platformHitBoxes = new List<Rect>();
         Rect obstacleHitBox;
+        List<Rect> itemHitBoxes = new List<Rect>();
+        List<FrameworkElement> items = new List<FrameworkElement>();
         Rect itemHitBox;
         Rect finishHitBox;
 
@@ -262,8 +264,9 @@ namespace Runner2
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
-            itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
+
+            itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
 
             for (int i = GameWin.Children.Count - 4; i < GameWin.Children.Count; i++)
             {
@@ -533,12 +536,12 @@ namespace Runner2
             //Obstacle
             if (playerHitBox.IntersectsWith(obstacleHitBox))
             {
-                Canvas.SetTop(player, 703 + speed);
+                Canvas.SetTop(player, 509 + speed);
                 Canvas.SetLeft(player, 80);
             }
             if (player2HitBox.IntersectsWith(obstacleHitBox))
             {
-                Canvas.SetTop(player2, 703 + opposingSpeed);
+                Canvas.SetTop(player2, 509 + opposingSpeed);
                 Canvas.SetLeft(player2, 80);
             }
         }
@@ -637,6 +640,7 @@ namespace Runner2
             Background bg;
             Platform plat;
             Obstacle obs;
+            Item itm;
             switch (level)
             {
                 case 1:
@@ -651,6 +655,8 @@ namespace Runner2
             backgroundSprite.ImageSource = new BitmapImage(new Uri(bg.spritePath));
 
             plat = sceneF.CreatePlatform();
+
+            //itm = sceneF.CreateItem();
             //obstaclePosition
 
             //gamePlatform.Fill = new SolidColorBrush(plat.color);
@@ -658,6 +664,18 @@ namespace Runner2
             //gamePlatform3.Fill = new SolidColorBrush(plat.color);
 
 
+            CreatePlatforms();
+            //CreateItems();
+
+
+            ground.Fill = new SolidColorBrush(plat.color);
+
+            obs = sceneF.CreateObstacle();
+            obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
+            obstacle.Fill = obstacleSprite;
+        }
+        public void CreatePlatforms()
+        {
             int number = 4;
             int[] width = { 229, 299, 411, 200 };
             int height = 32;
@@ -666,7 +684,6 @@ namespace Runner2
 
             for (int i = 0; i < number; i++)
             {
-                // Create the rectangle
                 Rectangle rec = new Rectangle()
                 {
                     Width = width[i],
@@ -680,13 +697,31 @@ namespace Runner2
                 Canvas.SetTop(rec, topPositions[i]);
                 Canvas.SetLeft(rec, leftPositions[i]);
             }
+        } 
+        public void CreateItems()
+        {
+            int number = 4;
+            int width = 50;
+            int height = 50;
+            //Random rnd = new Random(650, 1200);
+            int[] topPositions = { 510, 316, 310, 201 };
+            int[] leftPositions = { 397, 46, 789, 539 };
 
-
-            ground.Fill = new SolidColorBrush(plat.color);
-
-            obs = sceneF.CreateObstacle();
-            obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
-            obstacle.Fill = obstacleSprite;
+            for (int i = 0; i < number; i++)
+            {
+                Rectangle rec = new Rectangle()
+                {
+                    Width = width,
+                    Height = height,
+                    Fill = Brushes.BlueViolet,
+                    Stroke = Brushes.LemonChiffon,
+                    StrokeThickness = 2,
+                };
+                
+                GameWin.Children.Add(rec);
+                Canvas.SetTop(rec, topPositions[i]);
+                Canvas.SetLeft(rec, leftPositions[i]);
+            }
         }
 
         private void setActiveLobbyObjs()

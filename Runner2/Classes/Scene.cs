@@ -16,6 +16,7 @@ namespace Runner2.Classes
         public abstract Background CreateBackground();
         public abstract Obstacle CreateObstacle();
 
+        public abstract Item CreateItem();
     }
 
     /// <summary>
@@ -36,6 +37,11 @@ namespace Runner2.Classes
         {
             return new SummerObstacle();
         }
+
+        public override Item CreateItem()
+        {
+            return new SummerItem();
+        }
     }
 
     /// <summary>
@@ -55,6 +61,11 @@ namespace Runner2.Classes
         public override Obstacle CreateObstacle()
         {
             return new WinterObstacle();
+        }
+
+        public override Item CreateItem()
+        {
+            return new WinterItem();
         }
     }
 
@@ -78,6 +89,12 @@ namespace Runner2.Classes
     abstract class Obstacle
     {
         public int height;
+        public string spritePath;
+    }
+    abstract class Item
+    {
+        public int height;
+        public int width;
         public string spritePath;
     }
 
@@ -140,6 +157,23 @@ namespace Runner2.Classes
         public WinterObstacle()
         {
             spritePath = "pack://application:,,,/Images/obs2.png";
+        }
+    }
+
+    class SummerItem: Item
+    {
+        public SummerItem()
+        {
+            width = 50;
+            height = 50;
+        }
+    } 
+    class WinterItem: Item
+    {
+        public WinterItem()
+        {
+            width = 50;
+            height = 50;
         }
     }
 }
