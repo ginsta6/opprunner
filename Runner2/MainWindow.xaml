@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Runner2"
         mc:Ignorable="d"
         Title="Runner" Height="675" Width="1200">
-    <Canvas Name="MainWin" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" Background="Blue">
+    <Canvas Name="MainWin" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" Background="Blue" x:FieldModifier="public">
 
         <Canvas x:Name="StartWin" Focusable="True" Visibility="Visible">
 
@@ -48,8 +48,9 @@
             <Rectangle Name="platformLobby" Height="44" Width="289" Fill="Black" Canvas.Top="472" Canvas.Left="103" />
 
         </Canvas>
-        <Canvas x:Name="GameWin" Visibility="Hidden" Focusable="False">
+        <Canvas x:Name="GameWin" Visibility="Hidden" Focusable="False" x:FieldModifier="public">
             <Rectangle Name="background" Height="650" Width="1200" Fill="Orange" Canvas.Left="0"  />
+            <Rectangle Name="gameEndPoint" Height="110" Width="75" Fill="Brown" Canvas.Top="201" Canvas.Left="1100" />
             <Rectangle Name="ground" Height="32" Width="1596" Fill="Black" Canvas.Top="607" Canvas.Left="-4"/>
             <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="509" Canvas.Left="81"/>
             <Rectangle Name="player2" Height="100" Width="67" Fill="Brown" Canvas.Top="508" Canvas.Left="81"/>
@@ -63,7 +64,6 @@
             <Rectangle Name="gamePlatform3" Height="32" Width="411" Fill="Black" Canvas.Top="310" Canvas.Left="789" />
             <Rectangle x:Name="gamePlatform4" Height="32" Width="200" Fill="Black" Canvas.Top="201" Canvas.Left="539" />-->
 
-            <Rectangle Name="gameEndPoint" Height="110" Width="75" Fill="Brown" Canvas.Top="201" Canvas.Left="1100" />
         </Canvas>
 
     </Canvas>

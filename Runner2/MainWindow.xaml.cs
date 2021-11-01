@@ -22,6 +22,10 @@ namespace Runner2
 {
     public partial class MainWindow : Window
     {
+        Background bg;
+        Platform plat;
+        Obstacle obs;
+        Item itm;
 
         SignalRService rService;
 
@@ -53,7 +57,7 @@ namespace Runner2
             Standing
         }
 
-        PlayerFactory playerF;
+        Creator playerF = new ConcreteCreator();
         Player currentPlayer;
         Player opposingPlayer;
 
@@ -115,7 +119,7 @@ namespace Runner2
 
             //backgroundSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/fonas1.png"));
             avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
-            doorSprite.ImageSource= new BitmapImage(new Uri("pack://application:,,,/Images/door.png"));
+            doorSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/door.png"));
             gameEndPoint.Fill = doorSprite;
             avatar.Fill = avatarSprite;
 
@@ -266,16 +270,23 @@ namespace Runner2
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
 
-            itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
+            //itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
 
-            for (int i = GameWin.Children.Count - 4; i < GameWin.Children.Count; i++)
+            for (int i = plat.startIndex; i < plat.endIndex; i++)
             {
                 var gamePlatform = GameWin.Children[i] as FrameworkElement;
                 gamePlatforms.Add(gamePlatform);
                 platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.ActualWidth, gamePlatform.ActualHeight);
                 platformHitBoxes.Add(platformHitBox);
             }
-            
+            for (int i = itm.startIndex; i < itm.endIndex; i++)
+            {
+                var itemas = GameWin.Children[i] as FrameworkElement;
+                items.Add(itemas);
+                platformHitBox = new Rect(Canvas.GetLeft(itemas), Canvas.GetTop(itemas), itemas.ActualWidth, itemas.ActualHeight);
+                itemHitBoxes.Add(platformHitBox);
+            }
+
             finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
 
             //-------Hitbox platform interaction----
@@ -326,49 +337,49 @@ namespace Runner2
             }
 
             //-----------------Item---------------------
-            if (playerHitBox.IntersectsWith(itemHitBox))
-            {
-                Canvas.SetLeft(item, 2000);
+            //if (playerHitBox.IntersectsWith(itemHitBox))
+            //{
+            //    Canvas.SetLeft(item, 2000);
 
-                switch (rnd.Next(1, 3))
-                {
-                    case 1:
-                        //itemF = new GoodItemFactory();
-                        break;
-                    case 2:
-                        //itemF = new BadItemFactory();
-                        break;
-                    default:
-                        break;
+            //    switch (rnd.Next(1, 3))
+            //    {
+            //        case 1:
+            //            //itemF = new GoodItemFactory();
+            //            break;
+            //        case 2:
+            //            //itemF = new BadItemFactory();
+            //            break;
+            //        default:
+            //            break;
 
-                }
+            //    }
 
-                score += 1;
-                //var potion = itemF.CreatePotion();
+            //    score += 1;
+            //    //var potion = itemF.CreatePotion();
 
-            }
+            //}
             //Made two different 'if's to make logic of applying item effects easier later maybe
-            if (player2HitBox.IntersectsWith(itemHitBox))
-            {
-                Canvas.SetLeft(item, 2000);
+            //if (player2HitBox.IntersectsWith(itemHitBox))
+            //{
+            //    Canvas.SetLeft(item, 2000);
 
-                switch (rnd.Next(1, 3))
-                {
-                    case 1:
-                        //itemF = new GoodItemFactory();
-                        break;
-                    case 2:
-                        //itemF = new BadItemFactory();
-                        break;
-                    default:
-                        break;
+            //    switch (rnd.Next(1, 3))
+            //    {
+            //        case 1:
+            //            //itemF = new GoodItemFactory();
+            //            break;
+            //        case 2:
+            //            //itemF = new BadItemFactory();
+            //            break;
+            //        default:
+            //            break;
 
-                }
+            //    }
 
-                score += 1;
-                //var potion = itemF.CreatePotion();
+            //    score += 1;
+            //    //var potion = itemF.CreatePotion();
 
-            }
+            //}
 
             //------------------------------------------
             if (gameOver == true)
@@ -514,7 +525,7 @@ namespace Runner2
 
             }
             //Platforms (1-4)
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < plat.number; i++)
             {
                 if (playerHitBox.IntersectsWith(platformHitBoxes[i]))
                 {
@@ -526,6 +537,53 @@ namespace Runner2
                 {
                     opposingSpeed = 0;
                     Canvas.SetTop(player2, Canvas.GetTop(gamePlatforms[i]) - player2.Height);
+                }
+            }
+
+            //items
+            for (int i = 0; i < itm.number; i++)
+            {
+                if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
+                {
+                    itemHitBoxes[i] = new Rect();
+
+//---------------kazkas su dekoratorium ---------------------------------------------------------------------------------------------
+                    //Player pl = new PinkMonster(10);
+                    //MagicHat mghat = new Decoratorr(pl); 
+
+                    Canvas.SetLeft(items[i], 2000);
+
+                    switch (rnd.Next(1, 3))
+                    {
+                        case 1:
+                            //itemF = new GoodItemFactory();
+                            break;
+                        case 2:
+                            //itemF = new BadItemFactory();
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+                if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
+                {
+                    Canvas.SetLeft(items[i], 2000);
+
+                    switch (rnd.Next(1, 3))
+                    {
+                        case 1:
+                            //itemF = new GoodItemFactory();
+                            break;
+                        case 2:
+                            //itemF = new BadItemFactory();
+                            break;
+                        default:
+                            break;
+
+                    }
+
+                    score += 1;
                 }
             }
             //gameEndPoint
@@ -600,47 +658,41 @@ namespace Runner2
                 switch (typeToCreate)
                 {
                     case 1:
-                        playerF = new PinkMonsterFactory(10);
+                        currentPlayer = playerF.FactoryMethod("Pink");
                         break;
                     case 2:
-                        playerF = new OwlMonsterFactory(12);
+                        currentPlayer = playerF.FactoryMethod("Owlet");
                         break;
                     case 3:
-                        playerF = new DudeMonsterFactory(8);
+                        currentPlayer = playerF.FactoryMethod("Dude");
                         break;
                     default:
                         break;
                 }
 
-                currentPlayer = playerF.GetPlayer();
             }
             else
             {
                 switch (typeToCreate)
                 {
                     case 1:
-                        playerF = new PinkMonsterFactory(10);
+                        opposingPlayer = playerF.FactoryMethod("Pink");
                         break;
                     case 2:
-                        playerF = new OwlMonsterFactory(12);
+                        opposingPlayer = playerF.FactoryMethod("Owlet");
                         break;
                     case 3:
-                        playerF = new DudeMonsterFactory(8);
+                        opposingPlayer = playerF.FactoryMethod("Dude");
                         break;
                     default:
                         break;
                 }
-
-                opposingPlayer = playerF.GetPlayer();
             }
         }
 
         private void CreateScene(int level)
         {
-            Background bg;
-            Platform plat;
-            Obstacle obs;
-            Item itm;
+
             switch (level)
             {
                 case 1:
@@ -655,18 +707,12 @@ namespace Runner2
             backgroundSprite.ImageSource = new BitmapImage(new Uri(bg.spritePath));
 
             plat = sceneF.CreatePlatform();
-
-            //itm = sceneF.CreateItem();
+            itm = sceneF.CreateItem();
             //obstaclePosition
 
             //gamePlatform.Fill = new SolidColorBrush(plat.color);
             //gamePlatform2.Fill = new SolidColorBrush(plat.color);
             //gamePlatform3.Fill = new SolidColorBrush(plat.color);
-
-
-            CreatePlatforms();
-            //CreateItems();
-
 
             ground.Fill = new SolidColorBrush(plat.color);
 
@@ -674,30 +720,7 @@ namespace Runner2
             obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
             obstacle.Fill = obstacleSprite;
         }
-        public void CreatePlatforms()
-        {
-            int number = 4;
-            int[] width = { 229, 299, 411, 200 };
-            int height = 32;
-            int[] topPositions = { 510, 316, 310, 201 };
-            int[] leftPositions = { 397, 46, 789, 539 };
 
-            for (int i = 0; i < number; i++)
-            {
-                Rectangle rec = new Rectangle()
-                {
-                    Width = width[i],
-                    Height = height,
-                    Fill = Brushes.Green,
-                    Stroke = Brushes.Red,
-                    StrokeThickness = 2,
-                };
-
-                GameWin.Children.Add(rec);
-                Canvas.SetTop(rec, topPositions[i]);
-                Canvas.SetLeft(rec, leftPositions[i]);
-            }
-        } 
         public void CreateItems()
         {
             int number = 4;
@@ -717,7 +740,7 @@ namespace Runner2
                     Stroke = Brushes.LemonChiffon,
                     StrokeThickness = 2,
                 };
-                
+
                 GameWin.Children.Add(rec);
                 Canvas.SetTop(rec, topPositions[i]);
                 Canvas.SetLeft(rec, leftPositions[i]);
