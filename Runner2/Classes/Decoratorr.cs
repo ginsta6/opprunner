@@ -23,7 +23,7 @@ namespace Runner2.Classes
         {
             this._player = aPlayer;
             gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            player = gameWin.Children[3];
+            player = gameWin.Children[4];
         }
 
         public override int SkinType
@@ -47,7 +47,7 @@ namespace Runner2.Classes
 
     public class MagicHat : Decoratorr
     {
-        private ImageBrush _image = new ImageBrush();
+        //private ImageBrush _image = new ImageBrush();
         public int index { get; set; }
         FrameworkElement hat;
         public MagicHat(Player aPlayer) : base(aPlayer)
@@ -61,8 +61,8 @@ namespace Runner2.Classes
             Canvas.SetLeft(hat, Canvas.GetLeft(base.player) - hat.Width / 3 - 5);
         }
         public override int SkinType => base.SkinType;
-        public override int Points { get => base.Points + 10; set => base.Points = value; }
-        public override float Speed { get => base.Speed + 5; set => base.Speed = value; }
+        public override int Points { get => base.Points; set => base.Points = value; }
+        public override float Speed { get => base.Speed; set => base.Speed = value; }
     }
     public class BaseballHat : Decoratorr
     {
@@ -75,18 +75,18 @@ namespace Runner2.Classes
         }
         public void moveHat()
         {
-            Canvas.SetTop(hat, Canvas.GetTop(base.player) - hat.Height / 2 - 5);
-            Canvas.SetLeft(hat, Canvas.GetLeft(base.player) - hat.Width / 3 - 5);
+            Canvas.SetTop(hat, Canvas.GetTop(base.player)  - 5);
+            Canvas.SetLeft(hat, Canvas.GetLeft(base.player));
         }
         public override int SkinType => base.SkinType;
-        public override int Points { get => base.Points + 2; set => base.Points = value; }
-        public override float Speed { get => base.Speed + 2; set => base.Speed = value; }
+        public override int Points { get => base.Points; set => base.Points = value; }
+        public override float Speed { get => base.Speed; set => base.Speed = value; }
     }
     public class CowboyHat : Decoratorr
     {
         public int index { get; set; }
         FrameworkElement hat;
-        public CowboyHat(Player aPlayer) : base(aPlayer)
+        public CowboyHat(Player aPlayer) :  base(aPlayer)
         {
             index = 8;
             hat = base.gameWin.Children[index] as FrameworkElement;
@@ -94,10 +94,10 @@ namespace Runner2.Classes
         public void moveHat()
         {
             Canvas.SetTop(hat, Canvas.GetTop(base.player) - hat.Height / 2 - 5);
-            Canvas.SetLeft(hat, Canvas.GetLeft(base.player) - hat.Width / 3 - 5);
+            Canvas.SetLeft(hat, Canvas.GetLeft(base.player) - hat.Width / 2 - 5);
         }
         public override int SkinType => base.SkinType;
-        public override int Points { get => base.Points + 3; set => base.Points = value; }
-        public override float Speed { get => base.Speed + 3; set => base.Speed = value; }
+        public override int Points { get => base.Points; set => base.Points = value; }
+        public override float Speed { get => base.Speed; set => base.Speed = value; }
     }
 }

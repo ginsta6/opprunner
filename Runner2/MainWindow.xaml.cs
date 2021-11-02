@@ -27,7 +27,17 @@ namespace Runner2
         Obstacle obs;
         Item itm;
         MagicHat magicHat;
+        CowboyHat cowboyHat;
+        BaseballHat baseballHat;
+
         SignalRService rService;
+
+        Creator playerF = new ConcreteCreator();
+        Player currentPlayer;
+        Player opposingPlayer;
+
+        //ItemFactory itemF;
+        AbstractSceneFactory sceneF;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
@@ -35,8 +45,6 @@ namespace Runner2
         Rect player2HitBox;
         Rect groundHitBox;
         Rect platformHitBox;
-        Rect platform2HitBox;
-        Rect platform3HitBox;
         List<FrameworkElement> gamePlatforms = new List<FrameworkElement>();
         List<Rect> platformHitBoxes = new List<Rect>();
         Rect obstacleHitBox;
@@ -49,7 +57,9 @@ namespace Runner2
 
         bool jumping;
         bool opposingJumping;
-        bool hasHat;
+        bool hasMagicHat;
+        bool hasBaseballHat;
+        bool hasCowboyHat;
 
         PlayerAnimationState playerAnimationCurrentState;
         PlayerAnimationState player2AnimationCurrentState;
@@ -60,12 +70,6 @@ namespace Runner2
             Standing
         }
 
-        Creator playerF = new ConcreteCreator();
-        Player currentPlayer;
-        Player opposingPlayer;
-
-        //ItemFactory itemF;
-        AbstractSceneFactory sceneF;
 
         int force = 20;
         int speed = 10;
@@ -92,7 +96,7 @@ namespace Runner2
 
         int[] obstaclePosition = { 320, 310, 300, 305, 315 };
 
-        int score = 0;
+        
 
         private int CurrentPlayers;
 
@@ -129,23 +133,7 @@ namespace Runner2
 
             background.Fill = backgroundSprite;
 
-            ImageBrush itemImage1 = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/magicHat.png")));
-            
-
-            //MagicHAT
-            magicHatItem.Fill = itemImage1;
-            magicHatHitBox = new Rect(Canvas.GetLeft(magicHatItem), Canvas.GetTop(magicHatItem), magicHatItem.Width, magicHatItem.Height);
-            //BaseballHAT
-            ImageBrush itemImage2 = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/baseballHat.png")));
-                        //itemImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/baseballHat.png"));
-            baseballhatItem.Fill = itemImage2;
-            baseballHatHitBox = new Rect(Canvas.GetLeft(baseballhatItem), Canvas.GetTop(baseballhatItem), baseballhatItem.Width, baseballhatItem.Height);
-            //CowboyHAT
-            ImageBrush itemImage3 = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/cowboyHat.png")));
-                        //itemImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/cowboyHat.png"));
-            cowboyHatItem.Fill = itemImage3;
-            cowboyHatHitBox = new Rect(Canvas.GetLeft(cowboyHatItem), Canvas.GetTop(cowboyHatItem), cowboyHatItem.Width, cowboyHatItem.Height);
-
+            createHats();
 
             //background2.Fill = backgroundSprite;
 
@@ -250,11 +238,13 @@ namespace Runner2
 
             jumping = false;
             gameOver = false;
-            hasHat = false;
-            score = 0;
+            hasMagicHat = false;
+            hasBaseballHat = false;
+            hasCowboyHat = false;
             playerAnimationCurrentState = PlayerAnimationState.Standing;
 
-            scoreText.Content = "Score: " + score;
+            //scoreText.Content = "Score: " + currentPlayer.Points;
+            //OtherScoreText.Content = "Score: " + opposingPlayer.Points;
 
             obstacle.Visibility = Visibility.Visible;
             player.Visibility = Visibility.Visible;
@@ -286,7 +276,8 @@ namespace Runner2
             //Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
             //Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
 
-            scoreText.Content = "Score: " + score;
+            scoreText.Content = "Your Score: " + currentPlayer.Points;
+            OtherScoreText.Content = "Score: " + opposingPlayer.Points;
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
@@ -320,9 +311,17 @@ namespace Runner2
             //-------Hitbox platform interaction----
             HandleHitBoxCollisions();
 
-            if (hasHat)
+            if (hasMagicHat)
             {
                 magicHat.moveHat();
+            }
+            if (hasBaseballHat)
+            {
+                baseballHat.moveHat();
+            }
+            if (hasCowboyHat)
+            {
+                cowboyHat.moveHat();
             }
 
             //--------------------------------------
@@ -402,7 +401,7 @@ namespace Runner2
                 player.Stroke = Brushes.Red;
                 player.StrokeThickness = 1;
 
-                scoreText.Content = "Score: " + score + " Press Enter to play again!!";
+                scoreText.Content = "Score: " + currentPlayer.Points + " Press Enter to play again!!";
             }
             else
             {
@@ -551,21 +550,30 @@ namespace Runner2
                     Canvas.SetTop(player2, Canvas.GetTop(gamePlatforms[i]) - player2.Height);
                 }
             }
-            //magic hat-----------------------------------------------------------------------------------------------------------
-            if (playerHitBox.IntersectsWith(magicHatHitBox) && !hasHat)
+            //HATS-----------------------------------------------------------------------------------------------------------
+            if (playerHitBox.IntersectsWith(magicHatHitBox) && !hasMagicHat)
             {
-                //magicHat.addHat()
-                hasHat = true;
+                hasMagicHat = true;
                 magicHat = new MagicHat(currentPlayer);
+            }
+            if (playerHitBox.IntersectsWith(baseballHatHitBox) && !hasBaseballHat)
+            {
+                hasBaseballHat = true;
+                baseballHat = new BaseballHat(currentPlayer);
+            }
+            if (playerHitBox.IntersectsWith(cowboyHatHitBox) && !hasCowboyHat)
+            {
+                hasCowboyHat = true;
+                cowboyHat = new CowboyHat(currentPlayer);
             }
             //items
             for (int i = 0; i < itm.number; i++)
             {
                 if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
                 {
-                    itemHitBoxes[i] = new Rect();
-
-                    Canvas.SetLeft(items[i], 2000);
+                    itemHitBoxes[i] = new Rect(2000,2000,2,2);
+                    Canvas.SetLeft(GameWin.Children[itm.startIndex+i],2000);
+                    //Canvas.SetLeft(items[i], 2000);
 
                     switch (rnd.Next(1, 3))
                     {
@@ -578,11 +586,11 @@ namespace Runner2
                         default:
                             break;
                     }
-                    score += 1;
-
+                    currentPlayer.Points += 1;
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
+                    itemHitBoxes[i] = new Rect();
                     Canvas.SetLeft(items[i], 2000);
 
                     switch (rnd.Next(1, 3))
@@ -595,10 +603,8 @@ namespace Runner2
                             break;
                         default:
                             break;
-
                     }
-
-                    score += 1;
+                    opposingPlayer.Points += 1;
                 }
             }
             //gameEndPoint
@@ -644,7 +650,6 @@ namespace Runner2
                 flipTrans.ScaleX = 1;
                 Canvas.SetLeft(player, Canvas.GetLeft(player) + currentPlayer.Speed);
             }
-
             player.RenderTransform = flipTrans;
         }
 
@@ -662,7 +667,6 @@ namespace Runner2
                 flipTrans.ScaleX = 1;
                 Canvas.SetLeft(player2, Canvas.GetLeft(player2) + opposingPlayer.Speed);
             }
-
             player2.RenderTransform = flipTrans;
         }
 
@@ -684,7 +688,6 @@ namespace Runner2
                     default:
                         break;
                 }
-
             }
             else
             {
@@ -724,10 +727,6 @@ namespace Runner2
             plat = sceneF.CreatePlatform();
             itm = sceneF.CreateItem();
             //obstaclePosition
-
-            //gamePlatform.Fill = new SolidColorBrush(plat.color);
-            //gamePlatform2.Fill = new SolidColorBrush(plat.color);
-            //gamePlatform3.Fill = new SolidColorBrush(plat.color);
 
             ground.Fill = new SolidColorBrush(plat.color);
 
@@ -924,6 +923,20 @@ namespace Runner2
             {
                 IdleSprite(currentPlayer, player, playerSprite);
             }
+        }
+        private void createHats()
+        {
+            //Magic HAT
+            magicHatItem.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/magicHat.png")));
+            magicHatHitBox = new Rect(Canvas.GetLeft(magicHatItem), Canvas.GetTop(magicHatItem), magicHatItem.Width, magicHatItem.Height);
+            
+            //Baseball HAT
+            baseballhatItem.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/baseballHat.png")));
+            baseballHatHitBox = new Rect(Canvas.GetLeft(baseballhatItem), Canvas.GetTop(baseballhatItem), baseballhatItem.Width, baseballhatItem.Height);
+            
+            //Cowboy HAT
+            cowboyHatItem.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/cowboyHat.png")));
+            cowboyHatHitBox = new Rect(Canvas.GetLeft(cowboyHatItem), Canvas.GetTop(cowboyHatItem), cowboyHatItem.Width, cowboyHatItem.Height);
         }
 
     }

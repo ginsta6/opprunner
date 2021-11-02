@@ -8,7 +8,7 @@
         Title="Runner" Height="675" Width="1200">
     <Canvas Name="MainWin" Focusable="True" KeyDown="KeyIsDown" KeyUp="KeyIsUp" Background="Blue" x:FieldModifier="public">
 
-        <Canvas x:Name="StartWin" Focusable="True" Visibility="Visible">
+        <Canvas x:Name="StartWin"  Visibility="Visible">
 
             <Label x:Name="title" Height="200"   Canvas.Top="76" Width="603" FontSize="85" VerticalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="534" Content="Monster &#xD;&#xA;     Runner" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
             <TextBox x:Name="nameInput" Height="67
@@ -52,11 +52,11 @@
             <Rectangle Name="background" Height="650" Width="1200" Fill="Orange" Canvas.Left="0"  />
             <Rectangle Name="gameEndPoint" Height="110" Width="75" Fill="Brown" Canvas.Top="201" Canvas.Left="1100" />
             <Rectangle Name="ground" Height="32" Width="1596" Fill="Black" Canvas.Top="607" Canvas.Left="-4"/>
-            <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="509" Canvas.Left="81"/>
             <Rectangle Name="player2" Height="100" Width="67" Fill="Brown" Canvas.Top="508" Canvas.Left="81"/>
+            <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="509" Canvas.Left="81"/>
             <Rectangle Name="obstacle" Height="56" Width="50" Fill="Red" Canvas.Top="255" Canvas.Left="947"  />
-            <Rectangle Name="magicHatItem" Height="80" Width="185"   Canvas.Top="420" Canvas.Left="484"   />
-            <Rectangle Name="baseballhatItem" Height="40" Width="60"  Canvas.Top="508" Canvas.Left="990"   />
+            <Rectangle Name="magicHatItem" Height="80" Width="185"   Canvas.Top="240" Canvas.Left="484"   />
+            <Rectangle Name="baseballhatItem" Height="40" Width="65"  Canvas.Top="508" Canvas.Left="990"   />
             <Rectangle Name="cowboyHatItem" Height="50" Width="100"   Canvas.Top="42" Canvas.Left="169"   />
             <Label Name="scoreText" FontSize="32" FontWeight="Bold" Content="Score: 0"   />
             <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="Player: 0" Canvas.Left="539" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
