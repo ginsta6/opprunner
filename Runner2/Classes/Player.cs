@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace Runner2.Classes
 {
@@ -24,12 +29,17 @@ namespace Runner2.Classes
         private readonly int _skinType;
         private int _points;
         private float _speed;
+        private ImageBrush _image = new ImageBrush();
 
         public PinkMonster(float speed)
         {
             _skinType = 1;
             _points = 0;
             _speed = speed;
+            _image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
+            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+            var player = gameWin.Children[3] as Rectangle;
+            player.Fill = _image;
         }
 
         public override int SkinType
@@ -133,8 +143,10 @@ namespace Runner2.Classes
     /// </summary>
     class ConcreteCreator : Creator
     {
+
+            
         public override Player FactoryMethod(string type)
-        {
+        {            
             switch (type)
             {
                 case "Pink":

@@ -179,6 +179,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Decoratorr.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Scene.cs" />
@@ -297,6 +298,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\door.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\goodItems\magicHat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\goodItems\baseballHat.png" />
+    <Resource Include="Images\goodItems\cowboyHat.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

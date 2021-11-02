@@ -26,7 +26,7 @@ namespace Runner2
         Platform plat;
         Obstacle obs;
         Item itm;
-
+        MagicHat magicHat;
         SignalRService rService;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
@@ -42,11 +42,14 @@ namespace Runner2
         Rect obstacleHitBox;
         List<Rect> itemHitBoxes = new List<Rect>();
         List<FrameworkElement> items = new List<FrameworkElement>();
-        Rect itemHitBox;
+        Rect magicHatHitBox;
+        Rect baseballHatHitBox;
+        Rect cowboyHatHitBox;
         Rect finishHitBox;
 
         bool jumping;
         bool opposingJumping;
+        bool hasHat;
 
         PlayerAnimationState playerAnimationCurrentState;
         PlayerAnimationState player2AnimationCurrentState;
@@ -125,6 +128,25 @@ namespace Runner2
 
 
             background.Fill = backgroundSprite;
+
+            ImageBrush itemImage1 = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/magicHat.png")));
+            
+
+            //MagicHAT
+            magicHatItem.Fill = itemImage1;
+            magicHatHitBox = new Rect(Canvas.GetLeft(magicHatItem), Canvas.GetTop(magicHatItem), magicHatItem.Width, magicHatItem.Height);
+            //BaseballHAT
+            ImageBrush itemImage2 = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/baseballHat.png")));
+                        //itemImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/baseballHat.png"));
+            baseballhatItem.Fill = itemImage2;
+            baseballHatHitBox = new Rect(Canvas.GetLeft(baseballhatItem), Canvas.GetTop(baseballhatItem), baseballhatItem.Width, baseballhatItem.Height);
+            //CowboyHAT
+            ImageBrush itemImage3 = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/cowboyHat.png")));
+                        //itemImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/cowboyHat.png"));
+            cowboyHatItem.Fill = itemImage3;
+            cowboyHatHitBox = new Rect(Canvas.GetLeft(cowboyHatItem), Canvas.GetTop(cowboyHatItem), cowboyHatItem.Width, cowboyHatItem.Height);
+
+
             //background2.Fill = backgroundSprite;
 
             //StartGame();
@@ -228,6 +250,7 @@ namespace Runner2
 
             jumping = false;
             gameOver = false;
+            hasHat = false;
             score = 0;
             playerAnimationCurrentState = PlayerAnimationState.Standing;
 
@@ -269,8 +292,13 @@ namespace Runner2
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
+            //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //magicHatHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
 
-            //itemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
+            //ImageBrush itemImage = new ImageBrush();
+            //itemImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/magicHat.png"));
+            //item.Fill = itemImage;
+            //----------------------------------------------------------------------------------------------------------------------------------
 
             for (int i = plat.startIndex; i < plat.endIndex; i++)
             {
@@ -292,6 +320,10 @@ namespace Runner2
             //-------Hitbox platform interaction----
             HandleHitBoxCollisions();
 
+            if (hasHat)
+            {
+                magicHat.moveHat();
+            }
 
             //--------------------------------------
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
@@ -331,33 +363,13 @@ namespace Runner2
             //    score += 1;
             //}
 
-            if (Canvas.GetLeft(item) < -50)
-            {
-                Canvas.SetLeft(item, 2000);
-            }
-
-            //-----------------Item---------------------
-            //if (playerHitBox.IntersectsWith(itemHitBox))
+            //if (Canvas.GetLeft(item) < -50)
             //{
             //    Canvas.SetLeft(item, 2000);
-
-            //    switch (rnd.Next(1, 3))
-            //    {
-            //        case 1:
-            //            //itemF = new GoodItemFactory();
-            //            break;
-            //        case 2:
-            //            //itemF = new BadItemFactory();
-            //            break;
-            //        default:
-            //            break;
-
-            //    }
-
-            //    score += 1;
-            //    //var potion = itemF.CreatePotion();
-
             //}
+
+            //-----------------Item---------------------
+            
             //Made two different 'if's to make logic of applying item effects easier later maybe
             //if (player2HitBox.IntersectsWith(itemHitBox))
             //{
@@ -539,17 +551,19 @@ namespace Runner2
                     Canvas.SetTop(player2, Canvas.GetTop(gamePlatforms[i]) - player2.Height);
                 }
             }
-
+            //magic hat-----------------------------------------------------------------------------------------------------------
+            if (playerHitBox.IntersectsWith(magicHatHitBox) && !hasHat)
+            {
+                //magicHat.addHat()
+                hasHat = true;
+                magicHat = new MagicHat(currentPlayer);
+            }
             //items
             for (int i = 0; i < itm.number; i++)
             {
                 if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
                 {
                     itemHitBoxes[i] = new Rect();
-
-//---------------kazkas su dekoratorium ---------------------------------------------------------------------------------------------
-                    //Player pl = new PinkMonster(10);
-                    //MagicHat mghat = new Decoratorr(pl); 
 
                     Canvas.SetLeft(items[i], 2000);
 
@@ -564,6 +578,7 @@ namespace Runner2
                         default:
                             break;
                     }
+                    score += 1;
 
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))

@@ -55,7 +55,9 @@
             <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="509" Canvas.Left="81"/>
             <Rectangle Name="player2" Height="100" Width="67" Fill="Brown" Canvas.Top="508" Canvas.Left="81"/>
             <Rectangle Name="obstacle" Height="56" Width="50" Fill="Red" Canvas.Top="255" Canvas.Left="947"  />
-            <Rectangle Name="item" Height="50" Width="50" Fill="Red" Canvas.Top="460" Canvas.Left="484"   />
+            <Rectangle Name="magicHatItem" Height="80" Width="185"   Canvas.Top="420" Canvas.Left="484"   />
+            <Rectangle Name="baseballhatItem" Height="40" Width="60"  Canvas.Top="508" Canvas.Left="990"   />
+            <Rectangle Name="cowboyHatItem" Height="50" Width="100"   Canvas.Top="42" Canvas.Left="169"   />
             <Label Name="scoreText" FontSize="32" FontWeight="Bold" Content="Score: 0"   />
             <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="Player: 0" Canvas.Left="539" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
 
