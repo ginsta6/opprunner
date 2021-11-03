@@ -225,6 +225,9 @@ namespace Runner2
         {
             CantPlayText.Visibility = Visibility.Hidden;
 
+            LobbyWin.Visibility = Visibility.Hidden;
+            GameWin.Visibility = Visibility.Visible;
+
             CreateScene(1);
 
             Canvas.SetLeft(background, 0);
@@ -507,8 +510,8 @@ namespace Runner2
             //}
             //else
             {
-                LobbyWin.Visibility = Visibility.Hidden;
-                GameWin.Visibility = Visibility.Visible;
+                //LobbyWin.Visibility = Visibility.Hidden;
+                //GameWin.Visibility = Visibility.Visible;
 
                 SendStartSignalOthers();
                 //StartGame();
@@ -554,25 +557,42 @@ namespace Runner2
             if (playerHitBox.IntersectsWith(magicHatHitBox) && !hasMagicHat)
             {
                 hasMagicHat = true;
-                magicHat = new MagicHat(currentPlayer);
+                magicHat = new MagicHat(currentPlayer, "player");
             }
             if (playerHitBox.IntersectsWith(baseballHatHitBox) && !hasBaseballHat)
             {
                 hasBaseballHat = true;
-                baseballHat = new BaseballHat(currentPlayer);
+                baseballHat = new BaseballHat(currentPlayer, "player");
             }
             if (playerHitBox.IntersectsWith(cowboyHatHitBox) && !hasCowboyHat)
             {
                 hasCowboyHat = true;
-                cowboyHat = new CowboyHat(currentPlayer);
+                cowboyHat = new CowboyHat(currentPlayer, "player");
+            }
+            if (player2HitBox.IntersectsWith(magicHatHitBox) && !hasMagicHat)
+            {
+                hasMagicHat = true;
+                magicHat = new MagicHat(opposingPlayer, "player2");
+            }
+            if (player2HitBox.IntersectsWith(baseballHatHitBox) && !hasBaseballHat)
+            {
+                hasBaseballHat = true;
+                baseballHat = new BaseballHat(opposingPlayer, "player2");
+            }
+            if (player2HitBox.IntersectsWith(cowboyHatHitBox) && !hasCowboyHat)
+            {
+                hasCowboyHat = true;
+                cowboyHat = new CowboyHat(opposingPlayer, "player2");
             }
             //items
             for (int i = 0; i < itm.number; i++)
             {
                 if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
                 {
-                    itemHitBoxes[i] = new Rect(2000,2000,2,2);
-                    Canvas.SetLeft(GameWin.Children[itm.startIndex+i],2000);
+                    itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
+                    Canvas.SetLeft(GameWin.Children[itm.startIndex + i], 2000);
+                    Canvas.SetLeft(items[i], 2000);
+                    items[i].Visibility = Visibility.Hidden;
                     //Canvas.SetLeft(items[i], 2000);
 
                     switch (rnd.Next(1, 3))
@@ -590,8 +610,10 @@ namespace Runner2
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
-                    itemHitBoxes[i] = new Rect();
+                    itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
+                    Canvas.SetLeft(GameWin.Children[itm.startIndex + i], 2000);
                     Canvas.SetLeft(items[i], 2000);
+                    items[i].Visibility = Visibility.Hidden;
 
                     switch (rnd.Next(1, 3))
                     {
@@ -628,9 +650,9 @@ namespace Runner2
         private void GoToNextLevel()
         {
             CreateScene(2);//Canvas.Top="703" Canvas.Left="80"
-            Canvas.SetTop(player, 703 + speed);
+            Canvas.SetTop(player, 510 + speed);
             Canvas.SetLeft(player, 80);
-            Canvas.SetTop(player2, 703 + opposingSpeed);
+            Canvas.SetTop(player2, 510 + opposingSpeed);
             Canvas.SetLeft(player2, 80);
 
             //Change canvas visibility
@@ -734,33 +756,7 @@ namespace Runner2
             obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
             obstacle.Fill = obstacleSprite;
         }
-
-        public void CreateItems()
-        {
-            int number = 4;
-            int width = 50;
-            int height = 50;
-            //Random rnd = new Random(650, 1200);
-            int[] topPositions = { 510, 316, 310, 201 };
-            int[] leftPositions = { 397, 46, 789, 539 };
-
-            for (int i = 0; i < number; i++)
-            {
-                Rectangle rec = new Rectangle()
-                {
-                    Width = width,
-                    Height = height,
-                    Fill = Brushes.BlueViolet,
-                    Stroke = Brushes.LemonChiffon,
-                    StrokeThickness = 2,
-                };
-
-                GameWin.Children.Add(rec);
-                Canvas.SetTop(rec, topPositions[i]);
-                Canvas.SetLeft(rec, leftPositions[i]);
-            }
-        }
-
+        
         private void setActiveLobbyObjs()
         {
             title.Visibility = Visibility.Hidden;

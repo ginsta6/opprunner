@@ -19,11 +19,11 @@ namespace Runner2.Classes
         private Player _player;
         public Canvas gameWin { get; }
         public UIElement player { get; }
-        public Decoratorr(Player aPlayer)
+        public Decoratorr(Player aPlayer, string name)
         {
             this._player = aPlayer;
             gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            player = gameWin.Children[4];
+            player = (UIElement) gameWin.FindName(name);
         }
 
         public override int SkinType
@@ -50,7 +50,7 @@ namespace Runner2.Classes
         //private ImageBrush _image = new ImageBrush();
         public int index { get; set; }
         FrameworkElement hat;
-        public MagicHat(Player aPlayer) : base(aPlayer)
+        public MagicHat(Player aPlayer, string name) : base(aPlayer, name)
         {
             index = 6;
             hat = base.gameWin.Children[index] as FrameworkElement;
@@ -68,7 +68,7 @@ namespace Runner2.Classes
     {
         public int index { get; set; }
         FrameworkElement hat;
-        public BaseballHat(Player aPlayer) : base(aPlayer)
+        public BaseballHat(Player aPlayer, string name) : base(aPlayer, name)
         {
             index = 7;
             hat = base.gameWin.Children[index] as FrameworkElement;
@@ -86,7 +86,7 @@ namespace Runner2.Classes
     {
         public int index { get; set; }
         FrameworkElement hat;
-        public CowboyHat(Player aPlayer) :  base(aPlayer)
+        public CowboyHat(Player aPlayer, string name) : base(aPlayer, name)
         {
             index = 8;
             hat = base.gameWin.Children[index] as FrameworkElement;

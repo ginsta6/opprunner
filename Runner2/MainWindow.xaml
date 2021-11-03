@@ -52,8 +52,8 @@
             <Rectangle Name="background" Height="650" Width="1200" Fill="Orange" Canvas.Left="0"  />
             <Rectangle Name="gameEndPoint" Height="110" Width="75" Fill="Brown" Canvas.Top="201" Canvas.Left="1100" />
             <Rectangle Name="ground" Height="32" Width="1596" Fill="Black" Canvas.Top="607" Canvas.Left="-4"/>
-            <Rectangle Name="player2" Height="100" Width="67" Fill="Brown" Canvas.Top="508" Canvas.Left="81"/>
-            <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="509" Canvas.Left="81"/>
+            <Rectangle Name="player2" Height="100" Width="67" Fill="Brown" Canvas.Top="510" Canvas.Left="80"/>
+            <Rectangle Name="player" Height="99" Width="67" Fill="Brown" Canvas.Top="510" Canvas.Left="80"/>
             <Rectangle Name="obstacle" Height="56" Width="50" Fill="Red" Canvas.Top="255" Canvas.Left="947"  />
             <Rectangle Name="magicHatItem" Height="80" Width="185"   Canvas.Top="240" Canvas.Left="484"   />
             <Rectangle Name="baseballhatItem" Height="40" Width="65"  Canvas.Top="508" Canvas.Left="990"   />
