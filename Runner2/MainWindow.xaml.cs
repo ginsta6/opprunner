@@ -54,6 +54,7 @@ namespace Runner2
         Rect baseballHatHitBox;
         Rect cowboyHatHitBox;
         Rect finishHitBox;
+        Rect potionHitBox;
 
         bool jumping;
         bool opposingJumping;
@@ -286,6 +287,7 @@ namespace Runner2
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
             obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
+            potionHitBox = new Rect(Canvas.GetLeft(testpotion), Canvas.GetTop(testpotion), testpotion.Width, testpotion.Height);
             //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             //magicHatHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
 
@@ -644,6 +646,24 @@ namespace Runner2
             {
                 Canvas.SetTop(player2, 509 + opposingSpeed);
                 Canvas.SetLeft(player2, 80);
+            }
+
+            //-----Potion------
+            if (playerHitBox.IntersectsWith(potionHitBox))
+            {
+                Canvas.SetLeft(testpotion, 2000);
+                //Create potion effect
+                PotionEffectAlgorithm pot = new IncreaseSpeedPotion();
+                //Use potion effect
+                pot.giveEffect(currentPlayer);
+            }
+            if (player2HitBox.IntersectsWith(potionHitBox))
+            {
+                Canvas.SetLeft(testpotion, 2000);
+                //Create potion effect
+                PotionEffectAlgorithm pot = new IncreaseSpeedPotion();
+                //Use potion effect
+                pot.giveEffect(opposingPlayer);
             }
         }
 

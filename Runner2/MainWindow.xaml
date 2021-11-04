@@ -61,6 +61,8 @@
             <Label Name="scoreText" FontSize="32" FontWeight="Bold" Content="Score: 0"   />
             <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="Player: 0" Canvas.Left="539" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
 
+            <Rectangle Name="testpotion" Height="50" Width="50" Fill="Gold" Canvas.Left="935" Canvas.Top="510" />
+
             <!--<Rectangle Name="gamePlatform" Height="32" Width="229" Fill="Black" Canvas.Top="510" Canvas.Left="397" />-->
             <!--<Rectangle Name="gamePlatform2" Height="32" Width="299" Fill="Black" Canvas.Top="316" Canvas.Left="46" />
             <Rectangle Name="gamePlatform3" Height="32" Width="411" Fill="Black" Canvas.Top="310" Canvas.Left="789" />
