@@ -291,7 +291,7 @@ namespace Runner2.Classes
                 {
                     Width = width,
                     Height = height,
-                    Fill = Brushes.BlueViolet,
+                    Fill = Brushes.Linen,
                     Stroke = Brushes.LemonChiffon,
                     StrokeThickness = 2,
                 };
