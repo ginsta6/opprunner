@@ -31,7 +31,7 @@ namespace Runner2.Classes
             get { return _player.SkinType; }
         }
 
-        public override int Points
+        public override PointsCounter Points
         {
             get { return _player.Points; }
             set { _player.Points = value; }
@@ -61,7 +61,7 @@ namespace Runner2.Classes
             Canvas.SetLeft(hat, Canvas.GetLeft(base.player) - hat.Width / 3 - 5);
         }
         public override int SkinType => base.SkinType;
-        public override int Points { get => base.Points; set => base.Points = value; }
+        public override PointsCounter Points { get => base.Points; set => base.Points = value; }
         public override float Speed { get => base.Speed; set => base.Speed = value; }
     }
     public class BaseballHat : Decoratorr
@@ -79,7 +79,7 @@ namespace Runner2.Classes
             Canvas.SetLeft(hat, Canvas.GetLeft(base.player));
         }
         public override int SkinType => base.SkinType;
-        public override int Points { get => base.Points; set => base.Points = value; }
+        public override PointsCounter Points { get => base.Points; set => base.Points = value; }
         public override float Speed { get => base.Speed; set => base.Speed = value; }
     }
     public class CowboyHat : Decoratorr
@@ -97,7 +97,7 @@ namespace Runner2.Classes
             Canvas.SetLeft(hat, Canvas.GetLeft(base.player) - hat.Width / 2 - 5);
         }
         public override int SkinType => base.SkinType;
-        public override int Points { get => base.Points; set => base.Points = value; }
+        public override PointsCounter Points { get => base.Points; set => base.Points = value; }
         public override float Speed { get => base.Speed; set => base.Speed = value; }
     }
 }

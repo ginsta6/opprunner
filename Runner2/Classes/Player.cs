@@ -11,14 +11,34 @@ using System.Windows.Shapes;
 
 namespace Runner2.Classes
 {
+    public interface IClonable
+    {
+        IClonable shallowCopy();
+        IClonable deepCopy();
+    }
     /// <summary>
     /// Product
     /// </summary>
-    public abstract class Player
+    public abstract class Player : IClonable
     {
         public abstract int SkinType { get;  }
-        public abstract int Points { get; set; }
+        public abstract PointsCounter Points { get; set; }
         public abstract float Speed { get; set; }
+
+        public IClonable deepCopy()
+        {
+            Player other = (Player)this.MemberwiseClone();
+            other.Points = new PointsCounter();
+            other.Points.AddPoints(other.Points.points);
+            return other;
+
+        }
+
+        public IClonable shallowCopy()
+        {
+            return (Player)this.MemberwiseClone();
+
+        }
     }
 
     /// <summary>
@@ -27,14 +47,14 @@ namespace Runner2.Classes
     class PinkMonster : Player
     {
         private readonly int _skinType;
-        private int _points;
+        private PointsCounter _points;
         private float _speed;
         private ImageBrush _image = new ImageBrush();
 
         public PinkMonster(float speed)
         {
             _skinType = 1;
-            _points = 0;
+            _points = new PointsCounter();
             _speed = speed;
             _image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/pink/pinkjump4.png"));
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
@@ -47,18 +67,25 @@ namespace Runner2.Classes
             get { return _skinType; }
         }
 
-        public override int Points
+        public override PointsCounter Points
         {
             get { return _points; }
             set { _points = value; }
 
-        } 
+        }
 
         public override float Speed
         {
             get { return _speed; }
             set { _speed = value; }
         }
+
+        //public override IClonable deepCopy()
+        //{
+        //    PinkMonster other = new PinkMonster(this.Speed);
+        //    other.Points = this.Points;
+        //    return other;
+        //}
     }
 
     /// <summary>
@@ -67,13 +94,13 @@ namespace Runner2.Classes
     class OwlMonster : Player
     {
         private readonly int _skinType;
-        private int _points;
+        private PointsCounter _points;
         private float _speed;
 
         public OwlMonster(float speed)
         {
             _skinType = 2;
-            _points = 0;
+            _points = new PointsCounter();
             _speed = speed;
         }
 
@@ -82,7 +109,7 @@ namespace Runner2.Classes
             get { return _skinType; }
         }
 
-        public override int Points
+        public override PointsCounter Points
         {
             get { return _points; }
             set { _points = value; }
@@ -94,6 +121,13 @@ namespace Runner2.Classes
             get { return _speed; }
             set { _speed = value; }
         }
+
+        //public override IClonable deepCopy()
+        //{
+        //    OwlMonster other = new OwlMonster(this.Speed);
+        //    other.Points = this.Points;
+        //    return other;
+        //}
     }
     /// <summary>
     /// concrete product3
@@ -101,13 +135,13 @@ namespace Runner2.Classes
     class DudeMonster : Player
     {
         private readonly int _skinType;
-        private int _points;
+        private PointsCounter _points;
         private float _speed;
 
         public DudeMonster(float speed)
         {
             _skinType = 3;
-            _points = 0;
+            _points = new PointsCounter();
             _speed = speed;
         }
 
@@ -116,7 +150,7 @@ namespace Runner2.Classes
             get { return _skinType; }
         }
 
-        public override int Points
+        public override PointsCounter Points
         {
             get { return _points; }
             set { _points = value; }
@@ -128,6 +162,36 @@ namespace Runner2.Classes
             get { return _speed; }
             set { _speed = value; }
         }
+
+        //public override IClonable deepCopy()
+        //{
+        //    DudeMonster other = new DudeMonster(this.Speed);
+        //    other.Points = this.Points;
+        //    return other;
+        //}
+    }
+
+    public class PointsCounter
+    {
+        public int points;
+
+        public PointsCounter()
+        {
+            points = 0;
+        }
+        public void ResetPoints()
+        {
+            points = 0;
+        }
+        public void AddPoints(int add)
+        {
+            points += add;
+        }
+        public void SubtractPoints(int sub)
+        {
+            points -= sub;
+        }
+
     }
 
     /// <summary>
