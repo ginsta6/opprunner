@@ -674,9 +674,9 @@ namespace Runner2
             if (playerHitBox.IntersectsWith(obstacleHitBox))
             {
                 // DEEP COPY
-                //currentPlayer = currentPlayerDeepCopy;
-                //currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
-                currentPlayer = currentPlayerShallowCopy;
+                currentPlayer = currentPlayerDeepCopy;
+                currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
+                //currentPlayer = currentPlayerShallowCopy;
 
                 Canvas.SetTop(player, 509 + speed);
                 Canvas.SetLeft(player, 80);
@@ -684,11 +684,11 @@ namespace Runner2
             if (player2HitBox.IntersectsWith(obstacleHitBox))
             {
                 // DEEP COPY
-                //opposingPlayer = opposingPlayerDeepCopy;
-                //opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
+                opposingPlayer = opposingPlayerDeepCopy;
+                opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
 
                 // SHALLOW COPY
-                opposingPlayer = opposingPlayerShallowCopy;
+                //opposingPlayer = opposingPlayerShallowCopy;
 
 
 
@@ -736,14 +736,14 @@ namespace Runner2
             if (nameInput.Text == names[0])        //Player in given instance is the first one who connected
             {
                 //give player2 second type from list
-                endScore1.Content = currentPlayer.Points;
-                endScore2.Content = opposingPlayer.Points;
+                endScore1.Content = currentPlayer.Points.points;
+                endScore2.Content = opposingPlayer.Points.points;
             }
             else
             {
                 //give player2 first type from list
-                endScore2.Content = currentPlayer.Points;
-                endScore1.Content = opposingPlayer.Points;
+                endScore2.Content = currentPlayer.Points.points;
+                endScore1.Content = opposingPlayer.Points.points;
             }
             endPlayer1.Content = names[0];
             endPlayer2.Content = names[1];
