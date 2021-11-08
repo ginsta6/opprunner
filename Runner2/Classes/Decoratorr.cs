@@ -16,7 +16,7 @@ namespace Runner2.Classes
     /// </summary>
     public abstract class Decoratorr : Player
     {
-        private Player _player;
+        public Player _player;
         public Canvas gameWin { get; }
         public UIElement player { get; }
         public Decoratorr(Player aPlayer, string name)
@@ -42,7 +42,12 @@ namespace Runner2.Classes
             get { return _player.Speed; }
             set { _player.Speed = value; }
         }
-        
+        public override void Update()
+        {
+        }
+        public override void RemoveHats()
+        {
+        }
     }
 
     public class MagicHat : Decoratorr
@@ -52,6 +57,7 @@ namespace Runner2.Classes
         FrameworkElement hat;
         public MagicHat(Player aPlayer, string name) : base(aPlayer, name)
         {
+            _player = aPlayer;
             index = 6;
             hat = base.gameWin.Children[index] as FrameworkElement;
         }
@@ -63,6 +69,16 @@ namespace Runner2.Classes
         public override int SkinType => base.SkinType;
         public override PointsCounter Points { get => base.Points; set => base.Points = value; }
         public override float Speed { get => base.Speed; set => base.Speed = value; }
+        public override void Update()
+        {
+            moveHat();
+            this._player.Update();
+        }
+        public override void RemoveHats()
+        {
+            base.gameWin.Children[index].Visibility = Visibility.Hidden;
+            this._player.RemoveHats();
+        }
     }
     public class BaseballHat : Decoratorr
     {
@@ -70,6 +86,7 @@ namespace Runner2.Classes
         FrameworkElement hat;
         public BaseballHat(Player aPlayer, string name) : base(aPlayer, name)
         {
+            _player = aPlayer;
             index = 7;
             hat = base.gameWin.Children[index] as FrameworkElement;
         }
@@ -81,6 +98,16 @@ namespace Runner2.Classes
         public override int SkinType => base.SkinType;
         public override PointsCounter Points { get => base.Points; set => base.Points = value; }
         public override float Speed { get => base.Speed; set => base.Speed = value; }
+        public override void Update()
+        {
+            moveHat();
+            this._player.Update();
+        }
+        public override void RemoveHats()
+        {
+            base.gameWin.Children[index].Visibility = Visibility.Hidden;
+            this._player.RemoveHats();
+        }
     }
     public class CowboyHat : Decoratorr
     {
@@ -88,6 +115,7 @@ namespace Runner2.Classes
         FrameworkElement hat;
         public CowboyHat(Player aPlayer, string name) : base(aPlayer, name)
         {
+            _player = aPlayer;
             index = 8;
             hat = base.gameWin.Children[index] as FrameworkElement;
         }
@@ -99,5 +127,15 @@ namespace Runner2.Classes
         public override int SkinType => base.SkinType;
         public override PointsCounter Points { get => base.Points; set => base.Points = value; }
         public override float Speed { get => base.Speed; set => base.Speed = value; }
+        public override void Update()
+        {
+            moveHat();
+            this._player.Update();
+        }
+        public override void RemoveHats()
+        {
+            base.gameWin.Children[index].Visibility = Visibility.Hidden;
+            this._player.RemoveHats();
+        }
     }
 }

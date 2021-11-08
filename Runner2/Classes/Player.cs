@@ -25,11 +25,12 @@ namespace Runner2.Classes
         public abstract PointsCounter Points { get; set; }
         public abstract float Speed { get; set; }
 
+        public abstract void Update();
+        public abstract void RemoveHats();
         public IClonable deepCopy()
         {
             Player other = (Player)this.MemberwiseClone();
-            other.Points = new PointsCounter();
-            other.Points.AddPoints(other.Points.points);
+            other.Points = (PointsCounter)this.Points.deepCopy();
             return other;
 
         }
@@ -80,6 +81,13 @@ namespace Runner2.Classes
             set { _speed = value; }
         }
 
+        public override void Update()
+        {
+        }
+        public override void RemoveHats()
+        {
+        }
+
         //public override IClonable deepCopy()
         //{
         //    PinkMonster other = new PinkMonster(this.Speed);
@@ -120,6 +128,12 @@ namespace Runner2.Classes
         {
             get { return _speed; }
             set { _speed = value; }
+        }
+        public override void Update()
+        {
+        }
+        public override void RemoveHats()
+        {
         }
 
         //public override IClonable deepCopy()
@@ -162,7 +176,12 @@ namespace Runner2.Classes
             get { return _speed; }
             set { _speed = value; }
         }
-
+        public override void Update()
+        {
+        }
+        public override void RemoveHats()
+        {
+        }
         //public override IClonable deepCopy()
         //{
         //    DudeMonster other = new DudeMonster(this.Speed);
@@ -171,7 +190,7 @@ namespace Runner2.Classes
         //}
     }
 
-    public class PointsCounter
+    public class PointsCounter : IClonable
     {
         public int points;
 
@@ -192,6 +211,17 @@ namespace Runner2.Classes
             points -= sub;
         }
 
+        public IClonable shallowCopy()
+        {
+            return (IClonable)this.MemberwiseClone();
+        }
+
+        public IClonable deepCopy()
+        {
+            PointsCounter other = new PointsCounter();
+            other.AddPoints(this.points);
+            return other;
+        }
     }
 
     /// <summary>

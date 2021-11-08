@@ -329,19 +329,19 @@ namespace Runner2
             //-------Hitbox platform interaction----
             HandleHitBoxCollisions();
 
-            if (hasMagicHat)
-            {
-                magicHat.moveHat();
-            }
-            if (hasBaseballHat)
-            {
-                baseballHat.moveHat();
-            }
-            if (hasCowboyHat)
-            {
-                cowboyHat.moveHat();
-            }
-
+            //if (hasMagicHat)
+            //{
+            //    magicHat.moveHat();
+            //}
+            //if (hasBaseballHat)
+            //{
+            //    baseballHat.moveHat();
+            //}
+            //if (hasCowboyHat)
+            //{
+            //    cowboyHat.moveHat();
+            //}
+            currentPlayer.Update();
             //--------------------------------------
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
             {
@@ -572,32 +572,32 @@ namespace Runner2
             if (playerHitBox.IntersectsWith(magicHatHitBox) && !hasMagicHat)
             {
                 hasMagicHat = true;
-                magicHat = new MagicHat(currentPlayer, "player");
+                currentPlayer = new MagicHat(currentPlayer, "player");
             }
             if (playerHitBox.IntersectsWith(baseballHatHitBox) && !hasBaseballHat)
             {
                 hasBaseballHat = true;
-                baseballHat = new BaseballHat(currentPlayer, "player");
+                currentPlayer = new BaseballHat(currentPlayer, "player");
             }
             if (playerHitBox.IntersectsWith(cowboyHatHitBox) && !hasCowboyHat)
             {
                 hasCowboyHat = true;
-                cowboyHat = new CowboyHat(currentPlayer, "player");
+                currentPlayer = new CowboyHat(currentPlayer, "player");
             }
             if (player2HitBox.IntersectsWith(magicHatHitBox) && !hasMagicHat)
             {
                 hasMagicHat = true;
-                magicHat = new MagicHat(opposingPlayer, "player2");
+                opposingPlayer = new MagicHat(opposingPlayer, "player2");
             }
             if (player2HitBox.IntersectsWith(baseballHatHitBox) && !hasBaseballHat)
             {
                 hasBaseballHat = true;
-                baseballHat = new BaseballHat(opposingPlayer, "player2");
+                opposingPlayer = new BaseballHat(opposingPlayer, "player2");
             }
             if (player2HitBox.IntersectsWith(cowboyHatHitBox) && !hasCowboyHat)
             {
                 hasCowboyHat = true;
-                cowboyHat = new CowboyHat(opposingPlayer, "player2");
+                opposingPlayer = new CowboyHat(opposingPlayer, "player2");
             }
             //items
             for (int i = 0; i < itm.number; i++)
@@ -655,13 +655,16 @@ namespace Runner2
                 // DEEP COPY
                 //currentPlayer = currentPlayerDeepCopy;
                 //currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
+                currentPlayer.RemoveHats();
                 currentPlayer = currentPlayerShallowCopy;
 
+                
                 Canvas.SetTop(player, 509 + speed);
                 Canvas.SetLeft(player, 80);
             }
             if (player2HitBox.IntersectsWith(obstacleHitBox))
             {
+                opposingPlayer.RemoveHats();
                 // DEEP COPY
                 //opposingPlayer = opposingPlayerDeepCopy;
                 //opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
