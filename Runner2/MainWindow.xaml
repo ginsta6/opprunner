@@ -69,6 +69,18 @@
             <Rectangle x:Name="gamePlatform4" Height="32" Width="200" Fill="Black" Canvas.Top="201" Canvas.Left="539" />-->
 
         </Canvas>
+        <Canvas x:Name="EndWin" Focusable="False" Visibility="Hidden">
+
+            <Label x:Name="endPlayer1" Height="98"  Canvas.Top="95" Width="240" FontSize="50" VerticalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="225" Content="Player1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+            <Label x:Name="endPlayer2" Height="98"  Canvas.Top="193" Width="240" FontSize="50" VerticalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="225" Content="Player2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+
+            <Label x:Name="endScore1" Height="98"  Canvas.Top="95" Width="81" FontSize="50" VerticalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="470" Content="99" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+            <Label x:Name="endScore2" Height="98"  Canvas.Top="193" Width="81" FontSize="50" VerticalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="470" Content="99" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+
+
+            <Button x:Name="endGameBtn" Content="End Game" Height="85" Canvas.Left="225" Canvas.Top="438" Width="326" Background="#FF4BD14C" BorderBrush="White" Foreground="#FF130091" FontSize="36" FontFamily="Stencil" Click="EndGameBtnClick" />
+
+        </Canvas>
 
     </Canvas>
 

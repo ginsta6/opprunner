@@ -123,6 +123,7 @@ namespace Runner2
             rService.PlayerStateReceived += SignalRService_PlayerStateReceived;
             rService.PlayerJumpReceived += SignalRService_PlayerJumpReceived;
             rService.ChangeLevelSignalReceived += SignalRService_ChangeLevelSignalReceived;
+            rService.EndGameSignalReceived += SingalRService_EndGameSignalReceived;
 
             rService.Connect();
 
@@ -199,6 +200,11 @@ namespace Runner2
             GoToNextLevel();
         }
 
+        private void SingalRService_EndGameSignalReceived()
+        {
+            EndGameWin();
+        }
+
         //-----------------Functions to send to server----------------
 
         private async Task renameLater(string name, string playerType)
@@ -224,6 +230,11 @@ namespace Runner2
         private async Task SendChangeLevelSignal()
         {
             await rService.SendChangeLevelSignal();
+        }
+
+        private async Task SendEndGameSignal()
+        {
+            await rService.SendEndGameSignal();
         }
 
         // ------------------------------------------------------------------------------------------------------------
@@ -329,19 +340,8 @@ namespace Runner2
             //-------Hitbox platform interaction----
             HandleHitBoxCollisions();
 
-            //if (hasMagicHat)
-            //{
-            //    magicHat.moveHat();
-            //}
-            //if (hasBaseballHat)
-            //{
-            //    baseballHat.moveHat();
-            //}
-            //if (hasCowboyHat)
-            //{
-            //    cowboyHat.moveHat();
-            //}
-            currentPlayer.Update();
+
+            
             //--------------------------------------
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
             {
@@ -431,6 +431,8 @@ namespace Runner2
             SendPlayerState();
             SendPlayerJump();
             MovePlayer();
+            currentPlayer.Update();
+            opposingPlayer.Update();
         }
 
         // ------------------------------------------------------------------------------------------------------------
@@ -532,6 +534,11 @@ namespace Runner2
                 //StartGame();
             }
 
+        }
+
+        private void EndGameBtnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -647,16 +654,24 @@ namespace Runner2
             //gameEndPoint
             if (playerHitBox.IntersectsWith(finishHitBox) && player2HitBox.IntersectsWith(finishHitBox))
             {
-                SendChangeLevelSignal();
+                if (sceneF is WinterFactory)
+                {
+                    SendEndGameSignal();
+                }
+                else
+                    SendChangeLevelSignal();
             }
             //Obstacle
             if (playerHitBox.IntersectsWith(obstacleHitBox))
             {
+                currentPlayer.RemoveHats();
                 // DEEP COPY
                 //currentPlayer = currentPlayerDeepCopy;
                 //currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
-                currentPlayer.RemoveHats();
+
+                // SHALLOW COPY
                 currentPlayer = currentPlayerShallowCopy;
+                currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
 
                 
                 Canvas.SetTop(player, 509 + speed);
@@ -671,7 +686,7 @@ namespace Runner2
 
                 // SHALLOW COPY
                 opposingPlayer = opposingPlayerShallowCopy;
-
+                opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
 
 
                 Canvas.SetTop(player2, 509 + opposingSpeed);
@@ -706,6 +721,29 @@ namespace Runner2
             Canvas.SetLeft(player2, 80);
 
             //Change canvas visibility
+        }
+
+        private void EndGameWin()
+        {
+            GameWin.Visibility = Visibility.Hidden;
+            EndWin.Visibility = Visibility.Visible;
+
+            var names = players.Content.ToString().Split('\n');
+
+            if (nameInput.Text == names[0])        //Player in given instance is the first one who connected
+            {
+                //give player2 second type from list
+                endScore1.Content = currentPlayer.Points.points;
+                endScore2.Content = opposingPlayer.Points.points;
+            }
+            else
+            {
+                //give player2 first type from list
+                endScore2.Content = currentPlayer.Points.points;
+                endScore1.Content = opposingPlayer.Points.points;
+            }
+            endPlayer1.Content = names[0];
+            endPlayer2.Content = names[1];
         }
 
         private void MovePlayer()
