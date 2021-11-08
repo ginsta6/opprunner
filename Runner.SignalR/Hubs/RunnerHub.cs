@@ -14,7 +14,7 @@ namespace Runner.SignalR.Hubs
         //private static List<string> playerTypes = new List<string>();
 
         private SharedRecourses instance = SharedRecourses.getInstance();
-
+        
         public async Task SendTauntMessage(string message, string type)
         {
             Console.WriteLine(instance.currPlayers+" "+instance.players);
@@ -46,6 +46,11 @@ namespace Runner.SignalR.Hubs
         public async Task SendChangeLevelSignal()
         {
             await Clients.All.SendAsync("ReceiveChangeLevelSignal");
+        }
+
+        public async Task SendEndGameSignal()
+        {
+            await Clients.All.SendAsync("ReceiveEndGameSignal");
         }
         //public Task JoinGroup(string group)
         //{
