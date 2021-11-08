@@ -36,6 +36,12 @@ namespace Runner2
         Player currentPlayer;
         Player opposingPlayer;
 
+        Player currentPlayerDeepCopy;
+        Player currentPlayerShallowCopy;
+
+        Player opposingPlayerDeepCopy;
+        Player opposingPlayerShallowCopy;
+
         //ItemFactory itemF;
         AbstractSceneFactory sceneF;
 
@@ -298,8 +304,8 @@ namespace Runner2
             //Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
             //Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
 
-            scoreText.Content = "Your Score: " + currentPlayer.Points;
-            OtherScoreText.Content = "Score: " + opposingPlayer.Points;
+            scoreText.Content = "Your Score: " + currentPlayer.Points.points;
+            OtherScoreText.Content = "Score: " + opposingPlayer.Points.points;
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
@@ -631,7 +637,7 @@ namespace Runner2
                         default:
                             break;
                     }
-                    currentPlayer.Points += 1;
+                    currentPlayer.Points.AddPoints(1);
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
@@ -651,7 +657,7 @@ namespace Runner2
                         default:
                             break;
                     }
-                    opposingPlayer.Points += 1;
+                    opposingPlayer.Points.AddPoints(1);
                 }
             }
             //gameEndPoint
@@ -667,11 +673,25 @@ namespace Runner2
             //Obstacle
             if (playerHitBox.IntersectsWith(obstacleHitBox))
             {
+                // DEEP COPY
+                //currentPlayer = currentPlayerDeepCopy;
+                //currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
+                currentPlayer = currentPlayerShallowCopy;
+
                 Canvas.SetTop(player, 509 + speed);
                 Canvas.SetLeft(player, 80);
             }
             if (player2HitBox.IntersectsWith(obstacleHitBox))
             {
+                // DEEP COPY
+                //opposingPlayer = opposingPlayerDeepCopy;
+                //opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
+
+                // SHALLOW COPY
+                opposingPlayer = opposingPlayerShallowCopy;
+
+
+
                 Canvas.SetTop(player2, 509 + opposingSpeed);
                 Canvas.SetLeft(player2, 80);
             }
@@ -841,7 +861,11 @@ namespace Runner2
             obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
             obstacle.Fill = obstacleSprite;
 
+            currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
+            opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
 
+            currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
+            opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
 
 
             for (int i = plat.startIndex; i < plat.endIndex; i++)
