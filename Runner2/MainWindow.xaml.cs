@@ -103,6 +103,7 @@ namespace Runner2
         ImageBrush avatarSprite = new ImageBrush();
         ImageBrush doorSprite = new ImageBrush();
         ImageBrush symbolSprite = new ImageBrush();
+        ImageBrush potionSprite = new ImageBrush();
 
         int[] obstaclePosition = { 320, 310, 300, 305, 315 };
 
@@ -147,9 +148,11 @@ namespace Runner2
             //backgroundSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/fonas1.png"));
             avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
             doorSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/door.png"));
+            potionSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/potion.png"));
+
             gameEndPoint.Fill = doorSprite;
             avatar.Fill = avatarSprite;
-
+            testpotion.Fill = potionSprite;
 
             background.Fill = backgroundSprite;
 
@@ -279,20 +282,6 @@ namespace Runner2
             LobbyWin.Visibility = Visibility.Hidden;
             GameWin.Visibility = Visibility.Visible;
 
-            //for (int i = plat.startIndex; i < plat.endIndex; i++)
-            //{
-            //    var gamePlatform = GameWin.Children[i] as Rectangle;
-            //    gamePlatforms.Add(gamePlatform);
-            //    platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
-            //    platformHitBoxes.Add(platformHitBox);
-            //}
-            //for (int i = itm.startIndex; i < itm.endIndex; i++)
-            //{
-            //    var itemas = GameWin.Children[i] as Rectangle;
-            //    items.Add(itemas);
-            //    ItemHitBox = new Rect(Canvas.GetLeft(itemas), Canvas.GetTop(itemas), itemas.Width, itemas.Height);
-            //    itemHitBoxes.Add(ItemHitBox);
-            //}
 
 
             gameTimer.Start();
@@ -334,20 +323,7 @@ namespace Runner2
             //item.Fill = itemImage;
             //----------------------------------------------------------------------------------------------------------------------------------
 
-            //for (int i = plat.startIndex; i < plat.endIndex; i++)
-            //{
-            //    var gamePlatform = GameWin.Children[i] as FrameworkElement;
-            //    gamePlatforms.Add(gamePlatform);
-            //    platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.ActualWidth, gamePlatform.ActualHeight);
-            //    platformHitBoxes.Add(platformHitBox);
-            //}
-            //for (int i = itm.startIndex; i < itm.endIndex; i++)
-            //{
-            //    var itemas = GameWin.Children[i] as FrameworkElement;
-            //    items.Add(itemas);
-            //    platformHitBox = new Rect(Canvas.GetLeft(itemas), Canvas.GetTop(itemas), itemas.ActualWidth, itemas.ActualHeight);
-            //    itemHitBoxes.Add(platformHitBox);
-            //}
+           
 
             finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
 
@@ -726,17 +702,17 @@ namespace Runner2
             {
                 Canvas.SetLeft(testpotion, 2000);
                 //Create potion effect
-                PotionEffectAlgorithm pot = new IncreaseSpeedPotion();
+                Potion pot = new SpeedUpPotion();
                 //Use potion effect
-                pot.giveEffect(currentPlayer);
+                pot.algorithm.giveEffect(currentPlayer);
             }
             if (player2HitBox.IntersectsWith(potionHitBox))
             {
                 Canvas.SetLeft(testpotion, 2000);
                 //Create potion effect
-                PotionEffectAlgorithm pot = new IncreaseSpeedPotion();
+                Potion pot = new SpeedUpPotion();
                 //Use potion effect
-                pot.giveEffect(opposingPlayer);
+                pot.algorithm.giveEffect(opposingPlayer);
             }
         }
 
@@ -848,8 +824,6 @@ namespace Runner2
 
         private void CreateScene(int level)
         {
-            //perkelt startIndex ir endIndex i sita metoda ir skaiciuot kiek kartu builderi kvieciu tam tikriem dalykam or whatever
-
             switch (level)
             {
                 case 1:

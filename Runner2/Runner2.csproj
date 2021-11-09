@@ -313,5 +313,8 @@
     <Resource Include="Images\exclamation.png" />
     <Resource Include="Images\question.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\potion.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
