@@ -104,7 +104,8 @@ namespace Runner2
 
         int[] obstaclePosition = { 320, 310, 300, 305, 315 };
 
-        
+        int platStartInd;
+        int platEndInd;
 
         private int CurrentPlayers;
 
@@ -570,7 +571,7 @@ namespace Runner2
 
             }
             //Platforms (1-4)
-            for (int i = 0; i < plat.number; i++)
+            for (int i = 0; i <4; i++)
             {
                 if (playerHitBox.IntersectsWith(platformHitBoxes[i]))
                 {
@@ -823,6 +824,7 @@ namespace Runner2
 
         private void CreateScene(int level)
         {
+            //perkelt startIndex ir endIndex i sita metoda ir skaiciuot kiek kartu builderi kvieciu tam tikriem dalykam or whatever
 
             switch (level)
             {
@@ -834,9 +836,9 @@ namespace Runner2
                     {
                         GameWin.Children.Remove(GameWin.Children[itm.startIndex]);
                     }
-                    for (int i = plat.startIndex; i < plat.endIndex; i++)
+                    for (int i = platStartInd; i < platEndInd; i++)
                     {
-                        GameWin.Children.Remove(GameWin.Children[plat.startIndex]);
+                        GameWin.Children.Remove(GameWin.Children[platStartInd]);
                     }
 
                     gamePlatforms = new List<FrameworkElement>();
@@ -851,11 +853,14 @@ namespace Runner2
             bg = sceneF.CreateBackground();
             backgroundSprite.ImageSource = new BitmapImage(new Uri(bg.spritePath));
 
+            //Ground Platform
             plat = sceneF.CreatePlatform();
-            itm = sceneF.CreateItem();
+            ground.Fill = new SolidColorBrush(plat.color);
+
+            
             //obstaclePosition
 
-            ground.Fill = new SolidColorBrush(plat.color);
+            
 
             obs = sceneF.CreateObstacle();
             obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
@@ -867,14 +872,43 @@ namespace Runner2
             currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
             opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
 
+            //do this in a loop
+            //var platHitbox = Builder.CreatePlatform(coordinates n shit);
+            //gamePlatforms.Add(lastChild { GameWin.Children[i] } );
+            //platformHitBoxes.Add(platHitbox);
 
-            for (int i = plat.startIndex; i < plat.endIndex; i++)
+            //endIndex = gameWin.Children.Count;
+            //startIndex = gameWin.Children.Count - number;
+
+            //width = new int[] { 250, 2 };
+            int[] width = new int[] { 229, 299, 411, 200 };
+            //number = 4;
+            //height = 32;
+            int[] topPositions = new int[] { 510, 316, 310, 201 };
+            int[] leftPositions = new int[] { 397, 46, 789, 539 };
+
+            platStartInd = GameWin.Children.Count;
+
+            Builder builder1 = new SummerBuilder();
+            for (int i = 0; i < 4; i++)
             {
-                var gamePlatform = GameWin.Children[i] as Rectangle;
-                gamePlatforms.Add(gamePlatform);
-                platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
-                platformHitBoxes.Add(platformHitBox);
+                var platHitBox = builder1.buildPlatform(width[i], 32, topPositions[i], leftPositions[i]);
+                gamePlatforms.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
+                platformHitBoxes.Add(platHitBox);
             }
+
+            platEndInd = GameWin.Children.Count;
+
+            //items
+            itm = sceneF.CreateItem();
+
+            //for (int i = plat.startIndex; i < plat.endIndex; i++)
+            //{
+            //    var gamePlatform = GameWin.Children[i] as Rectangle;
+            //    gamePlatforms.Add(gamePlatform);
+            //    platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
+            //    platformHitBoxes.Add(platformHitBox);
+            //}
             for (int i = itm.startIndex; i < itm.endIndex; i++)
             {
                 var itemas = GameWin.Children[i] as Rectangle;

@@ -85,32 +85,32 @@ namespace Runner2.Classes
     /// <summary>
     /// "abstract product A" interface
     /// </summary>
-    abstract class Platform
+    public abstract class Platform
     {
-        public int[] width;
+        //public int[] width;
         public Color color;
-        public int number;
-        public int height;
-        public int[] topPositions;
-        public int[] leftPositions;
-        public int startIndex;
-        public int endIndex;
+        //public int number;
+        //public int height;
+        //public int[] topPositions;
+        //public int[] leftPositions;
+        //public int startIndex;
+        //public int endIndex;
     }
 
     /// <summary>
     /// "abstract product B" interface
     /// </summary>
-    abstract class Background
+    public abstract class Background
     {
         public string spritePath;
     }
 
-    abstract class Obstacle
+    public abstract class Obstacle
     {
         public int height;
         public string spritePath;
     }
-    abstract class Item
+    public abstract class Item
     {
         public int height;
         public int width;
@@ -130,29 +130,31 @@ namespace Runner2.Classes
     {
         public SummerPlatform()
         {
-            width = new int[] { 229, 299, 411, 200 };
-            number = 4;
-            height = 32;
-            topPositions = new int[] { 510, 316, 310, 201 };
-            leftPositions = new int[] { 397, 46, 789, 539 };
+            //pridet spalva, random width
+            //pridet start posicijas tik
+            //width = new int[] { 229, 299, 411, 200 };
+            //number = 4;
+            //height = 32;
+            //topPositions = new int[] { 510, 316, 310, 201 };
+            //leftPositions = new int[] { 397, 46, 789, 539 };
             color = Colors.Green;
-            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            for (int i = 0; i < number; i++)
-            {
-                Rectangle rec = new Rectangle()
-                {
-                    Width = width[i],
-                    Height = height,
-                    Fill = Brushes.Green,
-                    Stroke = Brushes.LemonChiffon,
-                    StrokeThickness = 2,
-                };
-                gameWin.Children.Add(rec);
-                Canvas.SetTop(rec, topPositions[i]);
-                Canvas.SetLeft(rec, leftPositions[i]);
-            }
-            endIndex = gameWin.Children.Count;
-            startIndex = gameWin.Children.Count - number;
+            //var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+            //for (int i = 0; i < number; i++)
+            //{
+            //    Rectangle rec = new Rectangle()
+            //    {
+            //        Width = width[i],
+            //        Height = height,
+            //        Fill = Brushes.Green,
+            //        Stroke = Brushes.LemonChiffon,
+            //        StrokeThickness = 2,
+            //    };
+            //    gameWin.Children.Add(rec);
+            //    Canvas.SetTop(rec, topPositions[i]);
+            //    Canvas.SetLeft(rec, leftPositions[i]);
+            //}
+            //endIndex = gameWin.Children.Count;
+            //startIndex = gameWin.Children.Count - number;
         }
     }
 
@@ -163,30 +165,30 @@ namespace Runner2.Classes
     {
         public WinterPlatform()
         {
-            width = new int[] { 250, 2 };
+            //width = new int[] { 250, 2 };
             color = Colors.LightGray;
-            width = new int[] { 229, 299, 411, 200 };
-            number = 4;
-            height = 32;
-            topPositions = new int[] { 510, 316, 310, 201 };
-            leftPositions = new int[] { 397, 46, 789, 539 };
-            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            for (int i = 0; i < number; i++)
-            {
-                Rectangle rec = new Rectangle()
-                {
-                    Width = width[i],
-                    Height = height,
-                    Fill = Brushes.LightBlue,
-                    Stroke = Brushes.Blue,
-                    StrokeThickness = 2,
-                };
-                gameWin.Children.Add(rec);
-                Canvas.SetTop(rec, topPositions[i]);
-                Canvas.SetLeft(rec, leftPositions[i]);
-            }
-            endIndex = gameWin.Children.Count;
-            startIndex = gameWin.Children.Count - number;
+            //width = new int[] { 229, 299, 411, 200 };
+            //number = 4;
+            //height = 32;
+            //topPositions = new int[] { 510, 316, 310, 201 };
+            //leftPositions = new int[] { 397, 46, 789, 539 };
+            //var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+            //for (int i = 0; i < number; i++)
+            //{
+            //    Rectangle rec = new Rectangle()
+            //    {
+            //        Width = width[i],
+            //        Height = height,
+            //        Fill = Brushes.LightBlue,
+            //        Stroke = Brushes.Blue,
+            //        StrokeThickness = 2,
+            //    };
+            //    gameWin.Children.Add(rec);
+            //    Canvas.SetTop(rec, topPositions[i]);
+            //    Canvas.SetLeft(rec, leftPositions[i]);
+            //}
+            //endIndex = gameWin.Children.Count;
+            //startIndex = gameWin.Children.Count - number;
         }
     }
 

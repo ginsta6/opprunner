@@ -179,6 +179,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Builder.cs" />
     <Compile Include="Classes\Decoratorr.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\Player.cs" />
