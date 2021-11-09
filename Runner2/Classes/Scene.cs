@@ -102,6 +102,10 @@ namespace Runner2.Classes
     {
         public int height;
         public string spritePath;
+        public bool exploded;
+
+        public abstract void resetPlayerPosition(int index);
+        public abstract void removePoints(Player player);
     }
     public abstract class Item
     {
@@ -109,6 +113,8 @@ namespace Runner2.Classes
         public int width;
         public Brush color;
         public string spritePath;
+        public Rect hitbox;
+        public abstract void modifyPoints(Player player);
     }
 
     /// <summary>
@@ -119,7 +125,7 @@ namespace Runner2.Classes
         public SummerPlatform()
         {
             color = Brushes.Green;
-           
+
         }
     }
 
@@ -131,7 +137,7 @@ namespace Runner2.Classes
         public WinterPlatform()
         {
             color = Brushes.LightGray;
-            
+
         }
     }
 
@@ -162,14 +168,36 @@ namespace Runner2.Classes
     {
         public SummerObstacle()
         {
+            exploded = false;
             spritePath = "pack://application:,,,/Images/obs1.png";
+        }
+
+        public override void removePoints(Player player)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void resetPlayerPosition(int index)
+        {
+            throw new NotImplementedException();
         }
     }
     class WinterObstacle : Obstacle
     {
         public WinterObstacle()
         {
+            exploded = false;
             spritePath = "pack://application:,,,/Images/obs2.png";
+        }
+
+        public override void removePoints(Player player)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void resetPlayerPosition(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -182,6 +210,11 @@ namespace Runner2.Classes
             color = Brushes.Yellow;
 
         }
+
+        public override void modifyPoints(Player player)
+        {
+            throw new NotImplementedException();
+        }
     }
     class WinterItem : Item
     {
@@ -193,6 +226,9 @@ namespace Runner2.Classes
 
         }
 
-
+        public override void modifyPoints(Player player)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

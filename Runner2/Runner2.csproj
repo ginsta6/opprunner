@@ -183,6 +183,7 @@
     <Compile Include="Classes\Decoratorr.cs" />
     <Compile Include="Classes\ICommand.cs" />
     <Compile Include="Classes\Item.cs" />
+    <Compile Include="Classes\ObstacleAdapter.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Scene.cs" />
     <Compile Include="Classes\Strategy.cs" />
