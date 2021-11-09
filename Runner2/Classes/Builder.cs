@@ -15,7 +15,7 @@ namespace Runner2.Classes
         public abstract Rect buildPlatform(int w, int h, int top, int left);
         public abstract void buildBackground();
         public abstract void buildObstacle();
-        public abstract Rect buildItem(int top, int left);
+        public abstract Item buildItem(int top, int left);
 
         
     }
@@ -33,7 +33,7 @@ namespace Runner2.Classes
             //return factory.CreateBackground();
         }
 
-        public override Rect buildItem(int top, int left)
+        public override Item buildItem(int top, int left)
         {
             var ite = factory.CreateItem();
 
@@ -54,9 +54,9 @@ namespace Runner2.Classes
             Canvas.SetLeft(rec, left);
 
             var item = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
-            Rect ItemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
+            ite.hitbox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
 
-            return ItemHitBox;
+            return ite;
         }
 
         public override void buildObstacle()
@@ -103,7 +103,7 @@ namespace Runner2.Classes
             //return factory.CreateBackground();
         }
 
-        public override Rect buildItem(int top, int left)
+        public override Item buildItem(int top, int left)
         {
             var ite = factory.CreateItem();
 
@@ -124,9 +124,9 @@ namespace Runner2.Classes
             Canvas.SetLeft(rec, left);
 
             var item = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
-            Rect ItemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
+            ite.hitbox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
 
-            return ItemHitBox;
+            return ite;
         }
 
         public override void buildObstacle()

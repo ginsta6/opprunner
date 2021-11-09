@@ -40,7 +40,7 @@ namespace Runner2
         Player opposingPlayerShallowCopy;
 
         PlayerStatsController statsController = new PlayerStatsController();
-        
+
 
 
         //ItemFactory itemF;
@@ -58,7 +58,8 @@ namespace Runner2
         List<Rect> platformHitBoxes = new List<Rect>();
         Rect obstacleHitBox;
         List<Rect> itemHitBoxes = new List<Rect>();
-        List<FrameworkElement> items = new List<FrameworkElement>();
+        List<FrameworkElement> canvasItems = new List<FrameworkElement>();
+        List<Item> items = new List<Item>();
         Rect magicHatHitBox;
         Rect baseballHatHitBox;
         Rect cowboyHatHitBox;
@@ -116,7 +117,7 @@ namespace Runner2
 
         ExclamationPoint exclamationPoint = new ExclamationPoint();
         QuestionMark questionMark = new QuestionMark();
-        
+
 
 
         private int CurrentPlayers;
@@ -333,7 +334,7 @@ namespace Runner2
             //item.Fill = itemImage;
             //----------------------------------------------------------------------------------------------------------------------------------
 
-           
+
 
             finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
 
@@ -341,7 +342,7 @@ namespace Runner2
             HandleHitBoxCollisions();
 
 
-            
+
             //--------------------------------------
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
             {
@@ -386,7 +387,7 @@ namespace Runner2
             //}
 
             //-----------------Item---------------------
-            
+
             //Made two different 'if's to make logic of applying item effects easier later maybe
             //if (player2HitBox.IntersectsWith(itemHitBox))
             //{
@@ -580,7 +581,7 @@ namespace Runner2
 
             }
             //Platforms (1-4)
-            for (int i = 0; i <4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (playerHitBox.IntersectsWith(platformHitBoxes[i]))
                 {
@@ -626,14 +627,13 @@ namespace Runner2
                 opposingPlayer = new CowboyHat(opposingPlayer, "player2");
             }
             //items
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < itemHitBoxes.Count; i++)
             {
                 if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
-                    Canvas.SetLeft(GameWin.Children[itemStartInd + i], 2000);
-                    Canvas.SetLeft(items[i], 2000);
-                    items[i].Visibility = Visibility.Hidden;
+                    Canvas.SetLeft(canvasItems[i], 2000);
+                    canvasItems[i].Visibility = Visibility.Hidden;
                     //Canvas.SetLeft(items[i], 2000);
 
                     switch (rnd.Next(1, 3))
@@ -653,9 +653,8 @@ namespace Runner2
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
-                    Canvas.SetLeft(GameWin.Children[itemStartInd + i], 2000);
-                    Canvas.SetLeft(items[i], 2000);
-                    items[i].Visibility = Visibility.Hidden;
+                    Canvas.SetLeft(canvasItems[i], 2000);
+                    canvasItems[i].Visibility = Visibility.Hidden;
 
                     switch (rnd.Next(1, 3))
                     {
@@ -683,7 +682,7 @@ namespace Runner2
                     SendChangeLevelSignal();
             }
             //Obstacle
-            if (playerHitBox.IntersectsWith(obstacleHitBox))
+            if (playerHitBox.IntersectsWith(obstacleHitBox) && !obs.exploded)
             {
                 currentPlayer.RemoveHats();
                 // DEEP COPY
@@ -694,11 +693,19 @@ namespace Runner2
                 currentPlayer = currentPlayerShallowCopy;
                 currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
 
-                
+                if (!obs.exploded)
+                    obs.exploded = true;
+
+                ObstacleAdapter explodedItem = new ObstacleAdapter(obs);
+                items.Add(explodedItem);
+                itemHitBoxes.Add(obstacleHitBox);
+                canvasItems.Add(obstacle);
+                obstacle.Fill = Brushes.Red;
+
                 Canvas.SetTop(player, 509 + speed);
                 Canvas.SetLeft(player, 80);
             }
-            if (player2HitBox.IntersectsWith(obstacleHitBox))
+            if (player2HitBox.IntersectsWith(obstacleHitBox) && !obs.exploded)
             {
                 opposingPlayer.RemoveHats();
                 // DEEP COPY
@@ -709,6 +716,13 @@ namespace Runner2
                 opposingPlayer = opposingPlayerShallowCopy;
                 opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
 
+                if (!obs.exploded)
+                    obs.exploded = true;
+                ObstacleAdapter explodedItem = new ObstacleAdapter(obs);
+                items.Add(explodedItem);
+                itemHitBoxes.Add(obstacleHitBox);
+                canvasItems.Add(obstacle);
+                obstacle.Fill = Brushes.Red;
 
                 Canvas.SetTop(player2, 509 + opposingSpeed);
                 Canvas.SetLeft(player2, 80);
@@ -735,7 +749,7 @@ namespace Runner2
 
         private void GoToNextLevel()
         {
-            CreateScene(2);//Canvas.Top="703" Canvas.Left="80"
+             CreateScene(2);//Canvas.Top="703" Canvas.Left="80"
             Canvas.SetTop(player, 510 + speed);
             Canvas.SetLeft(player, 80);
             Canvas.SetTop(player2, 510 + opposingSpeed);
@@ -860,7 +874,7 @@ namespace Runner2
                     gamePlatforms = new List<FrameworkElement>();
                     platformHitBoxes = new List<Rect>();
                     itemHitBoxes = new List<Rect>();
-                    items = new List<FrameworkElement>();
+                    canvasItems = new List<FrameworkElement>();
 
                     sceneF = new WinterFactory();
                     builder = new WinterBuilder();
@@ -881,7 +895,15 @@ namespace Runner2
 
             obs = sceneF.CreateObstacle();
             obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
+            //if (itemHitBoxes.Count == 5)
+            //{
+            //    itemHitBoxes.Remove(itemHitBoxes.Last());
+            //    items.Remove(items.Last());
+            //    canvasItems.Remove(canvasItems.Last());
+            //}
+            Canvas.SetLeft(obstacle, 947);
             obstacle.Fill = obstacleSprite;
+            obstacle.Visibility = Visibility.Visible;
 
             //--------Player-copy--------------------------------------
             currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
@@ -897,7 +919,7 @@ namespace Runner2
 
             platStartInd = GameWin.Children.Count;
 
-            
+
             for (int i = 0; i < 4; i++)
             {
                 var platHitBox = builder.buildPlatform(width[i], 32, topPositions[i], leftPositions[i]);
@@ -916,15 +938,16 @@ namespace Runner2
 
             for (int i = 0; i < 4; i++)
             {
-                var itemHitBox = builder.buildItem(itemTopPositions[i], itemLeftPositions[i]);
-                items.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
-                itemHitBoxes.Add(itemHitBox);
+                var ite = builder.buildItem(itemTopPositions[i], itemLeftPositions[i]);
+                canvasItems.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
+                items.Add(ite);
+                itemHitBoxes.Add(ite.hitbox);
             }
 
             itemEndInd = GameWin.Children.Count;
 
         }
-        
+
         private void setActiveLobbyObjs()
         {
             title.Visibility = Visibility.Hidden;
@@ -1093,11 +1116,11 @@ namespace Runner2
             //Magic HAT
             magicHatItem.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/magicHat.png")));
             magicHatHitBox = new Rect(Canvas.GetLeft(magicHatItem), Canvas.GetTop(magicHatItem), magicHatItem.Width, magicHatItem.Height);
-            
+
             //Baseball HAT
             baseballhatItem.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/baseballHat.png")));
             baseballHatHitBox = new Rect(Canvas.GetLeft(baseballhatItem), Canvas.GetTop(baseballhatItem), baseballhatItem.Width, baseballhatItem.Height);
-            
+
             //Cowboy HAT
             cowboyHatItem.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/cowboyHat.png")));
             cowboyHatHitBox = new Rect(Canvas.GetLeft(cowboyHatItem), Canvas.GetTop(cowboyHatItem), cowboyHatItem.Width, cowboyHatItem.Height);
