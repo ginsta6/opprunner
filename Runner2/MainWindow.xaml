@@ -59,7 +59,7 @@
             <Rectangle Name="baseballhatItem" Height="40" Width="65"  Canvas.Top="508" Canvas.Left="990"   />
             <Rectangle Name="cowboyHatItem" Height="50" Width="100"   Canvas.Top="42" Canvas.Left="169"   />
             <Label Name="scoreText" FontSize="32" FontWeight="Bold" Content="Score: 0"   />
-            <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="Player: 0" Canvas.Left="539" Width="245" Height="156"    HorizontalContentAlignment="Right" HorizontalAlignment="Right"/>
+            <Label Name="OtherScoreText" FontSize="32" FontWeight="Bold" Content="Player: 0" Canvas.Left="539" Width="446" Height="156"    HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
 
             <Rectangle Name="testpotion" Height="50" Width="50" Fill="Gold" Canvas.Left="935" Canvas.Top="510" />
 

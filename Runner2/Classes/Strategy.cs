@@ -6,6 +6,27 @@ using System.Threading.Tasks;
 
 namespace Runner2.Classes
 {
+    public abstract class Potion
+    {
+        public PotionEffectAlgorithm algorithm;
+    }
+
+    public class SpeedUpPotion : Potion
+    {
+        public SpeedUpPotion()
+        {
+            algorithm = new IncreaseSpeedPotion();
+        }
+    }
+
+    public class SpeedDownPotion : Potion
+    {
+        public SpeedDownPotion()
+        {
+            algorithm = new DecreaseSpeedPotion();
+        }
+    }
+
     public abstract class PotionEffectAlgorithm
     {
         public PotionEffectAlgorithm()
