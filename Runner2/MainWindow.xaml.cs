@@ -101,9 +101,12 @@ namespace Runner2
         ImageBrush obstacleSprite = new ImageBrush();
         ImageBrush avatarSprite = new ImageBrush();
         ImageBrush doorSprite = new ImageBrush();
+        ImageBrush symbolSprite = new ImageBrush();
 
         int[] obstaclePosition = { 320, 310, 300, 305, 315 };
 
+        ExclamationPoint exclamationPoint = new ExclamationPoint();
+        QuestionMark questionMark = new QuestionMark();
         
 
         private int CurrentPlayers;
@@ -304,8 +307,11 @@ namespace Runner2
             //Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
             //Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
 
+            Canvas.SetTop(symbolObject, Canvas.GetTop(player) + speed - 80);
+            Canvas.SetLeft(symbolObject, Canvas.GetLeft(player));
+
             scoreText.Content = "Your Score: " + currentPlayer.Points.points;
-            OtherScoreText.Content = "Score: " + opposingPlayer.Points.points;
+            OtherScoreText.Content = "Oponent Score: " + opposingPlayer.Points.points;
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
@@ -476,6 +482,20 @@ namespace Runner2
             if (e.Key == Key.Left || e.Key == Key.Right)
             {
                 playerAnimationCurrentState = PlayerAnimationState.Standing;
+            }
+            if (e.Key == Key.Z)
+            {
+                currentPlayer.symbol = questionMark;
+                symbolSprite.ImageSource = new BitmapImage(new Uri(currentPlayer.symbol.getPictureString()));
+                symbolObject.Fill = symbolSprite;
+                symbolObject.Visibility = Visibility.Visible;
+            }
+            if (e.Key == Key.X)
+            {
+                currentPlayer.symbol = exclamationPoint;
+                symbolSprite.ImageSource = new BitmapImage(new Uri(currentPlayer.symbol.getPictureString()));
+                symbolObject.Fill = symbolSprite;
+                symbolObject.Visibility = Visibility.Visible;
             }
         }
 

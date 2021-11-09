@@ -184,6 +184,7 @@
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Scene.cs" />
     <Compile Include="Classes\Strategy.cs" />
+    <Compile Include="Classes\Symbol.cs" />
     <Compile Include="Commands\SendTauntMessageCommand.cs" />
     <Compile Include="Services\SignalRService.cs" />
     <Page Include="MainWindow.xaml">
@@ -306,6 +307,10 @@
   <ItemGroup>
     <Resource Include="Images\goodItems\baseballHat.png" />
     <Resource Include="Images\goodItems\cowboyHat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\exclamation.png" />
+    <Resource Include="Images\question.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
