@@ -63,6 +63,8 @@
 
             <Rectangle Name="testpotion" Height="50" Width="50" Fill="Gold" Canvas.Left="935" Canvas.Top="510" />
 
+            <Rectangle Name="symbolObject" Height="40" Width="40"/>
+
             <!--<Rectangle Name="gamePlatform" Height="32" Width="229" Fill="Black" Canvas.Top="510" Canvas.Left="397" />-->
             <!--<Rectangle Name="gamePlatform2" Height="32" Width="299" Fill="Black" Canvas.Top="316" Canvas.Left="46" />
             <Rectangle Name="gamePlatform3" Height="32" Width="411" Fill="Black" Canvas.Top="310" Canvas.Left="789" />
