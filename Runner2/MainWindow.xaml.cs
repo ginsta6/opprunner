@@ -44,6 +44,7 @@ namespace Runner2
 
         //ItemFactory itemF;
         AbstractSceneFactory sceneF;
+        Builder builder;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
@@ -106,6 +107,8 @@ namespace Runner2
 
         int platStartInd;
         int platEndInd;
+        int itemStartInd;
+        int itemEndInd;
 
         private int CurrentPlayers;
 
@@ -617,12 +620,12 @@ namespace Runner2
                 cowboyHat = new CowboyHat(opposingPlayer, "player2");
             }
             //items
-            for (int i = 0; i < itm.number; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
-                    Canvas.SetLeft(GameWin.Children[itm.startIndex + i], 2000);
+                    Canvas.SetLeft(GameWin.Children[itemStartInd + i], 2000);
                     Canvas.SetLeft(items[i], 2000);
                     items[i].Visibility = Visibility.Hidden;
                     //Canvas.SetLeft(items[i], 2000);
@@ -643,7 +646,7 @@ namespace Runner2
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
-                    Canvas.SetLeft(GameWin.Children[itm.startIndex + i], 2000);
+                    Canvas.SetLeft(GameWin.Children[itemStartInd + i], 2000);
                     Canvas.SetLeft(items[i], 2000);
                     items[i].Visibility = Visibility.Hidden;
 
@@ -830,11 +833,12 @@ namespace Runner2
             {
                 case 1:
                     sceneF = new SummerFactory();
+                    builder = new SummerBuilder();
                     break;
                 case 2:
-                    for (int i = itm.startIndex; i < itm.endIndex; i++)
+                    for (int i = itemStartInd; i < itemEndInd; i++)
                     {
-                        GameWin.Children.Remove(GameWin.Children[itm.startIndex]);
+                        GameWin.Children.Remove(GameWin.Children[itemStartInd]);
                     }
                     for (int i = platStartInd; i < platEndInd; i++)
                     {
@@ -847,75 +851,66 @@ namespace Runner2
                     items = new List<FrameworkElement>();
 
                     sceneF = new WinterFactory();
+                    builder = new WinterBuilder();
                     break;
             }
 
+
+
+            //------------Background------------------------------------
             bg = sceneF.CreateBackground();
             backgroundSprite.ImageSource = new BitmapImage(new Uri(bg.spritePath));
 
-            //Ground Platform
+            //------------Ground-Platform------------------------------
             plat = sceneF.CreatePlatform();
-            ground.Fill = new SolidColorBrush(plat.color);
+            ground.Fill = plat.color;
 
-            
-            //obstaclePosition
-
-            
+            //-----------------Obstacle-----------------------------
 
             obs = sceneF.CreateObstacle();
             obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
             obstacle.Fill = obstacleSprite;
 
+            //--------Player-copy--------------------------------------
             currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
             opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
 
             currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
             opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
 
-            //do this in a loop
-            //var platHitbox = Builder.CreatePlatform(coordinates n shit);
-            //gamePlatforms.Add(lastChild { GameWin.Children[i] } );
-            //platformHitBoxes.Add(platHitbox);
-
-            //endIndex = gameWin.Children.Count;
-            //startIndex = gameWin.Children.Count - number;
-
-            //width = new int[] { 250, 2 };
+            //--------------------------platforms---------------------
             int[] width = new int[] { 229, 299, 411, 200 };
-            //number = 4;
-            //height = 32;
             int[] topPositions = new int[] { 510, 316, 310, 201 };
             int[] leftPositions = new int[] { 397, 46, 789, 539 };
 
             platStartInd = GameWin.Children.Count;
 
-            Builder builder1 = new SummerBuilder();
+            
             for (int i = 0; i < 4; i++)
             {
-                var platHitBox = builder1.buildPlatform(width[i], 32, topPositions[i], leftPositions[i]);
+                var platHitBox = builder.buildPlatform(width[i], 32, topPositions[i], leftPositions[i]);
                 gamePlatforms.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
                 platformHitBoxes.Add(platHitBox);
             }
 
             platEndInd = GameWin.Children.Count;
 
-            //items
-            itm = sceneF.CreateItem();
+            //-------------items----------------------------
 
-            //for (int i = plat.startIndex; i < plat.endIndex; i++)
-            //{
-            //    var gamePlatform = GameWin.Children[i] as Rectangle;
-            //    gamePlatforms.Add(gamePlatform);
-            //    platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
-            //    platformHitBoxes.Add(platformHitBox);
-            //}
-            for (int i = itm.startIndex; i < itm.endIndex; i++)
+            int[] itemTopPositions = new int[] { 400, 200, 250, 190 };
+            int[] itemLeftPositions = new int[] { 397, 46, 789, 539 };
+
+            itemStartInd = GameWin.Children.Count;
+
+            for (int i = 0; i < 4; i++)
             {
-                var itemas = GameWin.Children[i] as Rectangle;
-                items.Add(itemas);
-                ItemHitBox = new Rect(Canvas.GetLeft(itemas), Canvas.GetTop(itemas), itemas.Width, itemas.Height);
-                itemHitBoxes.Add(ItemHitBox);
+                var itemHitBox = builder.buildItem(itemTopPositions[i], itemLeftPositions[i]);
+                items.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
+                itemHitBoxes.Add(itemHitBox);
             }
+
+            itemEndInd = GameWin.Children.Count;
+
         }
         
         private void setActiveLobbyObjs()

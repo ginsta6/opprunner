@@ -15,7 +15,7 @@ namespace Runner2.Classes
         public abstract Rect buildPlatform(int w, int h, int top, int left);
         public abstract void buildBackground();
         public abstract void buildObstacle();
-        public abstract void buildItem();
+        public abstract Rect buildItem(int top, int left);
 
         
     }
@@ -33,9 +33,30 @@ namespace Runner2.Classes
             //return factory.CreateBackground();
         }
 
-        public override void buildItem()
+        public override Rect buildItem(int top, int left)
         {
-            //return factory.CreateItem();
+            var ite = factory.CreateItem();
+
+            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+
+            
+            Rectangle rec = new Rectangle()
+            {
+                Width = ite.width,
+                Height = ite.height,
+                Fill = ite.color,
+                Stroke = Brushes.LemonChiffon,
+                StrokeThickness = 2,
+            };
+
+            gameWin.Children.Add(rec);
+            Canvas.SetTop(rec, top);
+            Canvas.SetLeft(rec, left);
+
+            var item = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
+            Rect ItemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
+
+            return ItemHitBox;
         }
 
         public override void buildObstacle()
@@ -54,7 +75,7 @@ namespace Runner2.Classes
             {
                 Width = w,
                 Height = h,
-                Fill = Brushes.Green,
+                Fill = plat.color,
                 Stroke = Brushes.LemonChiffon,
                 StrokeThickness = 2,
             };
@@ -82,9 +103,30 @@ namespace Runner2.Classes
             //return factory.CreateBackground();
         }
 
-        public override void buildItem()
+        public override Rect buildItem(int top, int left)
         {
-            //return factory.CreateItem();
+            var ite = factory.CreateItem();
+
+            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+
+
+            Rectangle rec = new Rectangle()
+            {
+                Width = ite.width,
+                Height = ite.height,
+                Fill = ite.color,
+                Stroke = Brushes.LemonChiffon,
+                StrokeThickness = 2,
+            };
+
+            gameWin.Children.Add(rec);
+            Canvas.SetTop(rec, top);
+            Canvas.SetLeft(rec, left);
+
+            var item = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
+            Rect ItemHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
+
+            return ItemHitBox;
         }
 
         public override void buildObstacle()
@@ -102,7 +144,7 @@ namespace Runner2.Classes
             {
                 Width = w,
                 Height = h,
-                Fill = Brushes.Green,
+                Fill = plat.color,
                 Stroke = Brushes.LemonChiffon,
                 StrokeThickness = 2,
             };
@@ -110,7 +152,7 @@ namespace Runner2.Classes
             Canvas.SetTop(rec, top);
             Canvas.SetLeft(rec, left);
 
-            var gamePlatform = gameWin.Children[gameWin.Children.Count] as Rectangle;
+            var gamePlatform = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
             Rect platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
 
             return platformHitBox;
