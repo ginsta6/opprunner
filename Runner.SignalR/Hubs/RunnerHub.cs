@@ -42,6 +42,10 @@ namespace Runner.SignalR.Hubs
         {
             await Clients.Others.SendAsync("ReceivePlayerJump", jumping);
         }
+        public async Task SendUndoSignal()
+        {
+            await Clients.Others.SendAsync("ReceiveUndoSignal");
+        }
 
         public async Task SendChangeLevelSignal()
         {

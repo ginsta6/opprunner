@@ -26,9 +26,6 @@ namespace Runner2
         Platform plat;
         Obstacle obs;
         Item itm;
-        MagicHat magicHat;
-        CowboyHat cowboyHat;
-        BaseballHat baseballHat;
 
         SignalRService rService;
 
@@ -41,6 +38,10 @@ namespace Runner2
 
         Player opposingPlayerDeepCopy;
         Player opposingPlayerShallowCopy;
+
+        PlayerStatsController statsController = new PlayerStatsController();
+        
+
 
         //ItemFactory itemF;
         AbstractSceneFactory sceneF;
@@ -69,9 +70,9 @@ namespace Runner2
         bool hasBaseballHat;
         bool hasCowboyHat;
 
-        PlayerAnimationState playerAnimationCurrentState;
-        PlayerAnimationState player2AnimationCurrentState;
-        enum PlayerAnimationState
+        public PlayerAnimationState playerAnimationCurrentState;
+        public PlayerAnimationState player2AnimationCurrentState;
+        public enum PlayerAnimationState
         {
             RunningLeft,
             RunningRight,
@@ -124,7 +125,7 @@ namespace Runner2
             rService.PlayerJumpReceived += SignalRService_PlayerJumpReceived;
             rService.ChangeLevelSignalReceived += SignalRService_ChangeLevelSignalReceived;
             rService.EndGameSignalReceived += SingalRService_EndGameSignalReceived;
-
+            rService.UndoSignalReceived += SignalRService_UndoSignalReceived;
             rService.Connect();
 
             InitializeComponent();
@@ -194,6 +195,10 @@ namespace Runner2
         {
             opposingJumping = jump;
         }
+        private void SignalRService_UndoSignalReceived()
+        {
+            statsController.undo();
+        }
 
         private void SignalRService_ChangeLevelSignalReceived()
         {
@@ -225,6 +230,11 @@ namespace Runner2
         private async Task SendPlayerJump()
         {
             await rService.SendPlayerJump(jumping);
+        }
+
+        private async Task SendUndoSignal()
+        {
+            await rService.SendUndoSignal();
         }
 
         private async Task SendChangeLevelSignal()
@@ -457,6 +467,11 @@ namespace Runner2
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.U && gameOver == false)
+            {
+                statsController.undo();
+                SendUndoSignal();
+            }
             if (e.Key == Key.Space && gameOver == false && jumping == false)
             {
                 //renameLater();
@@ -628,7 +643,8 @@ namespace Runner2
                         default:
                             break;
                     }
-                    currentPlayer.Points.AddPoints(1);
+                    statsController.run(new GivePointsCommand(currentPlayer, 1));
+                    //currentPlayer.Points.AddPoints(1);
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
@@ -648,7 +664,8 @@ namespace Runner2
                         default:
                             break;
                     }
-                    opposingPlayer.Points.AddPoints(1);
+                    statsController.run(new GivePointsCommand(opposingPlayer, 1));
+                    //opposingPlayer.Points.AddPoints(1);
                 }
             }
             //gameEndPoint

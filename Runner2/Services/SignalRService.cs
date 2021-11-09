@@ -16,6 +16,7 @@ namespace Runner2.Services
         public event Action<int> PlayerCountReceived;
         public event Action<int> PlayerStateReceived;
         public event Action StartSignalReceived;
+        public event Action UndoSignalReceived;
         public event Action ChangeLevelSignalReceived;
         public event Action EndGameSignalReceived;
         public event Action<bool> PlayerJumpReceived;
@@ -31,6 +32,7 @@ namespace Runner2.Services
             _connection.On("ReceiveStartSignal", () => StartSignalReceived?.Invoke());
             _connection.On("ReceiveEndGameSignal", () => EndGameSignalReceived?.Invoke());
             _connection.On("ReceiveChangeLevelSignal", () => ChangeLevelSignalReceived?.Invoke());
+            _connection.On("ReceiveUndoSignal", () => UndoSignalReceived?.Invoke());
             _connection.On<bool>("ReceivePlayerJump", (jumping) => PlayerJumpReceived?.Invoke(jumping));
         }
 
@@ -47,6 +49,10 @@ namespace Runner2.Services
         public async Task SendStartSignal()
         {
             await _connection.SendAsync("SendStartSignal");
+        }
+        public async Task SendUndoSignal()
+        {
+            await _connection.SendAsync("SendUndoSignal");
         }
 
         public async Task SendPlayerState(int state)

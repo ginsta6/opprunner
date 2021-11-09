@@ -87,13 +87,6 @@ namespace Runner2.Classes
         public override void RemoveHats()
         {
         }
-
-        //public override IClonable deepCopy()
-        //{
-        //    PinkMonster other = new PinkMonster(this.Speed);
-        //    other.Points = this.Points;
-        //    return other;
-        //}
     }
 
     /// <summary>
@@ -123,7 +116,6 @@ namespace Runner2.Classes
             set { _points = value; }
 
         }
-
         public override float Speed
         {
             get { return _speed; }
@@ -135,13 +127,6 @@ namespace Runner2.Classes
         public override void RemoveHats()
         {
         }
-
-        //public override IClonable deepCopy()
-        //{
-        //    OwlMonster other = new OwlMonster(this.Speed);
-        //    other.Points = this.Points;
-        //    return other;
-        //}
     }
     /// <summary>
     /// concrete product3
@@ -170,7 +155,6 @@ namespace Runner2.Classes
             set { _points = value; }
 
         }
-
         public override float Speed
         {
             get { return _speed; }
@@ -182,12 +166,6 @@ namespace Runner2.Classes
         public override void RemoveHats()
         {
         }
-        //public override IClonable deepCopy()
-        //{
-        //    DudeMonster other = new DudeMonster(this.Speed);
-        //    other.Points = this.Points;
-        //    return other;
-        //}
     }
 
     public class PointsCounter : IClonable
