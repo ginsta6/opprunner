@@ -25,6 +25,8 @@ namespace Runner2.Classes
         public abstract PointsCounter Points { get; set; }
         public abstract float Speed { get; set; }
 
+        public Symbol symbol;
+
         public abstract void Update();
         public abstract void RemoveHats();
         public IClonable deepCopy()

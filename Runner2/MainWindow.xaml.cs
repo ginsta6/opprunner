@@ -45,6 +45,7 @@ namespace Runner2
 
         //ItemFactory itemF;
         AbstractSceneFactory sceneF;
+        Builder builder;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
@@ -102,10 +103,21 @@ namespace Runner2
         ImageBrush obstacleSprite = new ImageBrush();
         ImageBrush avatarSprite = new ImageBrush();
         ImageBrush doorSprite = new ImageBrush();
+        ImageBrush symbolSprite = new ImageBrush();
+        ImageBrush potionSprite = new ImageBrush();
 
         int[] obstaclePosition = { 320, 310, 300, 305, 315 };
 
+
+        int platStartInd;
+        int platEndInd;
+        int itemStartInd;
+        int itemEndInd;
+
+        ExclamationPoint exclamationPoint = new ExclamationPoint();
+        QuestionMark questionMark = new QuestionMark();
         
+
 
         private int CurrentPlayers;
 
@@ -137,9 +149,11 @@ namespace Runner2
             //backgroundSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/fonas1.png"));
             avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
             doorSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/door.png"));
+            potionSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/potion.png"));
+
             gameEndPoint.Fill = doorSprite;
             avatar.Fill = avatarSprite;
-
+            testpotion.Fill = potionSprite;
 
             background.Fill = backgroundSprite;
 
@@ -278,20 +292,6 @@ namespace Runner2
             LobbyWin.Visibility = Visibility.Hidden;
             GameWin.Visibility = Visibility.Visible;
 
-            //for (int i = plat.startIndex; i < plat.endIndex; i++)
-            //{
-            //    var gamePlatform = GameWin.Children[i] as Rectangle;
-            //    gamePlatforms.Add(gamePlatform);
-            //    platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
-            //    platformHitBoxes.Add(platformHitBox);
-            //}
-            //for (int i = itm.startIndex; i < itm.endIndex; i++)
-            //{
-            //    var itemas = GameWin.Children[i] as Rectangle;
-            //    items.Add(itemas);
-            //    ItemHitBox = new Rect(Canvas.GetLeft(itemas), Canvas.GetTop(itemas), itemas.Width, itemas.Height);
-            //    itemHitBoxes.Add(ItemHitBox);
-            //}
 
 
             gameTimer.Start();
@@ -314,8 +314,11 @@ namespace Runner2
             //Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
             //Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
 
+            Canvas.SetTop(symbolObject, Canvas.GetTop(player) + speed - 80);
+            Canvas.SetLeft(symbolObject, Canvas.GetLeft(player));
+
             scoreText.Content = "Your Score: " + currentPlayer.Points.points;
-            OtherScoreText.Content = "Score: " + opposingPlayer.Points.points;
+            OtherScoreText.Content = "Oponent Score: " + opposingPlayer.Points.points;
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
@@ -330,20 +333,7 @@ namespace Runner2
             //item.Fill = itemImage;
             //----------------------------------------------------------------------------------------------------------------------------------
 
-            //for (int i = plat.startIndex; i < plat.endIndex; i++)
-            //{
-            //    var gamePlatform = GameWin.Children[i] as FrameworkElement;
-            //    gamePlatforms.Add(gamePlatform);
-            //    platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.ActualWidth, gamePlatform.ActualHeight);
-            //    platformHitBoxes.Add(platformHitBox);
-            //}
-            //for (int i = itm.startIndex; i < itm.endIndex; i++)
-            //{
-            //    var itemas = GameWin.Children[i] as FrameworkElement;
-            //    items.Add(itemas);
-            //    platformHitBox = new Rect(Canvas.GetLeft(itemas), Canvas.GetTop(itemas), itemas.ActualWidth, itemas.ActualHeight);
-            //    itemHitBoxes.Add(platformHitBox);
-            //}
+           
 
             finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
 
@@ -492,6 +482,20 @@ namespace Runner2
             {
                 playerAnimationCurrentState = PlayerAnimationState.Standing;
             }
+            if (e.Key == Key.Z)
+            {
+                currentPlayer.symbol = questionMark;
+                symbolSprite.ImageSource = new BitmapImage(new Uri(currentPlayer.symbol.getPictureString()));
+                symbolObject.Fill = symbolSprite;
+                symbolObject.Visibility = Visibility.Visible;
+            }
+            if (e.Key == Key.X)
+            {
+                currentPlayer.symbol = exclamationPoint;
+                symbolSprite.ImageSource = new BitmapImage(new Uri(currentPlayer.symbol.getPictureString()));
+                symbolObject.Fill = symbolSprite;
+                symbolObject.Visibility = Visibility.Visible;
+            }
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -576,7 +580,7 @@ namespace Runner2
 
             }
             //Platforms (1-4)
-            for (int i = 0; i < plat.number; i++)
+            for (int i = 0; i <4; i++)
             {
                 if (playerHitBox.IntersectsWith(platformHitBoxes[i]))
                 {
@@ -622,12 +626,12 @@ namespace Runner2
                 opposingPlayer = new CowboyHat(opposingPlayer, "player2");
             }
             //items
-            for (int i = 0; i < itm.number; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
-                    Canvas.SetLeft(GameWin.Children[itm.startIndex + i], 2000);
+                    Canvas.SetLeft(GameWin.Children[itemStartInd + i], 2000);
                     Canvas.SetLeft(items[i], 2000);
                     items[i].Visibility = Visibility.Hidden;
                     //Canvas.SetLeft(items[i], 2000);
@@ -649,7 +653,7 @@ namespace Runner2
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
-                    Canvas.SetLeft(GameWin.Children[itm.startIndex + i], 2000);
+                    Canvas.SetLeft(GameWin.Children[itemStartInd + i], 2000);
                     Canvas.SetLeft(items[i], 2000);
                     items[i].Visibility = Visibility.Hidden;
 
@@ -715,17 +719,17 @@ namespace Runner2
             {
                 Canvas.SetLeft(testpotion, 2000);
                 //Create potion effect
-                PotionEffectAlgorithm pot = new IncreaseSpeedPotion();
+                Potion pot = new SpeedUpPotion();
                 //Use potion effect
-                pot.giveEffect(currentPlayer);
+                pot.algorithm.giveEffect(currentPlayer);
             }
             if (player2HitBox.IntersectsWith(potionHitBox))
             {
                 Canvas.SetLeft(testpotion, 2000);
                 //Create potion effect
-                PotionEffectAlgorithm pot = new IncreaseSpeedPotion();
+                Potion pot = new SpeedUpPotion();
                 //Use potion effect
-                pot.giveEffect(opposingPlayer);
+                pot.algorithm.giveEffect(opposingPlayer);
             }
         }
 
@@ -837,20 +841,20 @@ namespace Runner2
 
         private void CreateScene(int level)
         {
-
             switch (level)
             {
                 case 1:
                     sceneF = new SummerFactory();
+                    builder = new SummerBuilder();
                     break;
                 case 2:
-                    for (int i = itm.startIndex; i < itm.endIndex; i++)
+                    for (int i = itemStartInd; i < itemEndInd; i++)
                     {
-                        GameWin.Children.Remove(GameWin.Children[itm.startIndex]);
+                        GameWin.Children.Remove(GameWin.Children[itemStartInd]);
                     }
-                    for (int i = plat.startIndex; i < plat.endIndex; i++)
+                    for (int i = platStartInd; i < platEndInd; i++)
                     {
-                        GameWin.Children.Remove(GameWin.Children[plat.startIndex]);
+                        GameWin.Children.Remove(GameWin.Children[platStartInd]);
                     }
 
                     gamePlatforms = new List<FrameworkElement>();
@@ -859,43 +863,66 @@ namespace Runner2
                     items = new List<FrameworkElement>();
 
                     sceneF = new WinterFactory();
+                    builder = new WinterBuilder();
                     break;
             }
 
+
+
+            //------------Background------------------------------------
             bg = sceneF.CreateBackground();
             backgroundSprite.ImageSource = new BitmapImage(new Uri(bg.spritePath));
 
+            //------------Ground-Platform------------------------------
             plat = sceneF.CreatePlatform();
-            itm = sceneF.CreateItem();
-            //obstaclePosition
+            ground.Fill = plat.color;
 
-            ground.Fill = new SolidColorBrush(plat.color);
+            //-----------------Obstacle-----------------------------
 
             obs = sceneF.CreateObstacle();
             obstacleSprite.ImageSource = new BitmapImage(new Uri(obs.spritePath));
             obstacle.Fill = obstacleSprite;
 
+            //--------Player-copy--------------------------------------
             currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
             opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
 
             currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
             opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
 
+            //--------------------------platforms---------------------
+            int[] width = new int[] { 229, 299, 411, 200 };
+            int[] topPositions = new int[] { 510, 316, 310, 201 };
+            int[] leftPositions = new int[] { 397, 46, 789, 539 };
 
-            for (int i = plat.startIndex; i < plat.endIndex; i++)
+            platStartInd = GameWin.Children.Count;
+
+            
+            for (int i = 0; i < 4; i++)
             {
-                var gamePlatform = GameWin.Children[i] as Rectangle;
-                gamePlatforms.Add(gamePlatform);
-                platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
-                platformHitBoxes.Add(platformHitBox);
+                var platHitBox = builder.buildPlatform(width[i], 32, topPositions[i], leftPositions[i]);
+                gamePlatforms.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
+                platformHitBoxes.Add(platHitBox);
             }
-            for (int i = itm.startIndex; i < itm.endIndex; i++)
+
+            platEndInd = GameWin.Children.Count;
+
+            //-------------items----------------------------
+
+            int[] itemTopPositions = new int[] { 400, 200, 250, 190 };
+            int[] itemLeftPositions = new int[] { 397, 46, 789, 539 };
+
+            itemStartInd = GameWin.Children.Count;
+
+            for (int i = 0; i < 4; i++)
             {
-                var itemas = GameWin.Children[i] as Rectangle;
-                items.Add(itemas);
-                ItemHitBox = new Rect(Canvas.GetLeft(itemas), Canvas.GetTop(itemas), itemas.Width, itemas.Height);
-                itemHitBoxes.Add(ItemHitBox);
+                var itemHitBox = builder.buildItem(itemTopPositions[i], itemLeftPositions[i]);
+                items.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
+                itemHitBoxes.Add(itemHitBox);
             }
+
+            itemEndInd = GameWin.Children.Count;
+
         }
         
         private void setActiveLobbyObjs()
