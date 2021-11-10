@@ -100,6 +100,7 @@ namespace Runner2.Classes
 
     public abstract class Obstacle
     {
+        public int pointsModifier;
         public int height;
         public string spritePath;
         public bool exploded;
@@ -109,6 +110,8 @@ namespace Runner2.Classes
     }
     public abstract class Item
     {
+        public int pointsModifier;
+        public bool isGood;
         public int height;
         public int width;
         public Brush color;
@@ -168,36 +171,42 @@ namespace Runner2.Classes
     {
         public SummerObstacle()
         {
+            pointsModifier = 2;
             exploded = false;
             spritePath = "pack://application:,,,/Images/obs1.png";
         }
 
         public override void removePoints(Player player)
         {
-            throw new NotImplementedException();
+            player.Points.SubtractPoints(pointsModifier);
         }
 
         public override void resetPlayerPosition(int index)
         {
-            throw new NotImplementedException();
+            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+            Canvas.SetTop(gameWin.Children[index], 509);
+            Canvas.SetLeft(gameWin.Children[index], 80);
         }
     }
     class WinterObstacle : Obstacle
     {
         public WinterObstacle()
         {
+            pointsModifier = 2;
             exploded = false;
             spritePath = "pack://application:,,,/Images/obs2.png";
         }
 
         public override void removePoints(Player player)
         {
-            throw new NotImplementedException();
+            player.Points.SubtractPoints(pointsModifier);
         }
 
         public override void resetPlayerPosition(int index)
         {
-            throw new NotImplementedException();
+            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+            Canvas.SetTop(gameWin.Children[index], 509);
+            Canvas.SetLeft(gameWin.Children[index], 80);
         }
     }
 
@@ -205,6 +214,8 @@ namespace Runner2.Classes
     {
         public SummerItem()
         {
+            pointsModifier = 1;
+            isGood = true;
             width = 50;
             height = 50;
             color = Brushes.Yellow;
@@ -213,13 +224,15 @@ namespace Runner2.Classes
 
         public override void modifyPoints(Player player)
         {
-            throw new NotImplementedException();
+            player.Points.AddPoints(pointsModifier);
         }
     }
     class WinterItem : Item
     {
         public WinterItem()
         {
+            pointsModifier = 1;
+            isGood = true;
             width = 50;
             height = 50;
             color = Brushes.Magenta;
@@ -228,7 +241,7 @@ namespace Runner2.Classes
 
         public override void modifyPoints(Player player)
         {
-            throw new NotImplementedException();
+            player.Points.AddPoints(pointsModifier);
         }
     }
 }

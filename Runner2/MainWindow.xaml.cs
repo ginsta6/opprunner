@@ -647,8 +647,8 @@ namespace Runner2
                         default:
                             break;
                     }
-                    statsController.run(new GivePointsCommand(currentPlayer, 1));
-                    //currentPlayer.Points.AddPoints(1);
+
+                    statsController.run(new ModifyPointsCommand(currentPlayer, items[i]));
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
@@ -667,8 +667,7 @@ namespace Runner2
                         default:
                             break;
                     }
-                    statsController.run(new GivePointsCommand(opposingPlayer, 1));
-                    //opposingPlayer.Points.AddPoints(1);
+                    statsController.run(new ModifyPointsCommand(opposingPlayer, items[i]));
                 }
             }
             //gameEndPoint
@@ -685,14 +684,18 @@ namespace Runner2
             if (playerHitBox.IntersectsWith(obstacleHitBox) && !obs.exploded)
             {
                 currentPlayer.RemoveHats();
-                // DEEP COPY
-                //currentPlayer = currentPlayerDeepCopy;
-                //currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
-
-                // SHALLOW COPY
-                currentPlayer = currentPlayerShallowCopy;
-                currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
-
+                if (sceneF is WinterFactory)
+                {
+                    // DEEP COPY
+                    currentPlayer = currentPlayerDeepCopy;
+                    currentPlayerDeepCopy = (Player)currentPlayer.deepCopy();
+                }
+                else
+                {
+                    // SHALLOW COPY
+                    currentPlayer = currentPlayerShallowCopy;
+                    currentPlayerShallowCopy = (Player)currentPlayer.shallowCopy();
+                }
                 if (!obs.exploded)
                     obs.exploded = true;
 
@@ -701,20 +704,23 @@ namespace Runner2
                 itemHitBoxes.Add(obstacleHitBox);
                 canvasItems.Add(obstacle);
                 obstacle.Fill = Brushes.Red;
-
-                Canvas.SetTop(player, 509 + speed);
-                Canvas.SetLeft(player, 80);
+                obs.resetPlayerPosition(4);
             }
             if (player2HitBox.IntersectsWith(obstacleHitBox) && !obs.exploded)
             {
                 opposingPlayer.RemoveHats();
-                // DEEP COPY
-                //opposingPlayer = opposingPlayerDeepCopy;
-                //opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
-
-                // SHALLOW COPY
-                opposingPlayer = opposingPlayerShallowCopy;
-                opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
+                if (sceneF is WinterFactory)
+                {
+                    // DEEP COPY
+                    opposingPlayer = opposingPlayerDeepCopy;
+                    opposingPlayerDeepCopy = (Player)opposingPlayer.deepCopy();
+                }
+                else
+                {
+                    // SHALLOW COPY
+                    opposingPlayer = opposingPlayerShallowCopy;
+                    opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
+                }
 
                 if (!obs.exploded)
                     obs.exploded = true;
@@ -723,9 +729,7 @@ namespace Runner2
                 itemHitBoxes.Add(obstacleHitBox);
                 canvasItems.Add(obstacle);
                 obstacle.Fill = Brushes.Red;
-
-                Canvas.SetTop(player2, 509 + opposingSpeed);
-                Canvas.SetLeft(player2, 80);
+                obs.resetPlayerPosition(3);
             }
 
             //-----Potion------

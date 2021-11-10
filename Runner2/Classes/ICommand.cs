@@ -82,43 +82,61 @@ namespace Runner2.Classes
         {
         }
     }
-    public class GivePointsCommand : ICommand
+    public class ModifyPointsCommand : ICommand
     {
-        public int targetPoints;
-        public GivePointsCommand(Player target, int points)
+        public Item item;
+        public ModifyPointsCommand(Player target, Item item)
         {
-            targetPoints = points;
+            this.item = item;
             this.player = target;
         }
         public override void execute()
         {
-            player.Points.AddPoints(targetPoints);
+            item.modifyPoints(player);
         }
 
         public override void undo()
         {
-            player.Points.SubtractPoints(targetPoints);
-        }
-    }
-    public class RemovePointsCommand : ICommand
-    {
-        public int targetPoints;
-        public RemovePointsCommand(Player target, int points)
-        {
-            targetPoints = points;
-            this.player = target;
-        }
-        public override void execute()
-        {
-            player.Points.SubtractPoints(targetPoints);
-        }
-
-        public override void undo()
-        {
+            switch (item.isGood)
+            {
+                case true:
+                    player.Points.SubtractPoints(item.pointsModifier);
+                    return;
+                case false:
+                    player.Points.AddPoints(item.pointsModifier);
+                    return;
+            }
             
-            player.Points.AddPoints(targetPoints);
         }
     }
+    //public class RemovePointsCommand : ICommand
+    //{
+    //    public Item item;
+    //    public int targetPoints;
+    //    public RemovePointsCommand(Player target, Item item)
+    //    {
+    //        this.item = item;
+    //        this.player = target;
+    //    }
+    //    public override void execute()
+    //    {
+    //        item.modifyPoints(player);
+    //    }
+
+    //    public override void undo()
+    //    {
+    //        switch (item.isGood)
+    //        {
+    //            case true:
+    //                player.Points.SubtractPoints(item.pointsModifier);
+    //                return;
+    //            case false:
+    //                player.Points.AddPoints(item.pointsModifier);
+    //                return;
+    //        }
+
+    //    }
+    //}
     public class GiveSpeedCommand : ICommand
     {
         public float targetSpeed;
