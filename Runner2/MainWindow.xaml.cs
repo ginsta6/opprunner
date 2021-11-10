@@ -22,6 +22,9 @@ namespace Runner2
 {
     public partial class MainWindow : Window
     {
+        Facade facade;
+
+        #region Variables (a lot less needs to stay (if any) )
         Background bg;
         Platform plat;
         Obstacle obs;
@@ -121,10 +124,13 @@ namespace Runner2
 
 
         private int CurrentPlayers;
+        #endregion
 
-
+        #region This stays but with less stuff
         public MainWindow()
         {
+            facade = new Facade();
+
             HubConnection connection = new HubConnectionBuilder()           //Connecting to hub
                 .WithUrl("http://localhost:5000/runner").Build();
 
@@ -165,10 +171,11 @@ namespace Runner2
             //StartGame();
             //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
         }
-
+        #endregion
         // ----------------------------------------------------------------------------------------------------------
         // SignalR receiving funcions
 
+        #region These all go
         private void SignalRService_StartSignalReceived()
         {
             StartCountDown();
@@ -179,23 +186,26 @@ namespace Runner2
             CurrentPlayers = count;
         }
 
+        //modify slightly
         private void SignalRService_TauntMessageReceived(string message)
         {
             //TauntMessage.Content = message;
             players.Content = message;
         }
+
+        //modify slightly
         private void SignalRService_PlayerTypeReceived(List<string> message)
         {
             //Could've done it with "Clients.Others" on the server side instead but oh well. I thought of it too late.
             if (nameInput.Text == players.Content.ToString().Split('\n')[0])        //Player in given instance is the first one who connected
             {
                 //give player2 second type from list
-                CreatePlayer(Convert.ToInt32(message[1]), 2);
+                opposingPlayer = facade.CreatePlayer(Convert.ToInt32(message[1]));
             }
             else
             {
                 //give player2 first type from list
-                CreatePlayer(Convert.ToInt32(message[0]), 2);
+                opposingPlayer = facade.CreatePlayer(Convert.ToInt32(message[0]));
             }
             IdleSprite(opposingPlayer, player2, player2Sprite);
         }
@@ -224,9 +234,11 @@ namespace Runner2
         {
             EndGameWin();
         }
+        #endregion
 
         //-----------------Functions to send to server----------------
 
+        #region These all go
         private async Task renameLater(string name, string playerType)
         {
             await rService.SendTauntMessage(name, playerType);
@@ -261,10 +273,12 @@ namespace Runner2
         {
             await rService.SendEndGameSignal();
         }
+        #endregion
 
         // ------------------------------------------------------------------------------------------------------------
         // Game engine functions
 
+        #region This goes
         private void StartGame()
         {
             CantPlayText.Visibility = Visibility.Hidden;
@@ -277,6 +291,8 @@ namespace Runner2
             Canvas.SetLeft(background, 0);
             //Canvas.SetLeft(background2, 1262);
 
+            groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
+            potionHitBox = new Rect(Canvas.GetLeft(testpotion), Canvas.GetTop(testpotion), testpotion.Width, testpotion.Height);
 
             //Canvas.SetLeft(obstacle, 950);
             //Canvas.SetTop(obstacle, 310);
@@ -297,24 +313,15 @@ namespace Runner2
 
             gameTimer.Start();
         }
+        #endregion
 
+        #region This definately stays but modified
         private void GameEngine(object sender, EventArgs e)
         {
-            //Canvas.SetLeft(background, Canvas.GetLeft(background) - currentPlayer.Speed);
-            //Canvas.SetLeft(background2, Canvas.GetLeft(background2) - currentPlayer.Speed);
-
-            //if (Canvas.GetLeft(background) < -1262)
-            //    Canvas.SetLeft(background, Canvas.GetLeft(background2) + background2.Width);
-
-
-            //if (Canvas.GetLeft(background2) < -1262)
-            //    Canvas.SetLeft(background2, Canvas.GetLeft(background) + background.Width);
-
+            //-------------Gravity----------
             Canvas.SetTop(player, Canvas.GetTop(player) + speed);
             Canvas.SetTop(player2, Canvas.GetTop(player2) + opposingSpeed);
-            //Canvas.SetLeft(obstacle, Canvas.GetLeft(obstacle) - currentPlayer.Speed);
-            //Canvas.SetLeft(item, Canvas.GetLeft(item) - currentPlayer.Speed);
-
+            //------------------------------
             Canvas.SetTop(symbolObject, Canvas.GetTop(player) + speed - 80);
             Canvas.SetLeft(symbolObject, Canvas.GetLeft(player));
 
@@ -323,18 +330,8 @@ namespace Runner2
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
-            obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
-            groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
-            potionHitBox = new Rect(Canvas.GetLeft(testpotion), Canvas.GetTop(testpotion), testpotion.Width, testpotion.Height);
-            //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            //magicHatHitBox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
-
-            //ImageBrush itemImage = new ImageBrush();
-            //itemImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/magicHat.png"));
-            //item.Fill = itemImage;
+            
             //----------------------------------------------------------------------------------------------------------------------------------
-
-
 
             finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
 
@@ -351,7 +348,6 @@ namespace Runner2
                 if (spriteIndex > 6)
                     spriteIndex = 1;
 
-                //RunSprite(spriteIndex);
             }
 
             //-------------Player 1 jumping----------
@@ -373,44 +369,7 @@ namespace Runner2
             //-----Random piece of code that is useless?
             if (force < 0)
                 jumping = false;
-            //------------------------------------------
-            //if (Canvas.GetLeft(obstacle) < -50)
-            //{
-            //    Canvas.SetLeft(obstacle, 950);
-            //    Canvas.SetTop(obstacle, obstaclePosition[rnd.Next(0, obstaclePosition.Length)]);
-            //    score += 1;
-            //}
-
-            //if (Canvas.GetLeft(item) < -50)
-            //{
-            //    Canvas.SetLeft(item, 2000);
-            //}
-
-            //-----------------Item---------------------
-
-            //Made two different 'if's to make logic of applying item effects easier later maybe
-            //if (player2HitBox.IntersectsWith(itemHitBox))
-            //{
-            //    Canvas.SetLeft(item, 2000);
-
-            //    switch (rnd.Next(1, 3))
-            //    {
-            //        case 1:
-            //            //itemF = new GoodItemFactory();
-            //            break;
-            //        case 2:
-            //            //itemF = new BadItemFactory();
-            //            break;
-            //        default:
-            //            break;
-
-            //    }
-
-            //    score += 1;
-            //    //var potion = itemF.CreatePotion();
-
-            //}
-
+            
             //------------------------------------------
             if (gameOver == true)
             {
@@ -435,10 +394,11 @@ namespace Runner2
             currentPlayer.Update();
             opposingPlayer.Update();
         }
+        #endregion
 
         // ------------------------------------------------------------------------------------------------------------
         // Key input functions
-
+        #region These stay but modified
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && gameOver == true)
@@ -498,10 +458,12 @@ namespace Runner2
                 symbolObject.Visibility = Visibility.Visible;
             }
         }
+        #endregion
 
         // -------------------------------------------------------------------------------------------------------------
         // Button press functions
 
+        #region These stay but modified
         private void cycleCharacterTypeLeftBtn_Click(object sender, RoutedEventArgs e)
         {
             currentPlayerTypeIndex--;
@@ -527,9 +489,13 @@ namespace Runner2
                 LobbyWin.Visibility = Visibility.Visible;
                 CantJoinLobbyText.Visibility = Visibility.Hidden;
                 avatarLobby.Fill = avatarSprite;
-                setActiveLobbyObjs();
+
+                StartWin.Visibility = Visibility.Hidden;
+                LobbyWin.Visibility = Visibility.Visible;
+
+                //setActiveLobbyObjs();
                 //players.Content = nameInput.Text;
-                CreatePlayer(currentPlayerTypeIndex, 1);
+                currentPlayer = facade.CreatePlayer(currentPlayerTypeIndex);
                 renameLater(nameInput.Text, currentPlayer.SkinType.ToString());
             }
             else
@@ -560,10 +526,11 @@ namespace Runner2
         {
             this.Close();
         }
+        #endregion
 
         // -------------------------------------------------------------------------------------------------------------
         // Logic functions
-
+        #region These all go. Modify everything with static indexes in canvas
         private void HandleHitBoxCollisions()
         {
             //Ground platform
@@ -736,24 +703,20 @@ namespace Runner2
             if (playerHitBox.IntersectsWith(potionHitBox))
             {
                 Canvas.SetLeft(testpotion, 2000);
-                //Create potion effect
-                Potion pot = new SpeedUpPotion();
-                //Use potion effect
-                pot.algorithm.giveEffect(currentPlayer);
+                potionHitBox = new Rect(2000, 2000, 2, 2);
+                facade.UsePotion(currentPlayer, "speedUp");
             }
             if (player2HitBox.IntersectsWith(potionHitBox))
             {
                 Canvas.SetLeft(testpotion, 2000);
-                //Create potion effect
-                Potion pot = new SpeedUpPotion();
-                //Use potion effect
-                pot.algorithm.giveEffect(opposingPlayer);
+                potionHitBox = new Rect(2000, 2000, 2, 2);
+                facade.UsePotion(opposingPlayer, "speedUp");
             }
         }
 
         private void GoToNextLevel()
         {
-             CreateScene(2);//Canvas.Top="703" Canvas.Left="80"
+            CreateScene(2);//Canvas.Top="703" Canvas.Left="80"
             Canvas.SetTop(player, 510 + speed);
             Canvas.SetLeft(player, 80);
             Canvas.SetTop(player2, 510 + opposingSpeed);
@@ -785,87 +748,22 @@ namespace Runner2
             endPlayer2.Content = names[1];
         }
 
-        private void MovePlayer()
-        {
-            player.RenderTransformOrigin = new Point(0.5, 0.5);
-            ScaleTransform flipTrans = new ScaleTransform();
-            if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft)
-            {
-                flipTrans.ScaleX = -1;
-                Canvas.SetLeft(player, Canvas.GetLeft(player) - currentPlayer.Speed);
-            }
-            else if (playerAnimationCurrentState == PlayerAnimationState.RunningRight)
-            {
-                flipTrans.ScaleX = 1;
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + currentPlayer.Speed);
-            }
-            player.RenderTransform = flipTrans;
-        }
-
-        private void MoveOtherPlayer()
-        {
-            player2.RenderTransformOrigin = new Point(0.5, 0.5);
-            ScaleTransform flipTrans = new ScaleTransform();
-            if (player2AnimationCurrentState == PlayerAnimationState.RunningLeft)
-            {
-                flipTrans.ScaleX = -1;
-                Canvas.SetLeft(player2, Canvas.GetLeft(player2) - opposingPlayer.Speed);
-            }
-            else if (player2AnimationCurrentState == PlayerAnimationState.RunningRight)
-            {
-                flipTrans.ScaleX = 1;
-                Canvas.SetLeft(player2, Canvas.GetLeft(player2) + opposingPlayer.Speed);
-            }
-            player2.RenderTransform = flipTrans;
-        }
-
-        private void CreatePlayer(int typeToCreate, int playernum)
-        {
-            if (playernum == 1)
-            {
-                switch (typeToCreate)
-                {
-                    case 1:
-                        currentPlayer = playerF.FactoryMethod("Pink");
-                        break;
-                    case 2:
-                        currentPlayer = playerF.FactoryMethod("Owlet");
-                        break;
-                    case 3:
-                        currentPlayer = playerF.FactoryMethod("Dude");
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
-                switch (typeToCreate)
-                {
-                    case 1:
-                        opposingPlayer = playerF.FactoryMethod("Pink");
-                        break;
-                    case 2:
-                        opposingPlayer = playerF.FactoryMethod("Owlet");
-                        break;
-                    case 3:
-                        opposingPlayer = playerF.FactoryMethod("Dude");
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
         private void CreateScene(int level)
         {
+            int[] topPositions = new int[4];
+            int[] leftPositions = new int[4];
+
             switch (level)
             {
                 case 1:
+                    topPositions = new int[] { 510, 315, 310, 200 };
+                    leftPositions = new int[] { 400, 50, 790, 540 };
                     sceneF = new SummerFactory();
                     builder = new SummerBuilder();
                     break;
                 case 2:
+                    topPositions = new int[] { 400, 270, 310, 210 };
+                    leftPositions = new int[] { 300, 60, 790, 340 };
                     for (int i = itemStartInd; i < itemEndInd; i++)
                     {
                         GameWin.Children.Remove(GameWin.Children[itemStartInd]);
@@ -906,6 +804,7 @@ namespace Runner2
             //    canvasItems.Remove(canvasItems.Last());
             //}
             Canvas.SetLeft(obstacle, 947);
+            obstacleHitBox = new Rect(Canvas.GetLeft(obstacle), Canvas.GetTop(obstacle), obstacle.Width, obstacle.Height);
             obstacle.Fill = obstacleSprite;
             obstacle.Visibility = Visibility.Visible;
 
@@ -918,8 +817,7 @@ namespace Runner2
 
             //--------------------------platforms---------------------
             int[] width = new int[] { 229, 299, 411, 200 };
-            int[] topPositions = new int[] { 510, 316, 310, 201 };
-            int[] leftPositions = new int[] { 397, 46, 789, 539 };
+            
 
             platStartInd = GameWin.Children.Count;
 
@@ -952,20 +850,20 @@ namespace Runner2
 
         }
 
-        private void setActiveLobbyObjs()
-        {
-            title.Visibility = Visibility.Hidden;
-            startGameBtn.Visibility = Visibility.Hidden;
-            nameInput.Visibility = Visibility.Hidden;
-            joinLobbyBtn.Visibility = Visibility.Hidden;
-            cycleCharacterTypeLeftBtn.Visibility = Visibility.Hidden;
-            cycleCharacterTypeRightBtn.Visibility = Visibility.Hidden;
-            CharacterTypeSelected.Visibility = Visibility.Hidden;
+        //private void setActiveLobbyObjs()
+        //{
+        //    title.Visibility = Visibility.Hidden;
+        //    startGameBtn.Visibility = Visibility.Hidden;
+        //    nameInput.Visibility = Visibility.Hidden;
+        //    joinLobbyBtn.Visibility = Visibility.Hidden;
+        //    cycleCharacterTypeLeftBtn.Visibility = Visibility.Hidden;
+        //    cycleCharacterTypeRightBtn.Visibility = Visibility.Hidden;
+        //    CharacterTypeSelected.Visibility = Visibility.Hidden;
 
-            titlePlayers.Visibility = Visibility.Visible;
-            startGameBtn.Visibility = Visibility.Visible;
-            players.Visibility = Visibility.Visible;
-        }
+        //    titlePlayers.Visibility = Visibility.Visible;
+        //    startGameBtn.Visibility = Visibility.Visible;
+        //    players.Visibility = Visibility.Visible;
+        //}
 
         private void changeAvatar(int index)
         {
@@ -995,10 +893,12 @@ namespace Runner2
         {
             StartGame();
         }
+        #endregion
 
         // -------------------------------------------------------------------------------------------------------------------
         // Animation functions
 
+        #region Sprites
         private void RunSprite(double i)
         {
             if (currentPlayer.SkinType == 1)
@@ -1115,6 +1015,40 @@ namespace Runner2
                 IdleSprite(currentPlayer, player, playerSprite);
             }
         }
+
+        private void MovePlayer()
+        {
+            player.RenderTransformOrigin = new Point(0.5, 0.5);
+            ScaleTransform flipTrans = new ScaleTransform();
+            if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft)
+            {
+                flipTrans.ScaleX = -1;
+                Canvas.SetLeft(player, Canvas.GetLeft(player) - currentPlayer.Speed);
+            }
+            else if (playerAnimationCurrentState == PlayerAnimationState.RunningRight)
+            {
+                flipTrans.ScaleX = 1;
+                Canvas.SetLeft(player, Canvas.GetLeft(player) + currentPlayer.Speed);
+            }
+            player.RenderTransform = flipTrans;
+        }
+
+        private void MoveOtherPlayer()
+        {
+            player2.RenderTransformOrigin = new Point(0.5, 0.5);
+            ScaleTransform flipTrans = new ScaleTransform();
+            if (player2AnimationCurrentState == PlayerAnimationState.RunningLeft)
+            {
+                flipTrans.ScaleX = -1;
+                Canvas.SetLeft(player2, Canvas.GetLeft(player2) - opposingPlayer.Speed);
+            }
+            else if (player2AnimationCurrentState == PlayerAnimationState.RunningRight)
+            {
+                flipTrans.ScaleX = 1;
+                Canvas.SetLeft(player2, Canvas.GetLeft(player2) + opposingPlayer.Speed);
+            }
+            player2.RenderTransform = flipTrans;
+        }
         private void createHats()
         {
             //Magic HAT
@@ -1129,6 +1063,6 @@ namespace Runner2
             cowboyHatItem.Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Images/goodItems/cowboyHat.png")));
             cowboyHatHitBox = new Rect(Canvas.GetLeft(cowboyHatItem), Canvas.GetTop(cowboyHatItem), cowboyHatItem.Width, cowboyHatItem.Height);
         }
-
+        #endregion
     }
 }

@@ -8,11 +8,6 @@ namespace Runner.SignalR.Hubs
 {
     public class RunnerHub : Hub
     {
-        //public int minPlayers = 2;
-        //public static int currPlayers = 0;
-        //private static string players = "";
-        //private static List<string> playerTypes = new List<string>();
-
         private SharedRecourses instance = SharedRecourses.getInstance();
         
         public async Task SendTauntMessage(string message, string type)
@@ -56,14 +51,6 @@ namespace Runner.SignalR.Hubs
         {
             await Clients.All.SendAsync("ReceiveEndGameSignal");
         }
-        //public Task JoinGroup(string group)
-        //{
-        //    return Groups.AddToGroupAsync(Context.ConnectionId, group);
-        //}
-        //public Task SendMessageToGroup(string group, string message)
-        //{
-        //    return Clients.Group(group).SendAsync("ReceiveMessage", message);
-        //}
 
     } 
 
