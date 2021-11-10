@@ -181,6 +181,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\Builder.cs" />
     <Compile Include="Classes\Decoratorr.cs" />
+    <Compile Include="Classes\Facade.cs" />
     <Compile Include="Classes\ICommand.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\ObstacleAdapter.cs" />

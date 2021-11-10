@@ -22,10 +22,10 @@ namespace Runner2.Classes
 
     public class SummerBuilder : Builder
     {
-        AbstractSceneFactory factory;
+        Facade facade;
         public SummerBuilder()
         {
-            factory = new SummerFactory();
+            facade = new Facade();
         }
 
         public override void buildBackground()
@@ -35,7 +35,8 @@ namespace Runner2.Classes
 
         public override Item buildItem(int top, int left)
         {
-            var ite = factory.CreateItem();
+            var ite = facade.CreateItem("summer");
+            //var ite = factory.CreateItem();
 
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
 
@@ -67,7 +68,7 @@ namespace Runner2.Classes
         //paduodi koordinates
         public override Rect buildPlatform(int w, int h, int top, int left)
         {
-            var plat = factory.CreatePlatform();
+            var plat = facade.CreatePlatform("summer");
 
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
             
@@ -92,10 +93,10 @@ namespace Runner2.Classes
     }
     public class WinterBuilder : Builder
     {
-        AbstractSceneFactory factory;
+        Facade facade;
         public WinterBuilder()
         {
-            factory = new WinterFactory();
+            facade = new Facade();
         }
 
         public override void buildBackground()
@@ -105,7 +106,7 @@ namespace Runner2.Classes
 
         public override Item buildItem(int top, int left)
         {
-            var ite = factory.CreateItem();
+            var ite = facade.CreateItem("winter");
 
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
 
@@ -136,7 +137,7 @@ namespace Runner2.Classes
 
         public override Rect buildPlatform(int w, int h, int top, int left)
         {
-            var plat = factory.CreatePlatform();
+            var plat = facade.CreatePlatform("winter");
 
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
 
