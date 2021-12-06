@@ -15,6 +15,7 @@ namespace Runner2.Classes
     {
         Player player;
         Creator playerF;
+        public IconProvider prod;
         AbstractSceneFactory sceneF;
         Builder builder;
 
@@ -33,6 +34,7 @@ namespace Runner2.Classes
         {
             SF = new SummerFactory();
             WF = new WinterFactory();
+            prod = new IconProvider();
         }
 
         public Player CreatePlayer(int typeToCreate)
