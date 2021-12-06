@@ -22,7 +22,7 @@ namespace Runner2.Classes
     public abstract class Player : IClonable
     {
         public abstract State state { get; set; }
-        public abstract int SkinType { get;  }
+        public abstract int SkinType { get; }
         public abstract PointsCounter Points { get; set; }
         public abstract float Speed { get; set; }
 
@@ -42,8 +42,8 @@ namespace Runner2.Classes
             return (Player)this.MemberwiseClone();
 
         }
-        public abstract void Request();
-        
+        public abstract void Request(int ind);
+
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ namespace Runner2.Classes
     /// </summary>
     class PinkMonster : Player
     {
-        private  State _state;
+        private State _state;
         private readonly int _skinType;
         private PointsCounter _points;
         private float _speed;
@@ -87,7 +87,8 @@ namespace Runner2.Classes
             set { _speed = value; }
         }
 
-        public override State state {
+        public override State state
+        {
             get { return _state; }
             set { _state = value; }
         }
@@ -98,9 +99,9 @@ namespace Runner2.Classes
         public override void RemoveHats()
         {
         }
-        public override void Request()
+        public override void Request(int ind)
         {
-            _state.Handle();
+            _state.Handle(ind);
         }
 
     }
@@ -150,9 +151,9 @@ namespace Runner2.Classes
             get { return _state; }
             set { _state = value; }
         }
-        public override void Request()
+        public override void Request(int ind)
         {
-            _state.Handle();
+            _state.Handle(ind);
         }
     }
     /// <summary>
@@ -200,10 +201,10 @@ namespace Runner2.Classes
             get { return _state; }
             set { _state = value; }
         }
-        public override void Request( )
+        public override void Request(int ind)
         {
-            _state.Handle();
-        } 
+            _state.Handle(ind);
+        }
     }
 
     public class PointsCounter : IClonable
@@ -252,9 +253,9 @@ namespace Runner2.Classes
     /// "concrete creator"
     /// </summary>
     public class ConcreteCreator : Creator
-    {            
+    {
         public override Player FactoryMethod(string type)
-        {            
+        {
             switch (type)
             {
                 case "Pink":

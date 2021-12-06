@@ -20,11 +20,12 @@ namespace Runner2.Classes
             set { player = value; }
         }
         
-        public abstract void Handle();
+        public abstract void Handle(int ind);
         public abstract void ChangeSize(int size);
     }
     public class NormalSizeState : State
     {
+        int index;
         public NormalSizeState(State state)
         {
             player = state.Player;
@@ -38,14 +39,15 @@ namespace Runner2.Classes
         public override void ChangeSize(int size)
         {
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            var player1 = gameWin.Children[4] as Rectangle;
+            var player1 = gameWin.Children[index] as Rectangle;
             player1.Height = size;
             var text = gameWin.Children[10] as Label;
             text.Content = "State: " + player.state.ToString();
         }
 
-        public override void Handle()
+        public override void Handle(int ind)
         {
+            index = ind;
             StateChangeCheck();
         }
         private void StateChangeCheck()
@@ -68,6 +70,7 @@ namespace Runner2.Classes
     }
     public class SmallSizeState : State
     {
+        int index;
         public SmallSizeState(State state)
         {
             player = state.Player;
@@ -80,14 +83,15 @@ namespace Runner2.Classes
         public override void ChangeSize(int size)
         {
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            var player1 = gameWin.Children[4] as Rectangle;
+            var player1 = gameWin.Children[index] as Rectangle;
             player1.Height = size;
             var text = gameWin.Children[10] as Label;
             text.Content = "State: " + player.state.ToString();
         }
 
-        public override void Handle()
+        public override void Handle(int ind)
         {
+            index=ind;
             StateChangeCheck();
         }
         private void StateChangeCheck()
@@ -105,6 +109,7 @@ namespace Runner2.Classes
     }
     public class MediumSizeState : State
     {
+        int index;
         public MediumSizeState(State state)
         {
             player = state.Player;
@@ -117,14 +122,15 @@ namespace Runner2.Classes
         public override void ChangeSize(int size)
         {
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            var player1 = gameWin.Children[4] as Rectangle;
+            var player1 = gameWin.Children[index] as Rectangle;
             player1.Height = size;
             var text = gameWin.Children[10] as Label;
             text.Content = "State: " + player.state.ToString();
         }
 
-        public override void Handle()
+        public override void Handle(int ind)
         {
+            index = ind;
             StateChangeCheck();
         }
         private void StateChangeCheck()
@@ -147,6 +153,7 @@ namespace Runner2.Classes
     } 
     public class LargeSizeState : State
     {
+        int index;
         public LargeSizeState(State state)
         {
             player = state.Player;
@@ -159,14 +166,15 @@ namespace Runner2.Classes
         public override void ChangeSize(int size)
         {
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
-            var player1 = gameWin.Children[4] as Rectangle;
+            var player1 = gameWin.Children[index] as Rectangle;
             player1.Height = size;
             var text = gameWin.Children[10] as Label;
             text.Content = "State: " + player.state.ToString();
         }
 
-        public override void Handle()
+        public override void Handle(int ind)
         {
+            index = ind;
             StateChangeCheck();
         }
         private void StateChangeCheck()
