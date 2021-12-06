@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner2", "Runner2\Runner2.csproj", "{94AC8792-A76B-43BA-A7B4-3E223A434C78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner.SignalR", "Runner.SignalR\Runner.SignalR.csproj", "{827D05D8-9DFF-490B-A6BB-FA178FBDE165}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Runner.SignalR", "Runner.SignalR\Runner.SignalR.csproj", "{827D05D8-9DFF-490B-A6BB-FA178FBDE165}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodedUITestProject1", "CodedUITestProject1\CodedUITestProject1.csproj", "{AD0B2AA6-E374-4B45-A323-270E5C71B294}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject2", "TestProject2\TestProject2.csproj", "{A0CB17FB-6F3A-47DB-BA38-F0D57EA6830C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{827D05D8-9DFF-490B-A6BB-FA178FBDE165}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{827D05D8-9DFF-490B-A6BB-FA178FBDE165}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{827D05D8-9DFF-490B-A6BB-FA178FBDE165}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD0B2AA6-E374-4B45-A323-270E5C71B294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0B2AA6-E374-4B45-A323-270E5C71B294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0B2AA6-E374-4B45-A323-270E5C71B294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0B2AA6-E374-4B45-A323-270E5C71B294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0CB17FB-6F3A-47DB-BA38-F0D57EA6830C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0CB17FB-6F3A-47DB-BA38-F0D57EA6830C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0CB17FB-6F3A-47DB-BA38-F0D57EA6830C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0CB17FB-6F3A-47DB-BA38-F0D57EA6830C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

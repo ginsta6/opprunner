@@ -22,7 +22,7 @@ namespace Runner2.Classes
     /// <summary>
     /// "abstract factory" interface
     /// </summary>
-    abstract class AbstractSceneFactory
+    public abstract class AbstractSceneFactory
     {
         public abstract Platform CreatePlatform();
         public abstract Background CreateBackground();
@@ -34,7 +34,7 @@ namespace Runner2.Classes
     /// <summary>
     /// "concrete factory1" class
     /// </summary>
-    class SummerFactory : AbstractSceneFactory
+    public class SummerFactory : AbstractSceneFactory
     {
         int platformCount = 5;
         public override Platform CreatePlatform()
@@ -60,7 +60,7 @@ namespace Runner2.Classes
     /// <summary>
     /// "concrete factory2" class
     /// </summary>
-    class WinterFactory : AbstractSceneFactory
+    public class WinterFactory : AbstractSceneFactory
     {
         public override Platform CreatePlatform()
         {

@@ -33,7 +33,6 @@ namespace Runner2.Classes
         {
             SF = new SummerFactory();
             WF = new WinterFactory();
-
         }
 
         public Player CreatePlayer(int typeToCreate)
