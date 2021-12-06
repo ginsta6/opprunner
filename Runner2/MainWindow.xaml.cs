@@ -305,6 +305,7 @@ namespace Runner2
             hasBaseballHat = false;
             hasCowboyHat = false;
             playerAnimationCurrentState = PlayerAnimationState.Standing;
+            //currentPlayer.state = new Standing();
 
             LobbyWin.Visibility = Visibility.Hidden;
             GameWin.Visibility = Visibility.Visible;
@@ -342,6 +343,7 @@ namespace Runner2
 
             //--------------------------------------
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
+           // if ( currentPlayer.state is RunningLeft|| currentPlayer.state is RunningRight)
             {
                 spriteIndex += .5;
 
@@ -352,6 +354,7 @@ namespace Runner2
 
             //-------------Player 1 jumping----------
             if (jumping == true)
+            //if (currentPlayer.state is Jumping)
             {
                 speed = -9;
                 force -= 1;
@@ -369,6 +372,7 @@ namespace Runner2
             //-----Random piece of code that is useless?
             if (force < 0)
                 jumping = false;
+                //currentPlayer.state = new Standing();
             
             //------------------------------------------
             if (gameOver == true)
@@ -409,10 +413,13 @@ namespace Runner2
             if (e.Key == Key.Left)
             {
                 playerAnimationCurrentState = PlayerAnimationState.RunningLeft;
+                //currentPlayer.state = new RunningLeft();
+
             }
             else if (e.Key == Key.Right)
             {
                 playerAnimationCurrentState = PlayerAnimationState.RunningRight;
+                //currentPlayer.state = new RunningRight();
             }
         }
 
@@ -427,6 +434,8 @@ namespace Runner2
             {
                 //renameLater();
                 jumping = true;
+                //currentPlayer.state = new Jumping();
+                //currentPlayer.Request(ref force, ref speed);
                 force = 15;
                 speed = -3;
 
@@ -442,6 +451,7 @@ namespace Runner2
             if (e.Key == Key.Left || e.Key == Key.Right)
             {
                 playerAnimationCurrentState = PlayerAnimationState.Standing;
+                //currentPlayer.state = new Standing();
             }
             if (e.Key == Key.Z)
             {
@@ -539,6 +549,7 @@ namespace Runner2
                 speed = 0;
                 Canvas.SetTop(player, Canvas.GetTop(ground) - player.Height);
                 jumping = false;
+                //currentPlayer.state = new Standing();
 
             }
             if (player2HitBox.IntersectsWith(groundHitBox))
@@ -555,6 +566,7 @@ namespace Runner2
                     speed = 0;
                     Canvas.SetTop(player, Canvas.GetTop(gamePlatforms[i]) - player.Height);
                     jumping = false;
+                    //currentPlayer.state = new Standing();
                 }
                 if (player2HitBox.IntersectsWith(platformHitBoxes[i]))
                 {
@@ -616,6 +628,7 @@ namespace Runner2
                     }
 
                     statsController.run(new ModifyPointsCommand(currentPlayer, items[i]));
+                    currentPlayer.Request();
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
@@ -899,7 +912,7 @@ namespace Runner2
         // Animation functions
 
         #region Sprites
-        private void RunSprite(double i)
+        public void RunSprite(double i)
         {
             if (currentPlayer.SkinType == 1)
             {
@@ -1007,10 +1020,11 @@ namespace Runner2
         private void AnimatePlayer(double i)
         {
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
+            //if (currentPlayer.state is  RunningLeft || currentPlayer.state is RunningRight)
             {
                 RunSprite(i);
             }
-            else
+            else //if(currentPlayer.state is Standing)
             {
                 IdleSprite(currentPlayer, player, playerSprite);
             }

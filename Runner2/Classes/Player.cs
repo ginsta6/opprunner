@@ -21,6 +21,7 @@ namespace Runner2.Classes
     /// </summary>
     public abstract class Player : IClonable
     {
+        public abstract State state { get; set; }
         public abstract int SkinType { get;  }
         public abstract PointsCounter Points { get; set; }
         public abstract float Speed { get; set; }
@@ -34,7 +35,6 @@ namespace Runner2.Classes
             Player other = (Player)this.MemberwiseClone();
             other.Points = (PointsCounter)this.Points.deepCopy();
             return other;
-
         }
 
         public IClonable shallowCopy()
@@ -42,6 +42,8 @@ namespace Runner2.Classes
             return (Player)this.MemberwiseClone();
 
         }
+        public abstract void Request();
+        
     }
 
     /// <summary>
@@ -49,6 +51,7 @@ namespace Runner2.Classes
     /// </summary>
     class PinkMonster : Player
     {
+        private  State _state;
         private readonly int _skinType;
         private PointsCounter _points;
         private float _speed;
@@ -63,6 +66,7 @@ namespace Runner2.Classes
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
             var player = gameWin.Children[3] as Rectangle;
             player.Fill = _image;
+            _state = new NormalSizeState(this);
         }
 
         public override int SkinType
@@ -83,12 +87,22 @@ namespace Runner2.Classes
             set { _speed = value; }
         }
 
+        public override State state {
+            get { return _state; }
+            set { _state = value; }
+        }
+
         public override void Update()
         {
         }
         public override void RemoveHats()
         {
         }
+        public override void Request()
+        {
+            _state.Handle();
+        }
+
     }
 
     /// <summary>
@@ -96,6 +110,7 @@ namespace Runner2.Classes
     /// </summary>
     class OwlMonster : Player
     {
+        private State _state;
         private readonly int _skinType;
         private PointsCounter _points;
         private float _speed;
@@ -105,6 +120,7 @@ namespace Runner2.Classes
             _skinType = 2;
             _points = new PointsCounter();
             _speed = speed;
+            _state = new NormalSizeState(this);
         }
 
         public override int SkinType
@@ -129,12 +145,22 @@ namespace Runner2.Classes
         public override void RemoveHats()
         {
         }
+        public override State state
+        {
+            get { return _state; }
+            set { _state = value; }
+        }
+        public override void Request()
+        {
+            _state.Handle();
+        }
     }
     /// <summary>
     /// concrete product3
     /// </summary>
     class DudeMonster : Player
     {
+        private State _state;
         private readonly int _skinType;
         private PointsCounter _points;
         private float _speed;
@@ -144,6 +170,7 @@ namespace Runner2.Classes
             _skinType = 3;
             _points = new PointsCounter();
             _speed = speed;
+            _state = new NormalSizeState(this);
         }
 
         public override int SkinType
@@ -168,6 +195,15 @@ namespace Runner2.Classes
         public override void RemoveHats()
         {
         }
+        public override State state
+        {
+            get { return _state; }
+            set { _state = value; }
+        }
+        public override void Request( )
+        {
+            _state.Handle();
+        } 
     }
 
     public class PointsCounter : IClonable
@@ -207,7 +243,7 @@ namespace Runner2.Classes
     /// <summary>
     /// "creator"
     /// </summary>
-    abstract class Creator
+    public abstract class Creator
     {
         public abstract Player FactoryMethod(string type);
     }
@@ -215,10 +251,8 @@ namespace Runner2.Classes
     /// <summary>
     /// "concrete creator"
     /// </summary>
-    class ConcreteCreator : Creator
-    {
-
-            
+    public class ConcreteCreator : Creator
+    {            
         public override Player FactoryMethod(string type)
         {            
             switch (type)
