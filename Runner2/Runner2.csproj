@@ -182,6 +182,7 @@
     <Compile Include="Classes\Builder.cs" />
     <Compile Include="Classes\Decoratorr.cs" />
     <Compile Include="Classes\Facade.cs" />
+    <Compile Include="Classes\Flyweight.cs" />
     <Compile Include="Classes\ICommand.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\ObstacleAdapter.cs" />
@@ -319,6 +320,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\potion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\screen-1.jpg" />
+    <Resource Include="Images\screen-12.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

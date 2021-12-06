@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace Runner2.Classes
@@ -40,15 +41,23 @@ namespace Runner2.Classes
 
             var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
 
-            
+            //Greitaveikai kaip turi buti kai blogai
+            //ImageBrush brush = new ImageBrush();
+            //brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/screen-1.jpg"));
+
             Rectangle rec = new Rectangle()
             {
                 Width = ite.width,
                 Height = ite.height,
+                //Fill = brush,
                 Fill = ite.color,
                 Stroke = Brushes.LemonChiffon,
                 StrokeThickness = 2,
             };
+
+           
+            //Geras budas su flaiveitu
+            rec.Fill = facade.prod.GetIcon("summer").brush;
 
             gameWin.Children.Add(rec);
             Canvas.SetTop(rec, top);
@@ -119,6 +128,9 @@ namespace Runner2.Classes
                 Stroke = Brushes.LemonChiffon,
                 StrokeThickness = 2,
             };
+
+            //Geras budas su flaiveitu
+            rec.Fill = facade.prod.GetIcon("winter").brush;
 
             gameWin.Children.Add(rec);
             Canvas.SetTop(rec, top);
