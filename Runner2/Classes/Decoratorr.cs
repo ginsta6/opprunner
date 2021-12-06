@@ -53,7 +53,7 @@ namespace Runner2.Classes
         public override void RemoveHats()
         {
         }
-        public override void Request()
+        public override void Request(int ind)
         {
         }
     }
@@ -90,9 +90,9 @@ namespace Runner2.Classes
             this._player.RemoveHats();
         }
 
-        public override void Request()
+        public override void Request(int ind)
         {
-            base.Request();
+            base.Request( ind);
         }
     }
     public class BaseballHat : Decoratorr
@@ -124,9 +124,9 @@ namespace Runner2.Classes
             base.gameWin.Children[index].Visibility = Visibility.Hidden;
             this._player.RemoveHats();
         }
-        public override void Request()
+        public override void Request(int ind)
         {
-            base.Request();
+            base.Request(ind);
         }
     }
     public class CowboyHat : Decoratorr
@@ -158,9 +158,9 @@ namespace Runner2.Classes
             base.gameWin.Children[index].Visibility = Visibility.Hidden;
             this._player.RemoveHats();
         }
-        public override void Request()
+        public override void Request(int ind)
         {
-            base.Request();
+            base.Request(ind);
         }
     }
 }

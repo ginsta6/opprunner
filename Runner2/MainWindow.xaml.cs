@@ -628,7 +628,7 @@ namespace Runner2
                     }
 
                     statsController.run(new ModifyPointsCommand(currentPlayer, items[i]));
-                    currentPlayer.Request();
+                    currentPlayer.Request(4);
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
                 {
@@ -648,6 +648,7 @@ namespace Runner2
                             break;
                     }
                     statsController.run(new ModifyPointsCommand(opposingPlayer, items[i]));
+                    opposingPlayer.Request(3);
                 }
             }
             //gameEndPoint
