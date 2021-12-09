@@ -185,6 +185,7 @@
     <Compile Include="Classes\Flyweight.cs" />
     <Compile Include="Classes\ICommand.cs" />
     <Compile Include="Classes\Item.cs" />
+    <Compile Include="Classes\Memento.cs" />
     <Compile Include="Classes\ObstacleAdapter.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Scene.cs" />

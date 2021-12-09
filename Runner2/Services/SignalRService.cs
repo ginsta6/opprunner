@@ -20,6 +20,8 @@ namespace Runner2.Services
         public event Action ChangeLevelSignalReceived;
         public event Action EndGameSignalReceived;
         public event Action<bool> PlayerJumpReceived;
+        public event Action<int> AddPointsReceived;
+        public event Action<int> RemovePointsReceived;
 
         public SignalRService(HubConnection connection)
         {
@@ -34,6 +36,8 @@ namespace Runner2.Services
             _connection.On("ReceiveChangeLevelSignal", () => ChangeLevelSignalReceived?.Invoke());
             _connection.On("ReceiveUndoSignal", () => UndoSignalReceived?.Invoke());
             _connection.On<bool>("ReceivePlayerJump", (jumping) => PlayerJumpReceived?.Invoke(jumping));
+            _connection.On<int>("ReceiveAddPointsSignal", (number) => AddPointsReceived?.Invoke(number));
+            _connection.On<int>("ReceiveRemovePointsSignal", (number) => RemovePointsReceived?.Invoke(number));
         }
 
         public async Task Connect()
@@ -73,6 +77,11 @@ namespace Runner2.Services
         public async Task SendEndGameSignal()
         {
             await _connection.SendAsync("SendEndGameSignal");
+        }
+
+        public async Task SendAllowConsoleSignal()
+        {
+            await _connection.SendAsync("AllowConsoleCommand");
         }
     }
 }

@@ -44,6 +44,10 @@ namespace Runner2
 
         PlayerStatsController statsController = new PlayerStatsController();
 
+        #region Memento
+        Caretaker caretaker = new Caretaker();
+        #endregion
+
 
 
         //ItemFactory itemF;
@@ -145,6 +149,8 @@ namespace Runner2
             rService.ChangeLevelSignalReceived += SignalRService_ChangeLevelSignalReceived;
             rService.EndGameSignalReceived += SingalRService_EndGameSignalReceived;
             rService.UndoSignalReceived += SignalRService_UndoSignalReceived;
+            rService.AddPointsReceived += SignalRService_AddPointsReceived;
+            rService.RemovePointsReceived += SignalRService_RemovePointsReceived;
             rService.Connect();
 
             InitializeComponent();
@@ -234,6 +240,18 @@ namespace Runner2
         {
             EndGameWin();
         }
+
+        private void SignalRService_AddPointsReceived(int number)
+        {
+            currentPlayer.Points.AddPoints(number);
+            opposingPlayer.Points.AddPoints(number);
+        }
+
+        private void SignalRService_RemovePointsReceived(int number)
+        {
+            currentPlayer.Points.AddPoints(-number);
+            opposingPlayer.Points.AddPoints(-number);
+        }
         #endregion
 
         //-----------------Functions to send to server----------------
@@ -272,6 +290,11 @@ namespace Runner2
         private async Task SendEndGameSignal()
         {
             await rService.SendEndGameSignal();
+        }
+
+        private async Task AllowConsoleCommand()
+        {
+            await rService.SendAllowConsoleSignal();
         }
         #endregion
 
@@ -430,6 +453,23 @@ namespace Runner2
                 statsController.undo();
                 SendUndoSignal();
             }
+
+            if (e.Key == Key.B)
+            {
+                AllowConsoleCommand();
+            }
+
+            //PADARYK KAD VEIKTU IR KITAM SCRYNE GINTAI
+            if (e.Key == Key.Q)
+            {
+                caretaker.Memento = currentPlayer.CreateMemento();
+            }
+
+            if (e.Key == Key.W)
+            {
+                currentPlayer.SetMemento(caretaker.Memento);
+            }
+
             if (e.Key == Key.Space && gameOver == false && jumping == false)
             {
                 //renameLater();
