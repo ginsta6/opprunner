@@ -42,6 +42,20 @@ namespace Runner2.Classes
             return (Player)this.MemberwiseClone();
 
         }
+
+        public Memento CreateMemento()
+        {
+            var gameWin = (Application.Current.MainWindow.FindName("MainWin") as Canvas).Children[2] as Canvas;
+            var player = gameWin.Children[3] as Rectangle;
+            return (new Memento(state, (int)player.Height));
+        }
+
+        public void SetMemento(Memento memento)
+        {
+            state = memento.State;
+            state.ChangeSize(memento.Size);
+        }
+
         public abstract void Request(int ind);
 
     }

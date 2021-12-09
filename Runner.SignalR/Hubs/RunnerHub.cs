@@ -4,11 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace Runner.SignalR.Hubs
 {
     public class RunnerHub : Hub
     {
+        
         private SharedRecourses instance = SharedRecourses.getInstance();
+        private Interpreter interp;
+
+        public RunnerHub() : base()
+        {
+            interp = new Interpreter(this);
+        }
+
+        
         
         public async Task SendTauntMessage(string message, string type)
         {
@@ -52,6 +62,22 @@ namespace Runner.SignalR.Hubs
             await Clients.All.SendAsync("ReceiveEndGameSignal");
         }
 
+        public async Task SendAddPointsSignal(int number)
+        {
+            Console.WriteLine("adding points");
+            await Clients.All.SendAsync("ReceiveAddPointsSignal", number);
+        }
+        public async Task SendRemovePointsSignal(int number)
+        {
+            await Clients.All.SendAsync("ReceiveRemovePointsSignal", number);
+        }
+
+        public async void AllowConsoleCommand()
+        {
+            Console.WriteLine("Write Your Command \n");
+            var test = Console.ReadLine();
+            interp.interpret(test);
+        }
     } 
 
     public class SharedRecourses
