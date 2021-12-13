@@ -66,6 +66,18 @@
 
             <Rectangle Name="symbolObject" Height="40" Width="40"/>
 
+            <Rectangle Name="backpack" Visibility="Hidden" Height="60" Width="50" Fill="Black"  Canvas.Left="1135" Canvas.Top="13"/>
+            <Rectangle Name="trinket" Visibility="Hidden" Height="30" Width="30" Fill="Black" Canvas.Left="1100" Canvas.Top="13"/>
+            <Rectangle Name="pelian" Visibility="Hidden" Height="30" Width="40" Fill="Black" Canvas.Left="1055" Canvas.Top="13"/>
+            <Rectangle Name="pencil" Visibility="Hidden" Height="50" Width="20" Fill="Black" Canvas.Left="1030" Canvas.Top="13"/>
+            <Rectangle Name="rubber" Visibility="Hidden" Height="20" Width="20" Fill="Black" Canvas.Left="1005" Canvas.Top="13"/>
+
+            <Rectangle Name="backpackR" Height="60" Width="50" Fill="Black"  Canvas.Left="754" Canvas.Top="542"/>
+            <Rectangle Name="trinketR" Height="30" Width="30" Fill="Black" Canvas.Left="394" Canvas.Top="555"/>
+            <Rectangle Name="pelianR" Height="30" Width="40" Fill="Black" Canvas.Left="861" Canvas.Top="555"/>
+            <Rectangle Name="pencilR" Height="50" Width="20" Fill="Black" Canvas.Left="496" Canvas.Top="542"/>
+            <Rectangle Name="rubberR" Height="20" Width="20" Fill="Black" Canvas.Left="539" Canvas.Top="555"/>
+
             <Rectangle Name="finishGround" Height="32" Width="150" Fill="Black" Canvas.Top="311" Canvas.Left="1049"/>
 
             <!--<Rectangle Name="gamePlatform" Height="32" Width="229" Fill="Black" Canvas.Top="510" Canvas.Left="397" />-->

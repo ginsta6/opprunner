@@ -48,7 +48,7 @@ namespace Runner2
         Caretaker caretaker = new Caretaker();
         #endregion
 
-
+        Composite root = new Composite("root");
 
         //ItemFactory itemF;
         AbstractSceneFactory sceneF;
@@ -59,12 +59,14 @@ namespace Runner2
         Rect playerHitBox;
         Rect player2HitBox;
         Rect groundHitBox;
+        Rect finishGroundHitBox;
         Rect platformHitBox;
         Rect ItemHitBox;
         List<FrameworkElement> gamePlatforms = new List<FrameworkElement>();
         List<Rect> platformHitBoxes = new List<Rect>();
         Rect obstacleHitBox;
         List<Rect> itemHitBoxes = new List<Rect>();
+        List<Rect> stuffHitBoxes = new List<Rect>();
         List<FrameworkElement> canvasItems = new List<FrameworkElement>();
         List<Item> items = new List<Item>();
         Rect magicHatHitBox;
@@ -72,6 +74,12 @@ namespace Runner2
         Rect cowboyHatHitBox;
         Rect finishHitBox;
         Rect potionHitBox;
+
+        Rect backpackHitBox;
+        Rect trinketHitBox;
+        Rect pelianHitBox;
+        Rect pencilHitBox;
+        Rect rubberHitBox;
 
         bool jumping;
         bool opposingJumping;
@@ -163,6 +171,22 @@ namespace Runner2
             avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/avatarpink.png"));
             doorSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/door.png"));
             potionSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/potion.png"));
+
+            //jhlkjhlkjhlkj
+           
+            backpack.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/backpack.png"))}; 
+            backpackR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/backpack.png")) };
+            trinket.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/trinket.png")) };
+            trinketR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/trinket.png")) };
+            pelian.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/pelian.png")) };
+            pelianR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/pelian.png")) };
+            pencil.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/pencil.png")) };
+            pencilR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/pencil.png")) };
+            rubber.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/rubber.png")) };
+            rubberR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/rubber.png")) };
+
+
+            //ajhdgfjalshdfjas
 
             gameEndPoint.Fill = doorSprite;
             avatar.Fill = avatarSprite;
@@ -315,7 +339,14 @@ namespace Runner2
             //Canvas.SetLeft(background2, 1262);
 
             groundHitBox = new Rect(Canvas.GetLeft(ground), Canvas.GetTop(ground), ground.Width, ground.Height);
+            finishGroundHitBox = new Rect(Canvas.GetLeft(finishGround), Canvas.GetTop(finishGround), finishGround.Width, finishGround.Height);
             potionHitBox = new Rect(Canvas.GetLeft(testpotion), Canvas.GetTop(testpotion), testpotion.Width, testpotion.Height);
+
+            backpackHitBox = new Rect(Canvas.GetLeft(backpackR), Canvas.GetTop(backpackR), backpackR.Width, backpackR.Height);
+            trinketHitBox = new Rect(Canvas.GetLeft(trinketR), Canvas.GetTop(trinketR), trinketR.Width, trinketR.Height);
+            pelianHitBox = new Rect(Canvas.GetLeft(pelianR), Canvas.GetTop(pelianR), pelianR.Width, pelianR.Height);
+            pencilHitBox = new Rect(Canvas.GetLeft(pencilR), Canvas.GetTop(pencilR), pencilR.Width, pencilR.Height);
+            rubberHitBox = new Rect(Canvas.GetLeft(rubberR), Canvas.GetTop(rubberR), rubberR.Width, rubberR.Height);
 
             //Canvas.SetLeft(obstacle, 950);
             //Canvas.SetTop(obstacle, 310);
@@ -601,14 +632,14 @@ namespace Runner2
             //Platforms (1-4)
             for (int i = 0; i < 4; i++)
             {
-                if (playerHitBox.IntersectsWith(platformHitBoxes[i]))
+                if (playerHitBox.IntersectsWith(platformHitBoxes[i]) && !(currentPlayer.state is SmallSizeState))
                 {
                     speed = 0;
                     Canvas.SetTop(player, Canvas.GetTop(gamePlatforms[i]) - player.Height);
                     jumping = false;
                     //currentPlayer.state = new Standing();
                 }
-                if (player2HitBox.IntersectsWith(platformHitBoxes[i]))
+                if (player2HitBox.IntersectsWith(platformHitBoxes[i]) && !(opposingPlayer.state is SmallSizeState))
                 {
                     opposingSpeed = 0;
                     Canvas.SetTop(player2, Canvas.GetTop(gamePlatforms[i]) - player2.Height);
@@ -648,7 +679,7 @@ namespace Runner2
             //items
             for (int i = 0; i < itemHitBoxes.Count; i++)
             {
-                if (playerHitBox.IntersectsWith(itemHitBoxes[i]))
+                if (playerHitBox.IntersectsWith(itemHitBoxes[i]) && !(currentPlayer.state is LargeSizeState) )
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
                     Canvas.SetLeft(canvasItems[i], 2000);
@@ -670,7 +701,7 @@ namespace Runner2
                     statsController.run(new ModifyPointsCommand(currentPlayer, items[i]));
                     currentPlayer.Request(4);
                 }
-                if (player2HitBox.IntersectsWith(itemHitBoxes[i]))
+                if (player2HitBox.IntersectsWith(itemHitBoxes[i]) && !(opposingPlayer.state is LargeSizeState))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
                     Canvas.SetLeft(canvasItems[i], 2000);
@@ -705,6 +736,20 @@ namespace Runner2
             if (playerHitBox.IntersectsWith(obstacleHitBox) && !obs.exploded)
             {
                 currentPlayer.RemoveHats();
+                (root.elements.Single(x => x.name == "backpack") as Composite).Remove("pelian");
+
+                pelian.Visibility = Visibility.Hidden;
+                Canvas.SetLeft(pelianR, 861);
+                pelianHitBox = new Rect(Canvas.GetLeft(pelianR), Canvas.GetTop(pelianR), pelianR.Width, pelianR.Height);
+
+                pencil.Visibility = Visibility.Hidden;
+                Canvas.SetLeft(pencilR, 496);
+                pencilHitBox = new Rect(Canvas.GetLeft(pencilR), Canvas.GetTop(pencilR), pencilR.Width, pencilR.Height);
+
+                rubber.Visibility = Visibility.Hidden;
+                Canvas.SetLeft(rubberR, 539);
+                rubberHitBox = new Rect(Canvas.GetLeft(rubberR), Canvas.GetTop(rubberR), rubberR.Width, rubberR.Height);
+
                 if (sceneF is WinterFactory)
                 {
                     // DEEP COPY
@@ -754,18 +799,71 @@ namespace Runner2
             }
 
             //-----Potion------
-            if (playerHitBox.IntersectsWith(potionHitBox))
+            if (playerHitBox.IntersectsWith(potionHitBox) && !(currentPlayer.state is MediumSizeState))
             {
                 Canvas.SetLeft(testpotion, 2000);
                 potionHitBox = new Rect(2000, 2000, 2, 2);
                 facade.UsePotion(currentPlayer, "speedUp");
             }
-            if (player2HitBox.IntersectsWith(potionHitBox))
+            if (player2HitBox.IntersectsWith(potionHitBox) && !(opposingPlayer.state is MediumSizeState))
             {
                 Canvas.SetLeft(testpotion, 2000);
                 potionHitBox = new Rect(2000, 2000, 2, 2);
                 facade.UsePotion(opposingPlayer, "speedUp");
             }
+            //------Stuff--------
+            if (playerHitBox.IntersectsWith(backpackHitBox))
+            {
+                Composite backpackS = new Composite("backpack");
+                root.Add(backpackS);
+
+                backpackHitBox = new Rect(2000, 2000, 2, 2);
+                Canvas.SetLeft(backpackR, 2000);
+                backpack.Visibility = Visibility.Visible;
+            }
+            if (playerHitBox.IntersectsWith(trinketHitBox) && (root.elements.Any(x => x.name == "backpack")) )
+            {
+                Trinket trinketS = new Trinket("trinket");
+                var temp = root.elements.Single(x => x.name == "backpack") as Composite;
+                temp.elements.Add(trinketS);
+
+                trinketHitBox = new Rect(2000, 2000, 2, 2);
+                Canvas.SetLeft(trinketR, 2000);
+                trinket.Visibility = Visibility.Visible;
+            }
+            if (playerHitBox.IntersectsWith(pelianHitBox) && (root.elements.Any(x => x.name == "backpack")) )
+            {
+                Composite pelianS = new Composite("pelian");
+                var temp = root.elements.Single(x => x.name == "backpack") as Composite;
+                temp.elements.Add(pelianS);
+
+                pelianHitBox = new Rect(2000, 2000, 2, 2);
+                Canvas.SetLeft(pelianR, 2000);
+                pelian.Visibility = Visibility.Visible;
+            }
+            if (playerHitBox.IntersectsWith(pencilHitBox) && (root.elements.Any(x => x.name == "backpack"))
+                && ((root.elements.Single(x => x.name == "backpack") as Composite).elements.Any(x => x.name == "pelian")))
+            {
+                Pensil pensilS = new Pensil("pensil");
+                var temp = (root.elements.Single(x => x.name == "backpack") as Composite).elements.Single(x => x.name == "pelian") as Composite;
+                temp.elements.Add(pensilS);
+
+                pencilHitBox = new Rect(2000, 2000, 2, 2);
+                Canvas.SetLeft(pencilR, 2000);
+                pencil.Visibility = Visibility.Visible;
+            }
+            if (playerHitBox.IntersectsWith(rubberHitBox) && (root.elements.Any(x => x.name == "backpack"))
+                && ((root.elements.Single(x => x.name == "backpack") as Composite).elements.Any(x => x.name == "pelian")))
+            {
+                Rubber rubberS = new Rubber("rubber");
+                var temp = (root.elements.Single(x => x.name == "backpack") as Composite).elements.Single(x => x.name == "pelian") as Composite;
+                temp.elements.Add(rubberS);
+
+                rubberHitBox = new Rect(2000, 2000, 2, 2);
+                Canvas.SetLeft(rubberR, 2000);
+                rubber.Visibility = Visibility.Visible;
+            }
+
         }
 
         private void GoToNextLevel()
