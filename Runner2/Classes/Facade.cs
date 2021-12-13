@@ -25,6 +25,8 @@ namespace Runner2.Classes
         ImageBrush backgroundSprite;
         ImageBrush obstacleSprite;
 
+        public Random random;
+
         int itemStartInd;
         int itemEndInd;
         int platStartInd;
@@ -35,6 +37,7 @@ namespace Runner2.Classes
             SF = new SummerFactory();
             WF = new WinterFactory();
             prod = new IconProvider();
+            random = new Random();
         }
 
         public Player CreatePlayer(int typeToCreate)

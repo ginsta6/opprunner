@@ -13,10 +13,43 @@ namespace Runner2.Classes
 {
     public abstract class Builder
     {
-        public abstract Rect buildPlatform(int w, int h, int top, int left);
+        public abstract Rect buildPlatform();
         public abstract void buildBackground();
         public abstract void buildObstacle();
-        public abstract Item buildItem(int top, int left);
+        public abstract Item buildItem();
+
+        public List<Rect> buildPlatforms(int n)
+        {
+            List<Rect> list = new List<Rect>();
+            for (int i = 0; i < n; i++)
+            {
+                Rect r = buildPlatform();
+                list.Add(r);
+            }
+            return list;
+        }
+
+        public List<Item> buildItems(int n)
+        {
+            List<Item> list = new List<Item>();
+            for (int i = 0; i < n; i++)
+            {
+                Item it = buildItem();
+                list.Add(it);
+            }
+            return list;
+        }
+
+        //Template method
+        public Tuple<List<Rect>, List<Item>> buildScene(int platN, int itemN)
+        {
+            buildBackground();
+            List<Rect> l1 = buildPlatforms(platN);
+            List<Item> l2 = buildItems(itemN);
+            buildObstacle();
+
+            return Tuple.Create(l1, l2);
+        }
 
         
     }
@@ -34,7 +67,7 @@ namespace Runner2.Classes
             //return factory.CreateBackground();
         }
 
-        public override Item buildItem(int top, int left)
+        public override Item buildItem()
         {
             var ite = facade.CreateItem("summer");
             //var ite = factory.CreateItem();
@@ -60,8 +93,8 @@ namespace Runner2.Classes
             rec.Fill = facade.prod.GetIcon("summer").brush;
 
             gameWin.Children.Add(rec);
-            Canvas.SetTop(rec, top);
-            Canvas.SetLeft(rec, left);
+            Canvas.SetTop(rec, facade.random.Next(200, 400));
+            Canvas.SetLeft(rec, facade.random.Next(50, 800));
 
             var item = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
             ite.hitbox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
@@ -75,7 +108,7 @@ namespace Runner2.Classes
         }
 
         //paduodi koordinates
-        public override Rect buildPlatform(int w, int h, int top, int left)
+        public override Rect buildPlatform()
         {
             var plat = facade.CreatePlatform("summer");
 
@@ -83,15 +116,15 @@ namespace Runner2.Classes
             
             Rectangle rec = new Rectangle()
             {
-                Width = w,
-                Height = h,
+                Width = facade.random.Next(200, 300),
+                Height = 32,
                 Fill = plat.color,
                 Stroke = Brushes.LemonChiffon,
                 StrokeThickness = 2,
             };
             gameWin.Children.Add(rec);
-            Canvas.SetTop(rec, top);
-            Canvas.SetLeft(rec, left);
+            Canvas.SetTop(rec, facade.random.Next(200, 500));
+            Canvas.SetLeft(rec, facade.random.Next(50, 800));
 
             var gamePlatform = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
             Rect platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);
@@ -113,7 +146,7 @@ namespace Runner2.Classes
             //return factory.CreateBackground();
         }
 
-        public override Item buildItem(int top, int left)
+        public override Item buildItem()
         {
             var ite = facade.CreateItem("winter");
 
@@ -133,8 +166,8 @@ namespace Runner2.Classes
             rec.Fill = facade.prod.GetIcon("winter").brush;
 
             gameWin.Children.Add(rec);
-            Canvas.SetTop(rec, top);
-            Canvas.SetLeft(rec, left);
+            Canvas.SetTop(rec, facade.random.Next(200, 400));
+            Canvas.SetLeft(rec, facade.random.Next(50, 800));
 
             var item = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
             ite.hitbox = new Rect(Canvas.GetLeft(item), Canvas.GetTop(item), item.Width, item.Height);
@@ -147,7 +180,7 @@ namespace Runner2.Classes
             //return factory.CreateObstacle();
         }
 
-        public override Rect buildPlatform(int w, int h, int top, int left)
+        public override Rect buildPlatform()
         {
             var plat = facade.CreatePlatform("winter");
 
@@ -155,15 +188,15 @@ namespace Runner2.Classes
 
             Rectangle rec = new Rectangle()
             {
-                Width = w,
-                Height = h,
+                Width = facade.random.Next(200, 300),
+                Height = 32,
                 Fill = plat.color,
                 Stroke = Brushes.LemonChiffon,
                 StrokeThickness = 2,
             };
             gameWin.Children.Add(rec);
-            Canvas.SetTop(rec, top);
-            Canvas.SetLeft(rec, left);
+            Canvas.SetTop(rec, facade.random.Next(200, 500));
+            Canvas.SetLeft(rec, facade.random.Next(50, 800));
 
             var gamePlatform = gameWin.Children[gameWin.Children.Count - 1] as Rectangle;
             Rect platformHitBox = new Rect(Canvas.GetLeft(gamePlatform), Canvas.GetTop(gamePlatform), gamePlatform.Width, gamePlatform.Height);

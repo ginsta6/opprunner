@@ -180,6 +180,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Builder.cs" />
+    <Compile Include="Classes\Composite.cs" />
     <Compile Include="Classes\Decoratorr.cs" />
     <Compile Include="Classes\Facade.cs" />
     <Compile Include="Classes\Flyweight.cs" />
