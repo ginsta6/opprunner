@@ -54,6 +54,10 @@ namespace Runner2
         AbstractSceneFactory sceneF;
         Builder builder;
 
+        Collection platformColl = new Collection();
+
+        Iterator iterator;
+
         DispatcherTimer gameTimer = new DispatcherTimer();
 
         Rect playerHitBox;
@@ -173,8 +177,8 @@ namespace Runner2
             potionSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/potion.png"));
 
             //jhlkjhlkjhlkj
-           
-            backpack.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/backpack.png"))}; 
+
+            backpack.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/backpack.png")) };
             backpackR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/backpack.png")) };
             trinket.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/trinket.png")) };
             trinketR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/trinket.png")) };
@@ -385,7 +389,7 @@ namespace Runner2
 
             playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width - 15, player.Height);
             player2HitBox = new Rect(Canvas.GetLeft(player2), Canvas.GetTop(player2), player2.Width - 15, player2.Height);
-            
+
             //----------------------------------------------------------------------------------------------------------------------------------
 
             finishHitBox = new Rect(Canvas.GetLeft(gameEndPoint), Canvas.GetTop(gameEndPoint), gameEndPoint.Width, gameEndPoint.Height);
@@ -397,7 +401,7 @@ namespace Runner2
 
             //--------------------------------------
             if (playerAnimationCurrentState == PlayerAnimationState.RunningLeft || playerAnimationCurrentState == PlayerAnimationState.RunningRight)
-           // if ( currentPlayer.state is RunningLeft|| currentPlayer.state is RunningRight)
+            // if ( currentPlayer.state is RunningLeft|| currentPlayer.state is RunningRight)
             {
                 spriteIndex += .5;
 
@@ -426,8 +430,8 @@ namespace Runner2
             //-----Random piece of code that is useless?
             if (force < 0)
                 jumping = false;
-                //currentPlayer.state = new Standing();
-            
+            //currentPlayer.state = new Standing();
+
             //------------------------------------------
             if (gameOver == true)
             {
@@ -479,6 +483,10 @@ namespace Runner2
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.I)
+            {
+                Iteruojam();
+            }
             if (e.Key == Key.U && gameOver == false)
             {
                 statsController.undo();
@@ -679,7 +687,7 @@ namespace Runner2
             //items
             for (int i = 0; i < itemHitBoxes.Count; i++)
             {
-                if (playerHitBox.IntersectsWith(itemHitBoxes[i]) && !(currentPlayer.state is LargeSizeState) )
+                if (playerHitBox.IntersectsWith(itemHitBoxes[i]) && !(currentPlayer.state is LargeSizeState))
                 {
                     itemHitBoxes[i] = new Rect(2000, 2000, 2, 2);
                     Canvas.SetLeft(canvasItems[i], 2000);
@@ -821,7 +829,7 @@ namespace Runner2
                 Canvas.SetLeft(backpackR, 2000);
                 backpack.Visibility = Visibility.Visible;
             }
-            if (playerHitBox.IntersectsWith(trinketHitBox) && (root.elements.Any(x => x.name == "backpack")) )
+            if (playerHitBox.IntersectsWith(trinketHitBox) && (root.elements.Any(x => x.name == "backpack")))
             {
                 Trinket trinketS = new Trinket("trinket");
                 var temp = root.elements.Single(x => x.name == "backpack") as Composite;
@@ -831,7 +839,7 @@ namespace Runner2
                 Canvas.SetLeft(trinketR, 2000);
                 trinket.Visibility = Visibility.Visible;
             }
-            if (playerHitBox.IntersectsWith(pelianHitBox) && (root.elements.Any(x => x.name == "backpack")) )
+            if (playerHitBox.IntersectsWith(pelianHitBox) && (root.elements.Any(x => x.name == "backpack")))
             {
                 Composite pelianS = new Composite("pelian");
                 var temp = root.elements.Single(x => x.name == "backpack") as Composite;
@@ -983,7 +991,9 @@ namespace Runner2
             for (int i = platStartInd; i != platEndInd; i++)
             {
                 gamePlatforms.Add(GameWin.Children[i] as Rectangle);
+                platformColl.platforms.Add(GameWin.Children[i] as Rectangle);
             }
+            iterator = platformColl.CreateIterator();
             foreach (var hitbox in tuple.Item1)
             {
                 platformHitBoxes.Add(hitbox);
@@ -1048,7 +1058,33 @@ namespace Runner2
         //    startGameBtn.Visibility = Visibility.Visible;
         //    players.Visibility = Visibility.Visible;
         //}
+        void Iteruojam()
+        {
+            var iter = iterator.First();
+            //int color = 20;
+            int i = 0;
+            int ind = 0;
+            double dis = Distance(iter);
+            while (iter != null)
+            {
+                double dis1 = Distance(iter);
+                if (dis1 > dis)
+                {
+                    dis = dis1;
+                    ind = i;
+                }
 
+                iter = iterator.Next();
+                ++i;
+            }
+            //color += 50;
+            var brush = new SolidColorBrush(Color.FromRgb(255,0, 0));//new SolidColorBrush(Color.FromArgb(255, (byte)color, (byte)0, (byte)0));
+            platformColl[ind].Fill = brush;
+        }
+        public double Distance(Rectangle iter)
+        {
+            return Math.Sqrt(Math.Pow(Canvas.GetLeft(iter) - Canvas.GetLeft(player), 2) + Math.Pow(Canvas.GetTop(iter) - Canvas.GetTop(player), 2));
+        }
         private void changeAvatar(int index)
         {
             switch (index)
