@@ -870,37 +870,69 @@ namespace Runner2
             opposingPlayerShallowCopy = (Player)opposingPlayer.shallowCopy();
 
             //--------------------------platforms---------------------
-            int[] width = new int[] { 229, 299, 411, 200 };
-            
 
+            //new
+            int platn = 4;
+            int itemn = 6;
             platStartInd = GameWin.Children.Count;
 
+            var tuple = builder.buildScene(platn, itemn);
 
-            for (int i = 0; i < 4; i++)
+            platEndInd = GameWin.Children.Count - itemn;
+            itemStartInd = GameWin.Children.Count - itemn;
+            itemEndInd = GameWin.Children.Count;
+
+            for (int i = platStartInd; i != platEndInd; i++)
             {
-                var platHitBox = builder.buildPlatform(width[i], 32, topPositions[i], leftPositions[i]);
-                gamePlatforms.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
-                platformHitBoxes.Add(platHitBox);
+                gamePlatforms.Add(GameWin.Children[i] as Rectangle);
+            }
+            foreach (var hitbox in tuple.Item1)
+            {
+                platformHitBoxes.Add(hitbox);
             }
 
-            platEndInd = GameWin.Children.Count;
+            for (int i = itemStartInd; i != itemEndInd; i++)
+            {
+                canvasItems.Add(GameWin.Children[i] as Rectangle);
+            }
+            foreach (var item in tuple.Item2)
+            {
+                items.Add(item);
+                itemHitBoxes.Add(item.hitbox);
+            }
+
+            //OLd
+            //int[] width = new int[] { 229, 299, 411, 200 };
+
+
+            //platStartInd = GameWin.Children.Count;
+
+
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    var platHitBox = builder.buildPlatform(width[i], 32, topPositions[i], leftPositions[i]);
+            //    gamePlatforms.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
+            //    platformHitBoxes.Add(platHitBox);
+            //}
+
+            //platEndInd = GameWin.Children.Count;
 
             //-------------items----------------------------
 
-            int[] itemTopPositions = new int[] { 400, 200, 250, 190 };
-            int[] itemLeftPositions = new int[] { 397, 46, 789, 539 };
+            //int[] itemTopPositions = new int[] { 400, 200, 250, 190 };
+            //int[] itemLeftPositions = new int[] { 397, 46, 789, 539 };
 
-            itemStartInd = GameWin.Children.Count;
+            //itemStartInd = GameWin.Children.Count;
 
-            for (int i = 0; i < 4; i++)
-            {
-                var ite = builder.buildItem(itemTopPositions[i], itemLeftPositions[i]);
-                canvasItems.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
-                items.Add(ite);
-                itemHitBoxes.Add(ite.hitbox);
-            }
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    var ite = builder.buildItem(itemTopPositions[i], itemLeftPositions[i]);
+            //    canvasItems.Add(GameWin.Children[GameWin.Children.Count - 1] as Rectangle);
+            //    items.Add(ite);
+            //    itemHitBoxes.Add(ite.hitbox);
+            //}
 
-            itemEndInd = GameWin.Children.Count;
+            //itemEndInd = GameWin.Children.Count;
 
         }
 
