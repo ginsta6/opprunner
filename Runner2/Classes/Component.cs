@@ -33,7 +33,7 @@ namespace Runner2.Classes
     {
         public Trinket(string name) : base(name)
         {
-
+            this.pointMult = 1;
         }
 
         public override void Add(Component c)
@@ -60,7 +60,7 @@ namespace Runner2.Classes
     {
         public Pensil(string name) : base(name)
         {
-
+            this.pointMult = 3;
         }
 
         public override void Add(Component c)
@@ -88,7 +88,7 @@ namespace Runner2.Classes
     {
         public Rubber(string name) : base(name)
         {
-
+            this.pointMult = 4;
         }
 
         public override void Add(Component c)
@@ -119,9 +119,9 @@ namespace Runner2.Classes
     {
         public List<Component> elements = new List<Component>();
 
-        public Composite(string name) : base(name)
+        public Composite(string name, int points) : base(name)
         {
-
+            this.pointMult = points;
         }
 
         public override void Add(Component c)
