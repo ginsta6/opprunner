@@ -60,6 +60,8 @@ namespace Runner2
 
         Iterator iterator;
 
+        ControllerProxy proxy;
+
         DispatcherTimer gameTimer = new DispatcherTimer();
 
         Rect playerHitBox;
@@ -485,6 +487,18 @@ namespace Runner2
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
+            if(e.Key == Key.D)
+            {
+                proxy = new ControllerProxy(statsController);
+                proxy.GetContent();
+                stateText.Content = proxy.msg;
+            }
+            if(e.Key == Key.A)
+            {
+                proxy = new ControllerProxy(statsController);
+                proxy.undo();
+                stateText.Content = proxy.msg;
+            }
             if (e.Key == Key.I)
             {
                 Iteruojam();

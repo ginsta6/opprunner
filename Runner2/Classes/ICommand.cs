@@ -15,7 +15,7 @@ namespace Runner2.Classes
     }
 
 
-    public class PlayerMovementController
+    public class PlayerMovementController : Controller
     {
         private List<ICommand> commands;
 
@@ -31,8 +31,12 @@ namespace Runner2.Classes
 
         }
 
+        public void undo()
+        {
+            throw new NotImplementedException();
+        }
     }
-    public class PlayerStatsController
+    public class PlayerStatsController : Controller
     {
         private List<ICommand> commands;
         public PlayerStatsController()
@@ -56,6 +60,11 @@ namespace Runner2.Classes
                 commands.Remove(cmd);
             }
 
+        }
+
+        public List<ICommand> GetCommands()
+        {
+            return commands;
         }
     }
 
@@ -107,6 +116,11 @@ namespace Runner2.Classes
                     return;
             }
             
+        }
+
+        public override string ToString()
+        {
+            return "Added " + item.pointsModifier + " points" ;
         }
     }
     //public class RemovePointsCommand : ICommand
