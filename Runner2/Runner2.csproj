@@ -190,6 +190,7 @@
     <Compile Include="Classes\Memento.cs" />
     <Compile Include="Classes\ObstacleAdapter.cs" />
     <Compile Include="Classes\Player.cs" />
+    <Compile Include="Classes\ControllerProxy.cs" />
     <Compile Include="Classes\Scene.cs" />
     <Compile Include="Classes\State.cs" />
     <Compile Include="Classes\Strategy.cs" />
