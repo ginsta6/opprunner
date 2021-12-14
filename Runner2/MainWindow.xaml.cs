@@ -24,7 +24,7 @@ namespace Runner2
     {
         Facade facade;
 
-        #region Variables (a lot less needs to stay (if any) )
+        #region Variables
         Background bg;
         Platform plat;
         Obstacle obs;
@@ -57,6 +57,10 @@ namespace Runner2
         Collection platformColl = new Collection();
 
         Iterator iterator;
+        MonsterTypeValidator mtvalidator = new MonsterTypeValidator();
+        NameValidator namevalidator = new NameValidator();
+        SwearwordValidator swvalidator = new SwearwordValidator();
+        EmoteValidator emotevalidator = new EmoteValidator();
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
@@ -106,8 +110,8 @@ namespace Runner2
         int opposingSpeed = 10;
 
 
-        int currentPlayerTypeIndex = 1;
-        int maxPlayerTypeIndex = 3;
+        int currentPlayerTypeIndex = 4;
+        int maxPlayerTypeIndex = 4;
 
 
         Random rnd = new Random();
@@ -142,9 +146,12 @@ namespace Runner2
         private int CurrentPlayers;
         #endregion
 
-        #region This stays but with less stuff
+        #region VisualStuff
         public MainWindow()
         {
+            namevalidator.setNextChain(swvalidator);
+            mtvalidator.setNextChain(namevalidator);
+
             facade = new Facade();
 
             HubConnection connection = new HubConnectionBuilder()           //Connecting to hub
@@ -176,8 +183,6 @@ namespace Runner2
             doorSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/door.png"));
             potionSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/potion.png"));
 
-            //jhlkjhlkjhlkj
-
             backpack.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/backpack.png")) };
             backpackR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/backpack.png")) };
             trinket.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/trinket.png")) };
@@ -190,8 +195,8 @@ namespace Runner2
             rubberR.Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/Stuff/rubber.png")) };
 
 
-            //ajhdgfjalshdfjas
 
+            changeAvatar(currentPlayerTypeIndex);
             gameEndPoint.Fill = doorSprite;
             avatar.Fill = avatarSprite;
             testpotion.Fill = potionSprite;
@@ -209,7 +214,7 @@ namespace Runner2
         // ----------------------------------------------------------------------------------------------------------
         // SignalR receiving funcions
 
-        #region These all go
+        #region SignalR Methods
         private void SignalRService_StartSignalReceived()
         {
             StartCountDown();
@@ -284,7 +289,7 @@ namespace Runner2
 
         //-----------------Functions to send to server----------------
 
-        #region These all go
+        #region SignalR Tasks
         private async Task renameLater(string name, string playerType)
         {
             await rService.SendTauntMessage(name, playerType);
@@ -329,7 +334,7 @@ namespace Runner2
         // ------------------------------------------------------------------------------------------------------------
         // Game engine functions
 
-        #region This goes
+        #region GameStart
         private void StartGame()
         {
             CantPlayText.Visibility = Visibility.Hidden;
@@ -374,7 +379,7 @@ namespace Runner2
         }
         #endregion
 
-        #region This definately stays but modified
+        #region GameEngine
         private void GameEngine(object sender, EventArgs e)
         {
             //-------------Gravity----------
@@ -460,7 +465,7 @@ namespace Runner2
 
         // ------------------------------------------------------------------------------------------------------------
         // Key input functions
-        #region These stay but modified
+        #region KeyDowns
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && gameOver == true)
@@ -552,7 +557,7 @@ namespace Runner2
         // -------------------------------------------------------------------------------------------------------------
         // Button press functions
 
-        #region These stay but modified
+        #region ButtonClicks
         private void cycleCharacterTypeLeftBtn_Click(object sender, RoutedEventArgs e)
         {
             currentPlayerTypeIndex--;
@@ -572,7 +577,9 @@ namespace Runner2
 
         private void joinLobbyBtnClick(object sender, RoutedEventArgs e)
         {
-            if (nameInput.Text.Length > 0)
+            Information info = new Information(nameInput.Text, currentPlayerTypeIndex, 2);
+
+            if (mtvalidator.validate(info))
             {
                 StartWin.Visibility = Visibility.Hidden;
                 LobbyWin.Visibility = Visibility.Visible;
@@ -619,7 +626,7 @@ namespace Runner2
 
         // -------------------------------------------------------------------------------------------------------------
         // Logic functions
-        #region These all go. Modify everything with static indexes in canvas
+        #region Collisions
         private void HandleHitBoxCollisions()
         {
             //Ground platform
@@ -1104,6 +1111,12 @@ namespace Runner2
                     CharacterTypeSelected.Content = "Dude monster";
                     CharacterTypeSelectedLobby.Content = "Dude monster";
                     break;
+                case 4:
+                    avatarSprite.ImageSource = new BitmapImage(new Uri("pack://application:,,,/Images/nothing.png"));
+                    CharacterTypeSelected.Content = "Not selected";
+                    CharacterTypeSelectedLobby.Content = "Not selected";
+                    break;
+
             }
             avatar.Fill = avatarSprite;
             avatarLobby.Fill = avatarSprite;
@@ -1287,3 +1300,4 @@ namespace Runner2
         #endregion
     }
 }
+

@@ -180,6 +180,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Builder.cs" />
+    <Compile Include="Classes\ChainOfResponsibility.cs" />
     <Compile Include="Classes\Component.cs" />
     <Compile Include="Classes\Decoratorr.cs" />
     <Compile Include="Classes\Facade.cs" />
@@ -336,6 +337,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Stuff\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\nothing.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
