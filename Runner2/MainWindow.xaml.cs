@@ -48,19 +48,23 @@ namespace Runner2
         Caretaker caretaker = new Caretaker();
         #endregion
 
-        Composite root = new Composite("root");
+        Composite root = new Composite("root",0);
+        CompositeIterator treeIterator;
 
         //ItemFactory itemF;
         AbstractSceneFactory sceneF;
         Builder builder;
 
         Collection platformColl = new Collection();
+        MyCompositeCollection compositeCollection = new MyCompositeCollection();
 
         Iterator iterator;
         MonsterTypeValidator mtvalidator = new MonsterTypeValidator();
         NameValidator namevalidator = new NameValidator();
         SwearwordValidator swvalidator = new SwearwordValidator();
         EmoteValidator emotevalidator = new EmoteValidator();
+
+        ControllerProxy proxy;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
@@ -488,6 +492,18 @@ namespace Runner2
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
+            if(e.Key == Key.D)
+            {
+                proxy = new ControllerProxy(statsController);
+                proxy.GetContent();
+                stateText.Content = proxy.msg;
+            }
+            if(e.Key == Key.A)
+            {
+                proxy = new ControllerProxy(statsController);
+                proxy.undo();
+                stateText.Content = proxy.msg;
+            }
             if (e.Key == Key.I)
             {
                 Iteruojam();
@@ -714,6 +730,15 @@ namespace Runner2
                     }
 
                     statsController.run(new ModifyPointsCommand(currentPlayer, items[i]));
+
+                    //multiplier
+
+                    compositeCollection[0] = root;
+                    treeIterator = compositeCollection.CreateIterator();
+                    currentPlayer.Points.AddPoints(treeIterator.GoThroughCollection(compositeCollection[0] as Composite));
+
+                    //----------
+
                     currentPlayer.Request(4);
                 }
                 if (player2HitBox.IntersectsWith(itemHitBoxes[i]) && !(opposingPlayer.state is LargeSizeState))
@@ -829,7 +854,7 @@ namespace Runner2
             //------Stuff--------
             if (playerHitBox.IntersectsWith(backpackHitBox))
             {
-                Composite backpackS = new Composite("backpack");
+                Composite backpackS = new Composite("backpack", 1);
                 root.Add(backpackS);
 
                 backpackHitBox = new Rect(2000, 2000, 2, 2);
@@ -848,7 +873,7 @@ namespace Runner2
             }
             if (playerHitBox.IntersectsWith(pelianHitBox) && (root.elements.Any(x => x.name == "backpack")))
             {
-                Composite pelianS = new Composite("pelian");
+                Composite pelianS = new Composite("pelian", 2);
                 var temp = root.elements.Single(x => x.name == "backpack") as Composite;
                 temp.elements.Add(pelianS);
 
