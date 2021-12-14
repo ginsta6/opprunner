@@ -594,8 +594,8 @@ namespace Runner2
         private void joinLobbyBtnClick(object sender, RoutedEventArgs e)
         {
             Information info = new Information(nameInput.Text, currentPlayerTypeIndex, 2);
-
-            if (mtvalidator.validate(info))
+            string result = mtvalidator.validate(info);
+            if (result == "")
             {
                 StartWin.Visibility = Visibility.Hidden;
                 LobbyWin.Visibility = Visibility.Visible;
@@ -612,6 +612,7 @@ namespace Runner2
             }
             else
             {
+                CantJoinLobbyText.Content = result;
                 CantJoinLobbyText.Visibility = Visibility.Visible;
             }
         }

@@ -13,17 +13,17 @@ namespace Runner2.Classes
         {
             this.next = next;
         }
-        public abstract bool validate(Information info);
+        public abstract string validate(Information info);
     }
 
 
     public class MonsterTypeValidator : ValidationTemplate
     {
-        public override bool validate(Information info)
+        public override string validate(Information info)
         {
             if (info.monstertype == 4)
             {
-                return false;
+                return "Please select monster type";
             }
             else
             {
@@ -31,7 +31,7 @@ namespace Runner2.Classes
                 {
                     return next.validate(info);
                 }
-                return true;
+                return "";
             }
             
         }
@@ -39,11 +39,11 @@ namespace Runner2.Classes
 
     public class NameValidator : ValidationTemplate
     {
-        public override bool validate(Information info)
+        public override string validate(Information info)
         {
             if (info.name.Length < 1 || info.name.Length > 10)
             {
-                return false;
+                return "Bad name";
             }
             else
             {
@@ -51,14 +51,14 @@ namespace Runner2.Classes
                 {
                     return next.validate(info);
                 }
-                return true;
+                return "";
             }
         }
     }
 
     public class SwearwordValidator : ValidationTemplate
     {
-        public override bool validate(Information info)
+        public override string validate(Information info)
         {
             List<string> swearwords = new List<string>();
 
@@ -72,24 +72,24 @@ namespace Runner2.Classes
             foreach (string name in swearwords)
             {
                 if (info.name.Contains(name))
-                    return false;
+                    return "No swear words in name";
             }
 
             if (next != null)
             {
                 return next.validate(info);
             }
-            return true;
+            return "";
         }
     }
 
     public class EmoteValidator : ValidationTemplate
     {
-        public override bool validate(Information info)
+        public override string validate(Information info)
         {
             if (info.emotetype == 3)
             {
-                return false;
+                return "Please select an emote";
             }
             else
             {
@@ -97,7 +97,7 @@ namespace Runner2.Classes
                 {
                     return next.validate(info);
                 }
-                return true;
+                return "";
             }
 
         }
