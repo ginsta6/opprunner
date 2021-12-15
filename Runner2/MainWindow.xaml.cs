@@ -48,7 +48,7 @@ namespace Runner2
         Caretaker caretaker = new Caretaker();
         #endregion
 
-        Composite root = new Composite("root",0);
+        Composite root = new Composite("root", 0);
         CompositeIterator treeIterator;
 
         PlayerVisitor visitor = new PlayerVisitor();
@@ -210,7 +210,7 @@ namespace Runner2
 
 
             changeAvatar(currentPlayerTypeIndex);
-            changeIcon(currentIconTypeIndex);
+            changeIcon(currentIconTypeIndex, iconAvatar);
             gameEndPoint.Fill = doorSprite;
             avatar.Fill = avatarSprite;
             testpotion.Fill = potionSprite;
@@ -434,11 +434,22 @@ namespace Runner2
             if (jumping == true)
             //if (currentPlayer.state is Jumping)
             {
-                speed = -9;
-                force -= 1;
+                if (!currentPlayer.jumpInverted)
+                {
+                    speed = -9;
+                    force -= 1;
+                }
+                else
+                {
+                    speed = -4;
+                    force -= 1;
+                }
             }
-            else
+            else if (!currentPlayer.gravityInverted)
                 speed = 8;
+            else
+                speed = 5;
+
             //----------Player 2 jumping-------------
             if (opposingJumping == true)
             {
@@ -503,13 +514,13 @@ namespace Runner2
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.D)
+            if (e.Key == Key.D)
             {
                 proxy = new ControllerProxy(statsController);
                 proxy.GetContent();
                 stateText.Content = proxy.msg;
             }
-            if(e.Key == Key.A)
+            if (e.Key == Key.A)
             {
                 proxy = new ControllerProxy(statsController);
                 proxy.undo();
@@ -566,17 +577,20 @@ namespace Runner2
             }
             if (e.Key == Key.Z)
             {
-                currentPlayer.symbol = questionMark;
-                symbolSprite.ImageSource = new BitmapImage(new Uri(currentPlayer.symbol.getPictureString()));
-                symbolObject.Fill = symbolSprite;
-                symbolObject.Visibility = Visibility.Visible;
+                if (symbolObject.Visibility == Visibility.Hidden)
+                {
+                    //currentPlayer.symbol = questionMark;
+                    //symbolSprite.ImageSource = new BitmapImage(new Uri(currentPlayer.symbol.getPictureString()));
+                    //symbolObject.Fill = symbolSprite;
+                    changeIcon(currentIconTypeIndex, symbolObject);
+                    symbolObject.Visibility = Visibility.Visible;
+                }
+                else
+                    symbolObject.Visibility = Visibility.Hidden;
             }
             if (e.Key == Key.X)
             {
-                currentPlayer.symbol = exclamationPoint;
-                symbolSprite.ImageSource = new BitmapImage(new Uri(currentPlayer.symbol.getPictureString()));
-                symbolObject.Fill = symbolSprite;
-                symbolObject.Visibility = Visibility.Visible;
+                currentPlayer.isInverted = false;
             }
         }
         #endregion
@@ -601,14 +615,14 @@ namespace Runner2
             //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
             changeAvatar(currentPlayerTypeIndex);
         }
-        
+
         private void cycleIconTypeLeftBtn_Click(object sender, RoutedEventArgs e)
         {
             currentIconTypeIndex--;
             if (currentIconTypeIndex == 0)
                 currentIconTypeIndex = maxIconTypeIndex;
             //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
-            changeIcon(currentIconTypeIndex);
+            changeIcon(currentIconTypeIndex, iconAvatar);
         }
         private void cycleIconTypeRightBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -616,7 +630,7 @@ namespace Runner2
             if (currentIconTypeIndex > maxIconTypeIndex)
                 currentIconTypeIndex = 1;
             //CharacterTypeSelected.Content = currentPlayerTypeIndex.ToString();
-            changeIcon(currentIconTypeIndex);
+            changeIcon(currentIconTypeIndex, iconAvatar);
         }
 
         private void joinLobbyBtnClick(object sender, RoutedEventArgs e)
@@ -947,12 +961,12 @@ namespace Runner2
                 rubber.Visibility = Visibility.Visible;
             }
             //----Barier---
-            if(playerHitBox.IntersectsWith(barierHitBox))
+            if (playerHitBox.IntersectsWith(barierHitBox))
             {
                 currentPlayer.Accept(visitor);
                 barierHitBox = new Rect(2000, 2000, 2, 2);
             }
-            if(player2HitBox.IntersectsWith(barierHitBox))
+            if (player2HitBox.IntersectsWith(barierHitBox))
             {
                 opposingPlayer.Accept(visitor);
                 barierHitBox = new Rect(2000, 2000, 2, 2);
@@ -1097,7 +1111,7 @@ namespace Runner2
 
         }
 
-        
+
         void Iteruojam()
         {
             var iter = iterator.First();
@@ -1118,7 +1132,7 @@ namespace Runner2
                 ++i;
             }
             //color += 50;
-            var brush = new SolidColorBrush(Color.FromRgb(255,0, 0));//new SolidColorBrush(Color.FromArgb(255, (byte)color, (byte)0, (byte)0));
+            var brush = new SolidColorBrush(Color.FromRgb(255, 0, 0));//new SolidColorBrush(Color.FromArgb(255, (byte)color, (byte)0, (byte)0));
             platformColl[ind].Fill = brush;
         }
         public double Distance(Rectangle iter)
@@ -1154,7 +1168,7 @@ namespace Runner2
             avatar.Fill = avatarSprite;
             avatarLobby.Fill = avatarSprite;
         }
-        private void changeIcon(int index)
+        private void changeIcon(int index, Rectangle iconToChange)
         {
             switch (index)
             {
@@ -1169,7 +1183,7 @@ namespace Runner2
                     break;
 
             }
-            iconAvatar.Fill = iconSprite;
+            iconToChange.Fill = iconSprite;
         }
 
         private void StartCountDown()
@@ -1304,7 +1318,7 @@ namespace Runner2
         {
             player.RenderTransformOrigin = new Point(0.5, 0.5);
             ScaleTransform flipTrans = new ScaleTransform();
-            if ((playerAnimationCurrentState == PlayerAnimationState.RunningLeft && !currentPlayer.isInverted ) || (currentPlayer.isInverted && playerAnimationCurrentState == PlayerAnimationState.RunningRight))
+            if ((playerAnimationCurrentState == PlayerAnimationState.RunningLeft && !currentPlayer.isInverted) || (currentPlayer.isInverted && playerAnimationCurrentState == PlayerAnimationState.RunningRight))
             {
                 flipTrans.ScaleX = -1;
                 Canvas.SetLeft(player, Canvas.GetLeft(player) - currentPlayer.Speed);
