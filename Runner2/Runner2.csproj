@@ -196,6 +196,7 @@
     <Compile Include="Classes\State.cs" />
     <Compile Include="Classes\Strategy.cs" />
     <Compile Include="Classes\Symbol.cs" />
+    <Compile Include="Classes\IVisitor.cs" />
     <Compile Include="Commands\SendTauntMessageCommand.cs" />
     <Compile Include="Services\SignalRService.cs" />
     <Page Include="MainWindow.xaml">

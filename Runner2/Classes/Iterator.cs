@@ -173,6 +173,7 @@ namespace Runner2.Classes
                 {
                     multiplier += item.pointMult;
                     multiplier += GoThroughCollection(item as Composite);
+                    //item.accept(visitor);
                 }
             }
 
