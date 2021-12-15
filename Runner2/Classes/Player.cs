@@ -26,6 +26,10 @@ namespace Runner2.Classes
         public abstract PointsCounter Points { get; set; }
         public abstract float Speed { get; set; }
 
+        public bool isInverted = false;
+        public bool jumpInverted = false;
+        public bool gravityInverted = false;
+
         public Symbol symbol;
 
         public abstract void Update();
@@ -58,12 +62,13 @@ namespace Runner2.Classes
 
         public abstract void Request(int ind);
 
+        public abstract void Accept(IVisitor visitor);
     }
 
     /// <summary>
     /// concrete product
     /// </summary>
-    class PinkMonster : Player
+    public class PinkMonster : Player
     {
         private State _state;
         private readonly int _skinType;
@@ -118,12 +123,16 @@ namespace Runner2.Classes
             _state.Handle(ind);
         }
 
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.VisitConcretePlayer(this);
+        }
     }
 
     /// <summary>
     /// concrete product2
     /// </summary>
-    class OwlMonster : Player
+    public class OwlMonster : Player
     {
         private State _state;
         private readonly int _skinType;
@@ -169,11 +178,16 @@ namespace Runner2.Classes
         {
             _state.Handle(ind);
         }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.VisitConcretePlayer(this);
+        }
     }
     /// <summary>
     /// concrete product3
     /// </summary>
-    class DudeMonster : Player
+    public class DudeMonster : Player
     {
         private State _state;
         private readonly int _skinType;
@@ -218,6 +232,11 @@ namespace Runner2.Classes
         public override void Request(int ind)
         {
             _state.Handle(ind);
+        }
+
+        public override void Accept(IVisitor visitor)
+        {
+            visitor.VisitConcretePlayer(this);
         }
     }
 

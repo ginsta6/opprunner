@@ -29,10 +29,23 @@
                 </Button.RenderTransform>
                 <Polygon   Stretch="Fill" Fill="#FF4BD14C" Points="0,0 0,30 0,10 30,10 30,-10 45,10 30,30 30,20 0,20 0,0 30,0 30,10 0,10" Height="65" Width="65" />
             </Button>
-            <Label x:Name="CharacterSpeedValue" Height="54"  Content="Speed: " Canvas.Top="468" Width="196" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="138" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
-            <Label x:Name="CharacterJumpValue" Height="52"  Content="Jump: " Canvas.Top="522" Width="196" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Stencil" Foreground="White" Canvas.Left="138" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
             <Label Name="CantJoinLobbyText" FontSize="14" FontWeight="Bold" Content="Bad nick" Foreground="Red" Canvas.Left="534" Canvas.Top="247" Visibility="Hidden"/>
             <Rectangle Name="avatar" Height="264" Width="160" Fill="Brown" Canvas.Top="155" Canvas.Left="168" />
+            <Rectangle Name="iconAvatar" Height="50" Width="50" Fill="Brown" Canvas.Top="505" Canvas.Left="220" />
+            <Button x:Name="cycleIconTypeRightBtn" Background="Transparent" BorderBrush="Transparent" Canvas.Left="296" Canvas.Top="488" Click="cycleIconTypeRightBtn_Click">
+                <Polygon   Stretch="Fill" Fill="#FF4BD14C" Points="0,0 0,30 0,10 30,10 30,-10 45,10 30,30 30,20 0,20 0,0 30,0 30,10 0,10" RenderTransformOrigin="0.514,-0.367" Height="65" Width="65"/>
+            </Button>
+            <Button x:Name="cycleIconTypeLeftBtn" Background="Transparent" BorderBrush="Transparent" Canvas.Left="134" Canvas.Top="490" RenderTransformOrigin="0.5,0.5" Click="cycleIconTypeLeftBtn_Click">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-180.000"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+                <Polygon   Stretch="Fill" Fill="#FF4BD14C" Points="0,0 0,30 0,10 30,10 30,-10 45,10 30,30 30,20 0,20 0,0 30,0 30,10 0,10" Height="65" Width="65" />
+            </Button>
             <Rectangle Name="platform" Height="43" Width="289" Fill="Black" Canvas.Top="420" Canvas.Left="103" />
         </Canvas>
 
@@ -77,6 +90,8 @@
             <Rectangle Name="pelianR" Height="30" Width="40" Fill="Black" Canvas.Left="861" Canvas.Top="555"/>
             <Rectangle Name="pencilR" Height="50" Width="20" Fill="Black" Canvas.Left="496" Canvas.Top="542"/>
             <Rectangle Name="rubberR" Height="20" Width="20" Fill="Black" Canvas.Left="539" Canvas.Top="555"/>
+
+            <Rectangle Name="visitorBarier" Height="132" Width="90" Fill="BlanchedAlmond" Canvas.Left="219" Canvas.Top="475"/>
 
             <Rectangle Name="finishGround" Height="32" Width="150" Fill="Black" Canvas.Top="311" Canvas.Left="1049"/>
 
